@@ -40,3 +40,4 @@ build/
 /docs/
 /.idea/
 /target/
+/src/main/resources/settings.properties
