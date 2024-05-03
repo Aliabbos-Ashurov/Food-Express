@@ -40,4 +40,4 @@ build/
 /docs/
 /.idea/
 /target/
-/Users/mac/Desktop/IntelliJ IDEA/FoodExpress/src/main/resources/settings.properties
+/src/main/resources/settings.properties
