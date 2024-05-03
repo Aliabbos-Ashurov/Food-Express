@@ -5,8 +5,6 @@ import com.pdp.backend.web.enums.Language;
 import com.pdp.backend.web.enums.Role;
 import lombok.*;
 
-
-
 /**
  * Represents a user entity within the system.
  *
@@ -27,7 +25,7 @@ import lombok.*;
  */
 @Getter
 @Builder
-@ToString(callSuper = true)
+@ToString(callSuper = true, exclude = {"profilPictureUrl", "isEmailVerified", "isNumberVerified"})
 @AllArgsConstructor
 @NoArgsConstructor
 public class User extends BaseModel {

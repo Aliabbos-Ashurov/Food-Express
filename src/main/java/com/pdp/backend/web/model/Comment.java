@@ -8,9 +8,15 @@ import lombok.ToString;
 import java.util.UUID;
 
 /**
+ * Encapsulates a comment made on a particular food item, linking the
+ * user-generated content to the associated food entity within the system.
+ *
+ * <p>This class extends {@link BaseModel} to benefit from baseline
+ * entity properties such as identifier and creation timestamp.</p>
+ *
  * @author Aliabbos Ashurov
- * @since: 03/May/2024  13:06
- **/
+ * @since 03/May/2024 13:06
+ */
 @Getter
 @ToString(callSuper = true)
 @AllArgsConstructor

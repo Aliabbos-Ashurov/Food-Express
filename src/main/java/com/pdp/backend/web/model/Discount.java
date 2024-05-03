@@ -9,9 +9,15 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 /**
+ * Describes a discount applicable to a food item, detailing the timespan of the discount
+ * and associated descriptive information.
+ *
+ * <p>Note: This class does not extend {@link BaseModel} and, as such, does not inherit common
+ * entity properties such as an identifier or creation timestamp. Extend {@code BaseModel} if those properties are required.</p>
+ *
  * @author Aliabbos Ashurov
- * @since: 03/May/2024  13:07
- **/
+ * @since 03/May/2024 13:07
+ */
 @Getter
 @ToString(callSuper = true)
 @AllArgsConstructor
