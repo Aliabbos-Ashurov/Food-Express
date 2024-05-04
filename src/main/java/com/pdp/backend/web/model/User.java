@@ -2,7 +2,7 @@ package com.pdp.backend.web.model;
 
 import com.google.gson.annotations.SerializedName;
 import com.pdp.backend.web.enums.Language;
-import com.pdp.backend.web.enums.Role;
+import com.pdp.backend.web.enums.role.Role;
 import lombok.*;
 
 /**
