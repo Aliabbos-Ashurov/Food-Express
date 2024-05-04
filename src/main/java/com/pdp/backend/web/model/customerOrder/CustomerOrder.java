@@ -1,8 +1,9 @@
-package com.pdp.backend.web.model;
+package com.pdp.backend.web.model.customerOrder;
 
 import com.google.gson.annotations.SerializedName;
 import com.pdp.backend.web.enums.OrderStatus;
 import com.pdp.backend.web.enums.PaymentType;
+import com.pdp.backend.web.model.BaseModel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
@@ -23,7 +24,7 @@ import java.util.UUID;
 @Getter
 @ToString(callSuper = true)
 @AllArgsConstructor
-public class CustomerOrder {
+public class CustomerOrder extends BaseModel{
     @SerializedName("user_id")
     private UUID userID;
     @SerializedName("branch_id")

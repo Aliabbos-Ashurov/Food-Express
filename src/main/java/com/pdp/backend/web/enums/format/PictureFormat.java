@@ -1,4 +1,4 @@
-package com.pdp.backend.web.enums;
+package com.pdp.backend.web.enums.format;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

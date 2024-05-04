@@ -1,7 +1,8 @@
-package com.pdp.backend.web.model;
+package com.pdp.backend.web.model.picture;
 
 import com.google.gson.annotations.SerializedName;
-import com.pdp.backend.web.enums.PictureFormat;
+import com.pdp.backend.web.enums.format.PictureFormat;
+import com.pdp.backend.web.model.BaseModel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;

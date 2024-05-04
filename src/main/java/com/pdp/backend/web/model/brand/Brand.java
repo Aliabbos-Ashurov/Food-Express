@@ -1,6 +1,7 @@
-package com.pdp.backend.web.model;
+package com.pdp.backend.web.model.brand;
 
 import com.google.gson.annotations.SerializedName;
+import com.pdp.backend.web.model.BaseModel;
 import lombok.Getter;
 import lombok.ToString;
 

@@ -1,5 +1,6 @@
-package com.pdp.backend.web.model;
+package com.pdp.backend.web.model.description;
 
+import com.pdp.backend.web.model.BaseModel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
