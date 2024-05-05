@@ -15,7 +15,7 @@ import java.util.UUID;
  * @author Aliabbos Ashurov
  * @since 04/May/2024 14:51
  */
-public interface BaseRepositroy<T> {
+public interface BaseRepository<T> {
 
     /**
      * Adds a new entity to the repository.
@@ -47,4 +47,7 @@ public interface BaseRepositroy<T> {
      * @return A list of all entities.
      */
     List<T> getAll();
+
+    List<T> load();
+    void save();
 }
