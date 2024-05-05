@@ -21,7 +21,7 @@ import lombok.Getter;
  * @since 04/May/2024 14:56
  */
 @Getter
-public class ResoucePath {
+public class ResourcePath {
     private static final String DIRECTORY = "db/";
     public static final String ADDRESS = DIRECTORY + "address.json";
     public static final String BANNED = DIRECTORY + "banned.json";
