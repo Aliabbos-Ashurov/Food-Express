@@ -33,6 +33,7 @@ public class User extends BaseModel {
     private String fullname;
     private String username;
     private String password;
+    @SerializedName("phone_number")
     private String phoneNumber;
     private String email;
     @SerializedName("is_number_verified")
