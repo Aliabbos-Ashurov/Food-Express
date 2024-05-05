@@ -13,7 +13,7 @@ import lombok.RequiredArgsConstructor;
  * - DELIVERER: Permissions related to delivery operations.
  * - USER: Permissions available to regular users.
  * - ADMIN: Permissions granted to administrators.
- * - SUPERADMIN: Permissions reserved for super administrators.
+ * - SUPER_ADMIN: Permissions reserved for super administrators.
  * </p>
  *
  * @author Aliabbos Ashurov
@@ -43,7 +43,7 @@ public enum Permission {
     MANAGE_ORDERS("MANAGE_ORDERS"),
     VIEW_FINANCES("VIEW_FINANCES"),
 
-    // SUPERADMIN:
+    // SUPER_ADMIN:
     EXPORT_DATA("EXPORT_DATA"),
     IMPORT_DATA("IMPORT_DATA"),
     MANAGE_ROLES("MANAGE_ROLES"),
