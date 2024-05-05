@@ -1,6 +1,6 @@
 package com.pdp.backend.web.repository.category;
 
-import com.pdp.backend.web.config.path.ResoucePath;
+import com.pdp.backend.web.config.path.ResourcePath;
 import com.pdp.backend.web.model.category.Category;
 import com.pdp.backend.web.repository.BaseRepository;
 import com.pdp.json.serializer.JsonSerializer;
@@ -28,7 +28,7 @@ public class CategoryRepository implements BaseRepository<Category> {
     private final List<Category> categories;
 
     public CategoryRepository() {
-        this.jsonSerializer = new JsonSerializer<>(Path.of(ResoucePath.CATEGORY));
+        this.jsonSerializer = new JsonSerializer<>(Path.of(ResourcePath.CATEGORY));
         this.categories = load();
     }
 

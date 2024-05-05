@@ -1,6 +1,6 @@
 package com.pdp.backend.web.repository.branch;
 
-import com.pdp.backend.web.config.path.ResoucePath;
+import com.pdp.backend.web.config.path.ResourcePath;
 import com.pdp.backend.web.model.branch.Branch;
 import com.pdp.backend.web.repository.BaseRepository;
 import com.pdp.json.serializer.JsonSerializer;
@@ -29,7 +29,7 @@ public class BranchRepository implements BaseRepository<Branch> {
     private final List<Branch> branches;
 
     public BranchRepository() {
-        this.jsonSerializer = new JsonSerializer<>(Path.of(ResoucePath.BRANCH));
+        this.jsonSerializer = new JsonSerializer<>(Path.of(ResourcePath.BRANCH));
         this.branches = load();
     }
 

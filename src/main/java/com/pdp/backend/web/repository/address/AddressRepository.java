@@ -1,6 +1,6 @@
 package com.pdp.backend.web.repository.address;
 
-import com.pdp.backend.web.config.path.ResoucePath;
+import com.pdp.backend.web.config.path.ResourcePath;
 import com.pdp.backend.web.model.address.Address;
 import com.pdp.backend.web.repository.BaseRepository;
 import com.pdp.json.serializer.JsonSerializer;
@@ -33,7 +33,7 @@ public class AddressRepository implements BaseRepository<Address> {
     private final List<Address> addresses;
 
     public AddressRepository() {
-        this.jsonSerializer = new JsonSerializer<>(Path.of(ResoucePath.ADDRESS));
+        this.jsonSerializer = new JsonSerializer<>(Path.of(ResourcePath.ADDRESS));
         this.addresses = load();
     }
 

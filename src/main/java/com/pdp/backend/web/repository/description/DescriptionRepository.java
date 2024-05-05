@@ -1,6 +1,6 @@
 package com.pdp.backend.web.repository.description;
 
-import com.pdp.backend.web.config.path.ResoucePath;
+import com.pdp.backend.web.config.path.ResourcePath;
 import com.pdp.backend.web.model.description.Description;
 import com.pdp.backend.web.repository.BaseRepository;
 import com.pdp.json.serializer.JsonSerializer;
@@ -37,7 +37,7 @@ public class DescriptionRepository implements BaseRepository<Description> {
      * ResourcePath.DESCRIPTION.
      */
     public DescriptionRepository() {
-        this.jsonSerializer = new JsonSerializer<>(Path.of(ResoucePath.DESCRIPTION));
+        this.jsonSerializer = new JsonSerializer<>(Path.of(ResourcePath.DESCRIPTION));
         this.descriptions = load();
     }
 

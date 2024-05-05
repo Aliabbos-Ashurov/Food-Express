@@ -1,6 +1,6 @@
 package com.pdp.backend.web.repository.brand;
 
-import com.pdp.backend.web.config.path.ResoucePath;
+import com.pdp.backend.web.config.path.ResourcePath;
 import com.pdp.backend.web.model.brand.Brand;
 import com.pdp.backend.web.repository.BaseRepository;
 import com.pdp.json.serializer.JsonSerializer;
@@ -31,7 +31,7 @@ public class BrandRepository implements BaseRepository<Brand> {
     private final List<Brand> brands;
 
     public BrandRepository() {
-        this.jsonSerializer = new JsonSerializer<>(Path.of(ResoucePath.BRAND));
+        this.jsonSerializer = new JsonSerializer<>(Path.of(ResourcePath.BRAND));
         this.brands = load();
     }
 
