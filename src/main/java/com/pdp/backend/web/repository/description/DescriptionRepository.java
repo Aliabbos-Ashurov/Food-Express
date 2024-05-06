@@ -1,6 +1,6 @@
 package com.pdp.backend.web.repository.description;
 
-import com.pdp.backend.web.config.path.ResourcePath;
+import com.pdp.backend.web.config.jsonFilePath.JsonFilePath;
 import com.pdp.backend.web.model.description.Description;
 import com.pdp.backend.web.repository.BaseRepository;
 import com.pdp.json.serializer.JsonSerializer;
@@ -21,7 +21,7 @@ import java.util.UUID;
  *
  * Inherits the BaseRepository interface's methods for standardized data access and manipulation.
  * This repository ensures all Description objects are up-to-date and synchronized with a
- * JSON-formatted data file identified by ResourcePath.DESCRIPTION.
+ * JSON-formatted data file identified by JsonFilePath.DESCRIPTION.
  * @see BaseRepository
  * @author Aliabbos Ashurov
  * @since 04/May/2024 16:44
@@ -34,10 +34,10 @@ public class DescriptionRepository implements BaseRepository<Description> {
     /**
      * Initializes the repository by setting up the JsonSerializer and loads
      * existing descriptions from the JSON file located at the path specified by
-     * ResourcePath.DESCRIPTION.
+     * JsonFilePath.DESCRIPTION.
      */
     public DescriptionRepository() {
-        this.jsonSerializer = new JsonSerializer<>(Path.of(ResourcePath.DESCRIPTION));
+        this.jsonSerializer = new JsonSerializer<>(Path.of(PATH_DESCRIPTION));
         this.descriptions = load();
     }
 

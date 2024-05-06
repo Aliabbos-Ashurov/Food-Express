@@ -1,6 +1,6 @@
 package com.pdp.backend.web.repository.deliverer;
 
-import com.pdp.backend.web.config.path.ResourcePath;
+import com.pdp.backend.web.config.jsonFilePath.JsonFilePath;
 import com.pdp.backend.web.model.deliverer.Deliverer;
 import com.pdp.backend.web.repository.BaseRepository;
 import com.pdp.json.serializer.JsonSerializer;
@@ -29,7 +29,7 @@ public class DelivererRepository implements BaseRepository<Deliverer> {
     private final List<Deliverer> deliverers;
 
     public DelivererRepository() {
-        this.jsonSerializer = new JsonSerializer<>(Path.of(ResourcePath.DELIVERER));
+        this.jsonSerializer = new JsonSerializer<>(Path.of(PATH_DELIVERER));
         this.deliverers = load();
     }
 

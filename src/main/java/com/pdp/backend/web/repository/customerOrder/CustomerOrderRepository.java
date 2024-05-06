@@ -1,6 +1,6 @@
 package com.pdp.backend.web.repository.customerOrder;
 
-import com.pdp.backend.web.config.path.ResourcePath;
+import com.pdp.backend.web.config.jsonFilePath.JsonFilePath;
 import com.pdp.backend.web.model.customerOrder.CustomerOrder;
 import com.pdp.backend.web.repository.BaseRepository;
 import com.pdp.json.serializer.JsonSerializer;
@@ -18,7 +18,7 @@ import java.util.UUID;
  * to add, remove, retrieve, and list all customer orders persisted in the system.
  * <p>
  * Leverages JsonSerializer for translating CustomerOrder objects to and from JSON, supporting
- * data persistence to a file defined by ResourcePath.CUSTOMER_ORDER.
+ * data persistence to a file defined by JsonFilePath.CUSTOMER_ORDER.
  * <p>
  * Suspends normal checks during exception handling, allowing unchecked exceptions to propagate,
  * as indicated by the use of @SneakyThrows. Error handling is targeted towards console logging
@@ -33,7 +33,7 @@ public class CustomerOrderRepository implements BaseRepository<CustomerOrder> {
     private final List<CustomerOrder> customerOrders;
 
     public CustomerOrderRepository() {
-        this.jsonSerializer = new JsonSerializer<>(Path.of(ResourcePath.CUSTOMER_ORDER));
+        this.jsonSerializer = new JsonSerializer<>(Path.of(PATH_CUSTOMER_ORDER));
         this.customerOrders = load();
     }
 

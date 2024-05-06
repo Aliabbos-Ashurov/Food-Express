@@ -1,6 +1,6 @@
 package com.pdp.backend.web.repository.picture;
 
-import com.pdp.backend.web.config.path.ResourcePath;
+import com.pdp.backend.web.config.jsonFilePath.JsonFilePath;
 import com.pdp.backend.web.model.picture.Picture;
 import com.pdp.backend.web.repository.BaseRepository;
 import com.pdp.json.serializer.JsonSerializer;
@@ -32,7 +32,7 @@ public class PictureRepository implements BaseRepository<Picture> {
      * and loading the existing pictures from this file into the memory.
      */
     public PictureRepository() {
-        this.jsonSerializer = new JsonSerializer<>(Path.of(ResourcePath.PICTURE));
+        this.jsonSerializer = new JsonSerializer<>(Path.of(PATH_PICTURE));
         this.pictures = load();
     }
 

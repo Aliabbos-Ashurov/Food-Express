@@ -1,5 +1,7 @@
 package com.pdp.backend.web.repository;
 
+import com.pdp.backend.web.config.jsonFilePath.JsonFilePath;
+
 import java.util.List;
 import java.util.UUID;
 
@@ -15,7 +17,7 @@ import java.util.UUID;
  * @author Aliabbos Ashurov
  * @since 04/May/2024 14:51
  */
-public interface BaseRepository<T> {
+public interface BaseRepository<T> extends JsonFilePath {
 
     /**
      * Adds a new entity to the repository.

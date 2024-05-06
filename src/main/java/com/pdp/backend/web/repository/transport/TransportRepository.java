@@ -1,6 +1,6 @@
 package com.pdp.backend.web.repository.transport;
 
-import com.pdp.backend.web.config.path.ResourcePath;
+import com.pdp.backend.web.config.jsonFilePath.JsonFilePath;
 import com.pdp.backend.web.model.transport.Transport;
 import com.pdp.backend.web.repository.BaseRepository;
 import com.pdp.json.serializer.JsonSerializer;
@@ -33,7 +33,7 @@ public class TransportRepository implements BaseRepository<Transport> {
      * and loading the existing transport data from this file into memory.
      */
     public TransportRepository() {
-        this.jsonSerializer = new JsonSerializer<>(Path.of(ResourcePath.TRANSPORT));
+        this.jsonSerializer = new JsonSerializer<>(Path.of(PATH_TRANSPORT));
         this.transports = load();
     }
 

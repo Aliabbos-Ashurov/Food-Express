@@ -1,6 +1,6 @@
 package com.pdp.backend.web.repository.brand;
 
-import com.pdp.backend.web.config.path.ResourcePath;
+import com.pdp.backend.web.config.jsonFilePath.JsonFilePath;
 import com.pdp.backend.web.model.brand.Brand;
 import com.pdp.backend.web.repository.BaseRepository;
 import com.pdp.json.serializer.JsonSerializer;
@@ -19,7 +19,7 @@ import java.util.UUID;
  * serialization and deserialization of Brand instances to and from JSON format.
  *
  * Implements the BaseRepository interface, utilizing a local in-memory list that
- * is synchronized with a JSON file defined by ResourcePath.BRAND.
+ * is synchronized with a JSON file defined by JsonFilePath.BRAND.
  *
  * Operations to this repository are persisted to the JSON storage immediately.
  *
@@ -31,7 +31,7 @@ public class BrandRepository implements BaseRepository<Brand> {
     private final List<Brand> brands;
 
     public BrandRepository() {
-        this.jsonSerializer = new JsonSerializer<>(Path.of(ResourcePath.BRAND));
+        this.jsonSerializer = new JsonSerializer<>(Path.of(PATH_BRAND));
         this.brands = load();
     }
 

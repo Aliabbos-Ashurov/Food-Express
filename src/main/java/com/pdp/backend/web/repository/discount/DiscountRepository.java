@@ -1,6 +1,6 @@
 package com.pdp.backend.web.repository.discount;
 
-import com.pdp.backend.web.config.path.ResourcePath;
+import com.pdp.backend.web.config.jsonFilePath.JsonFilePath;
 import com.pdp.backend.web.model.discount.Discount;
 import com.pdp.backend.web.repository.BaseRepository;
 import com.pdp.json.serializer.JsonSerializer;
@@ -17,7 +17,7 @@ import java.util.UUID;
  * Manages the persistence and retrieval of Discount entities, providing CRUD
  * operations such as adding, removing, finding by ID, and listing all discounts.
  * Serialization and deserialization of Discount objects are performed by a JsonSerializer,
- * ensuring the data is maintained in a JSON file as defined in ResourcePath.
+ * ensuring the data is maintained in a JSON file as defined in JsonFilePath.
  * <p>
  * Implements the BaseRepository interface, which includes methods guaranteeing
  * consistent access to the underlying Discount data.
@@ -31,7 +31,7 @@ public class DiscountRepository implements BaseRepository<Discount> {
     private final List<Discount> discounts;
 
     public DiscountRepository() {
-        this.jsonSerializer = new JsonSerializer<>(Path.of(ResourcePath.DISCOUNT));
+        this.jsonSerializer = new JsonSerializer<>(Path.of(PATH_DISCOUNT));
         this.discounts = load();
     }
 

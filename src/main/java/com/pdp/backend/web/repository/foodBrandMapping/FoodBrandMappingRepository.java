@@ -1,6 +1,6 @@
 package com.pdp.backend.web.repository.foodBrandMapping;
 
-import com.pdp.backend.web.config.path.ResourcePath;
+import com.pdp.backend.web.config.jsonFilePath.JsonFilePath;
 import com.pdp.backend.web.model.foodBrandMapping.FoodBrandMapping;
 import com.pdp.backend.web.repository.BaseRepository;
 import com.pdp.json.serializer.JsonSerializer;
@@ -36,7 +36,7 @@ public class FoodBrandMappingRepository implements BaseRepository<FoodBrandMappi
      * food-brand mappings data file and loads existing mappings from persistent storage.
      */
     public FoodBrandMappingRepository() {
-        this.jsonSerializer = new JsonSerializer<>(Path.of(ResourcePath.FOOD_BRAND_MAPPING));
+        this.jsonSerializer = new JsonSerializer<>(Path.of(PATH_FOOD_BRAND_MAPPING));
         this.foodBrandMappings = load();
     }
 

@@ -1,6 +1,6 @@
 package com.pdp.backend.web.repository.banned;
 
-import com.pdp.backend.web.config.path.ResourcePath;
+import com.pdp.backend.web.config.jsonFilePath.JsonFilePath;
 import com.pdp.backend.web.model.banned.Banned;
 import com.pdp.backend.web.repository.BaseRepository;
 import com.pdp.json.serializer.JsonSerializer;
@@ -29,7 +29,7 @@ public class BannedRepository implements BaseRepository<Banned> {
     private final List<Banned> banneds;
 
     public BannedRepository() {
-        this.jsonSerializer = new JsonSerializer<>(Path.of(ResourcePath.BANNED));
+        this.jsonSerializer = new JsonSerializer<>(Path.of(PATH_BANNED));
         this.banneds = load();
     }
 

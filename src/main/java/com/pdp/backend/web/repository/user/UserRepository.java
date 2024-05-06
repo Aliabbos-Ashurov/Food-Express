@@ -1,6 +1,6 @@
 package com.pdp.backend.web.repository.user;
 
-import com.pdp.backend.web.config.path.ResourcePath;
+import com.pdp.backend.web.config.jsonFilePath.JsonFilePath;
 import com.pdp.backend.web.model.user.User;
 import com.pdp.backend.web.repository.BaseRepository;
 import com.pdp.json.serializer.JsonSerializer;
@@ -32,7 +32,7 @@ public class UserRepository implements BaseRepository<User> {
      * with the path to the users data file and loading the current set of users from that file.
      */
     public UserRepository() {
-        this.jsonSerializer = new JsonSerializer<>(Path.of(ResourcePath.USER));
+        this.jsonSerializer = new JsonSerializer<>(Path.of(PATH_USER));
         this.users = load();
     }
 

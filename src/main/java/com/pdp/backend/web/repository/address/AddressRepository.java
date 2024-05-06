@@ -1,6 +1,6 @@
 package com.pdp.backend.web.repository.address;
 
-import com.pdp.backend.web.config.path.ResourcePath;
+import com.pdp.backend.web.config.jsonFilePath.JsonFilePath;
 import com.pdp.backend.web.model.address.Address;
 import com.pdp.backend.web.repository.BaseRepository;
 import com.pdp.json.serializer.JsonSerializer;
@@ -20,7 +20,7 @@ import java.util.UUID;
  * <p>
  * Utilizes JsonSerializer for handling serialization and deserialization of Address
  * objects for persistence to and from a JSON file located at the path provided by
- * ResourcePath.ADDRESS.
+ * JsonFilePath.ADDRESS.
  * <p>
  * The repository maintains an in-memory list of address objects for runtime data
  * access. Changes to the addresses list are persisted to the JSON file via JsonSerializer.
@@ -33,7 +33,7 @@ public class AddressRepository implements BaseRepository<Address> {
     private final List<Address> addresses;
 
     public AddressRepository() {
-        this.jsonSerializer = new JsonSerializer<>(Path.of(ResourcePath.ADDRESS));
+        this.jsonSerializer = new JsonSerializer<>(Path.of(PATH_ADDRESS));
         this.addresses = load();
     }
 

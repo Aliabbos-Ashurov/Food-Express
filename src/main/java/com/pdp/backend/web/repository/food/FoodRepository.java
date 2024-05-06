@@ -1,6 +1,6 @@
 package com.pdp.backend.web.repository.food;
 
-import com.pdp.backend.web.config.path.ResourcePath;
+import com.pdp.backend.web.config.jsonFilePath.JsonFilePath;
 import com.pdp.backend.web.model.food.Food;
 import com.pdp.backend.web.repository.BaseRepository;
 import com.pdp.json.serializer.JsonSerializer;
@@ -34,7 +34,7 @@ public class FoodRepository implements BaseRepository<Food> {
     private final List<Food> foods;
 
     public FoodRepository() {
-        this.jsonSerializer = new JsonSerializer<>(Path.of(ResourcePath.FOOD));
+        this.jsonSerializer = new JsonSerializer<>(Path.of(PATH_FOOD));
         this.foods = load();
     }
 
