@@ -2,6 +2,7 @@ package com.pdp.backend.web.model.food;
 
 import com.google.gson.annotations.SerializedName;
 import com.pdp.backend.web.model.BaseModel;
+import com.pdp.java.console.support.Displayable;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
@@ -21,7 +22,7 @@ import java.util.UUID;
 @Getter
 @ToString(callSuper = true)
 @AllArgsConstructor
-public class Food extends BaseModel {
+public class Food extends BaseModel implements Displayable {
     private String name;
     @SerializedName("pictur_id")
     private UUID pictureID;
@@ -30,4 +31,9 @@ public class Food extends BaseModel {
     private String price;
     @SerializedName("category_id")
     private UUID categoryID;
+
+    @Override
+    public String getDisplayName() {
+        return this.name;
+    }
 }
