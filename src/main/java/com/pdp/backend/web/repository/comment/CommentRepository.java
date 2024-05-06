@@ -23,7 +23,7 @@ import java.util.UUID;
  * @author Aliabbos Ashurov
  * @since 04/May/2024 16:34
  */
-public class CommentRepository implements BaseRepository<Comment> {
+public class CommentRepository implements BaseRepository<Comment,List<Comment>> {
     private final JsonSerializer<Comment> jsonSerializer;
     private final List<Comment> comments;
 

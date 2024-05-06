@@ -26,7 +26,7 @@ import java.util.UUID;
  * @see BaseRepository
  * @since 04/May/2024 16:47
  */
-public class DiscountRepository implements BaseRepository<Discount> {
+public class DiscountRepository implements BaseRepository<Discount,List<Discount>> {
     private final JsonSerializer<Discount> jsonSerializer;
     private final List<Discount> discounts;
 

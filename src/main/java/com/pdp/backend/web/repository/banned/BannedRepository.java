@@ -24,7 +24,7 @@ import java.util.UUID;
  * @author Aliabbos Ashurov
  * @since 04/May/2024 15:43
  */
-public class BannedRepository implements BaseRepository<Banned> {
+public class BannedRepository implements BaseRepository<Banned,List<Banned>> {
     private final JsonSerializer<Banned> jsonSerializer;
     private final List<Banned> banneds;
 

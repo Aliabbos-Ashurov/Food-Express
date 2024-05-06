@@ -23,7 +23,7 @@ import java.util.UUID;
  * @author Aliabbos Ashurov
  * @since 04/May/2024 17:06
  */
-public class UserRepository implements BaseRepository<User> {
+public class UserRepository implements BaseRepository<User,List<User>> {
     private final JsonSerializer<User> jsonSerializer;
     private final List<User> users;
 

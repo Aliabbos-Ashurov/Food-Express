@@ -1,6 +1,5 @@
 package com.pdp.backend.web.repository.category;
 
-import com.pdp.backend.web.config.jsonFilePath.JsonFilePath;
 import com.pdp.backend.web.model.category.Category;
 import com.pdp.backend.web.repository.BaseRepository;
 import com.pdp.json.serializer.JsonSerializer;
@@ -8,10 +7,7 @@ import lombok.SneakyThrows;
 
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * This class provides the repository layer for managing {@link Category} objects, including
@@ -23,9 +19,9 @@ import java.util.UUID;
  * @author Aliabbos Ashurov
  * @since 04/May/2024 16:29
  */
-public class CategoryRepository implements BaseRepository<Category> {
+public class CategoryRepository implements BaseRepository<Category, Set<Category>> {
     private final JsonSerializer<Category> jsonSerializer;
-    private final List<Category> categories;
+    private final Set<Category> categories;
 
     public CategoryRepository() {
         this.jsonSerializer = new JsonSerializer<>(Path.of(PATH_CATEGORY));
@@ -60,8 +56,8 @@ public class CategoryRepository implements BaseRepository<Category> {
     }
 
     @Override
-    public List<Category> getAll() {
-        return Collections.unmodifiableList(categories);
+    public Set<Category> getAll() {
+        return Collections.unmodifiableSet(categories);
     }
 
     /**
@@ -70,12 +66,13 @@ public class CategoryRepository implements BaseRepository<Category> {
      * @return A list of loaded {@link Category} objects.
      */
     @Override
-    public List<Category> load() {
+    public Set<Category> load() {
         try {
-            return jsonSerializer.read(Category.class);
+            List<Category> list = jsonSerializer.read(Category.class);
+            return new HashSet<>(list);
         } catch (IOException e) {
             e.printStackTrace();
-            return new ArrayList<>();
+            return new HashSet<>();
         }
     }
 
@@ -87,6 +84,6 @@ public class CategoryRepository implements BaseRepository<Category> {
     @SneakyThrows
     @Override
     public void save() {
-        jsonSerializer.write(categories);
+        jsonSerializer.write(new ArrayList<>(categories));
     }
 }

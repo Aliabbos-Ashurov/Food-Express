@@ -29,7 +29,7 @@ import java.util.UUID;
  * @see JsonSerializer
  * @since 04/May/2024 16:51
  */
-public class FoodRepository implements BaseRepository<Food> {
+public class FoodRepository implements BaseRepository<Food,List<Food>> {
     private final JsonSerializer<Food> jsonSerializer;
     private final List<Food> foods;
 

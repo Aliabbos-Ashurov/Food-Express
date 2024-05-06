@@ -23,7 +23,7 @@ import java.util.UUID;
  * @author Aliabbos Ashurov
  * @since 04/May/2024 16:59
  */
-public class PictureRepository implements BaseRepository<Picture> {
+public class PictureRepository implements BaseRepository<Picture,List<Picture>> {
     private final JsonSerializer<Picture> jsonSerializer;
     private final List<Picture> pictures;
 

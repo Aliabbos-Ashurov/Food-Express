@@ -28,7 +28,7 @@ import java.util.UUID;
  * @see BaseRepository
  * @since 04/May/2024 16:37
  */
-public class CustomerOrderRepository implements BaseRepository<CustomerOrder> {
+public class CustomerOrderRepository implements BaseRepository<CustomerOrder,List<CustomerOrder>> {
     private final JsonSerializer<CustomerOrder> jsonSerializer;
     private final List<CustomerOrder> customerOrders;
 

@@ -1,7 +1,10 @@
 package com.pdp.backend.web.repository;
 
 import com.pdp.backend.web.config.jsonFilePath.JsonFilePath;
+import com.pdp.backend.web.model.BaseModel;
+import com.pdp.java.console.support.Displayable;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
@@ -16,8 +19,9 @@ import java.util.UUID;
  * @param <T> The type of the entity that the repository will manage.
  * @author Aliabbos Ashurov
  * @since 04/May/2024 14:51
+ *
  */
-public interface BaseRepository<T> extends JsonFilePath {
+public interface BaseRepository<T extends BaseModel,R extends Collection<T>> extends JsonFilePath {
 
     /**
      * Adds a new entity to the repository.
@@ -48,8 +52,8 @@ public interface BaseRepository<T> extends JsonFilePath {
      *
      * @return A list of all entities.
      */
-    List<T> getAll();
+    R getAll();
 
-    List<T> load();
+    R load();
     void save();
 }

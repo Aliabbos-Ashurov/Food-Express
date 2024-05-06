@@ -26,7 +26,7 @@ import java.util.UUID;
  * @author Aliabbos Ashurov
  * @since 04/May/2024 15:51
  */
-public class BrandRepository implements BaseRepository<Brand> {
+public class BrandRepository implements BaseRepository<Brand,List<Brand>> {
     private final JsonSerializer<Brand> jsonSerializer;
     private final List<Brand> brands;
 

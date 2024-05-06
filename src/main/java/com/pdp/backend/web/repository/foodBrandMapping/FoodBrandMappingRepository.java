@@ -27,7 +27,7 @@ import java.util.UUID;
  * @author Aliabbos Ashurov
  * @since 04/May/2024 16:54
  */
-public class FoodBrandMappingRepository implements BaseRepository<FoodBrandMapping> {
+public class FoodBrandMappingRepository implements BaseRepository<FoodBrandMapping,List<FoodBrandMapping>> {
     private final JsonSerializer<FoodBrandMapping> jsonSerializer;
     private final List<FoodBrandMapping> foodBrandMappings;
 

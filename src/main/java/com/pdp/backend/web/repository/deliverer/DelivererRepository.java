@@ -24,7 +24,7 @@ import java.util.UUID;
  * @see BaseRepository
  * @since 04/May/2024 16:41
  */
-public class DelivererRepository implements BaseRepository<Deliverer> {
+public class DelivererRepository implements BaseRepository<Deliverer,List<Deliverer>> {
     private final JsonSerializer<Deliverer> jsonSerializer;
     private final List<Deliverer> deliverers;
 

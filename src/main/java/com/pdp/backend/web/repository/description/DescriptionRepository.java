@@ -27,7 +27,7 @@ import java.util.UUID;
  * @since 04/May/2024 16:44
  */
 
-public class DescriptionRepository implements BaseRepository<Description> {
+public class DescriptionRepository implements BaseRepository<Description,List<Description>> {
     private final JsonSerializer<Description> jsonSerializer;
     private final List<Description> descriptions;
 

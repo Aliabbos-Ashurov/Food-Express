@@ -24,7 +24,7 @@ import java.util.UUID;
  * @author Aliabbos Ashurov
  * @since 04/May/2024 17:03
  */
-public class TransportRepository implements BaseRepository<Transport> {
+public class TransportRepository implements BaseRepository<Transport,List<Transport>> {
     private final JsonSerializer<Transport> jsonSerializer;
     private final List<Transport> transports;
 

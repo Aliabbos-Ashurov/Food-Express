@@ -28,7 +28,7 @@ import java.util.UUID;
  * @author Aliabbos Ashurov
  * @since 04/May/2024 15:34
  */
-public class AddressRepository implements BaseRepository<Address> {
+public class AddressRepository implements BaseRepository<Address,List<Address>> {
     private final JsonSerializer<Address> jsonSerializer;
     private final List<Address> addresses;
 

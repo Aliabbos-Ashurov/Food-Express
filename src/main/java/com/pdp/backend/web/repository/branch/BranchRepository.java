@@ -24,7 +24,7 @@ import java.util.UUID;
  * @author Aliabbos Ashurov
  * @since 04/May/2024 15:48
  */
-public class BranchRepository implements BaseRepository<Branch> {
+public class BranchRepository implements BaseRepository<Branch,List<Branch>> {
     private final JsonSerializer<Branch> jsonSerializer;
     private final List<Branch> branches;
 
