@@ -1,6 +1,6 @@
 package com.pdp.backend.web.repository.comment;
 
-import com.pdp.backend.web.config.path.ResoucePath;
+import com.pdp.backend.web.config.path.ResourcePath;
 import com.pdp.backend.web.model.comment.Comment;
 import com.pdp.backend.web.repository.BaseRepository;
 import com.pdp.json.serializer.JsonSerializer;
@@ -32,7 +32,7 @@ public class CommentRepository implements BaseRepository<Comment> {
      * file path from ResourcePath and loading existing comments from the file.
      */
     public CommentRepository() {
-        this.jsonSerializer = new JsonSerializer<>(Path.of(ResoucePath.COMMENT));
+        this.jsonSerializer = new JsonSerializer<>(Path.of(ResourcePath.COMMENT));
         this.comments = load();
     }
 

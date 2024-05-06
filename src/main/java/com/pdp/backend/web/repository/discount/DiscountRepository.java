@@ -1,6 +1,6 @@
 package com.pdp.backend.web.repository.discount;
 
-import com.pdp.backend.web.config.path.ResoucePath;
+import com.pdp.backend.web.config.path.ResourcePath;
 import com.pdp.backend.web.model.discount.Discount;
 import com.pdp.backend.web.repository.BaseRepository;
 import com.pdp.json.serializer.JsonSerializer;
@@ -31,7 +31,7 @@ public class DiscountRepository implements BaseRepository<Discount> {
     private final List<Discount> discounts;
 
     public DiscountRepository() {
-        this.jsonSerializer = new JsonSerializer<>(Path.of(ResoucePath.DISCOUNT));
+        this.jsonSerializer = new JsonSerializer<>(Path.of(ResourcePath.DISCOUNT));
         this.discounts = load();
     }
 

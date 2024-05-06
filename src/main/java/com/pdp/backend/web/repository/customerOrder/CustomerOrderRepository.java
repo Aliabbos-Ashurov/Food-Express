@@ -1,6 +1,6 @@
 package com.pdp.backend.web.repository.customerOrder;
 
-import com.pdp.backend.web.config.path.ResoucePath;
+import com.pdp.backend.web.config.path.ResourcePath;
 import com.pdp.backend.web.model.customerOrder.CustomerOrder;
 import com.pdp.backend.web.repository.BaseRepository;
 import com.pdp.json.serializer.JsonSerializer;
@@ -33,7 +33,7 @@ public class CustomerOrderRepository implements BaseRepository<CustomerOrder> {
     private final List<CustomerOrder> customerOrders;
 
     public CustomerOrderRepository() {
-        this.jsonSerializer = new JsonSerializer<>(Path.of(ResoucePath.CUSTOMER_ORDER));
+        this.jsonSerializer = new JsonSerializer<>(Path.of(ResourcePath.CUSTOMER_ORDER));
         this.customerOrders = load();
     }
 
