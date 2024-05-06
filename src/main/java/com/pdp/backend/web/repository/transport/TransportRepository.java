@@ -1,6 +1,5 @@
 package com.pdp.backend.web.repository.transport;
 
-import com.pdp.backend.web.config.jsonFilePath.JsonFilePath;
 import com.pdp.backend.web.model.transport.Transport;
 import com.pdp.backend.web.repository.BaseRepository;
 import com.pdp.json.serializer.JsonSerializer;

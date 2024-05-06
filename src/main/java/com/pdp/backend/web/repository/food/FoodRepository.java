@@ -1,6 +1,5 @@
 package com.pdp.backend.web.repository.food;
 
-import com.pdp.backend.web.config.jsonFilePath.JsonFilePath;
 import com.pdp.backend.web.model.food.Food;
 import com.pdp.backend.web.repository.BaseRepository;
 import com.pdp.json.serializer.JsonSerializer;

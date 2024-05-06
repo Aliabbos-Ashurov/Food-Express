@@ -1,6 +1,5 @@
 package com.pdp.backend.web.repository.comment;
 
-import com.pdp.backend.web.config.jsonFilePath.JsonFilePath;
 import com.pdp.backend.web.model.comment.Comment;
 import com.pdp.backend.web.repository.BaseRepository;
 import com.pdp.json.serializer.JsonSerializer;

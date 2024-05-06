@@ -1,6 +1,5 @@
 package com.pdp.backend.web.repository.address;
 
-import com.pdp.backend.web.config.jsonFilePath.JsonFilePath;
 import com.pdp.backend.web.model.address.Address;
 import com.pdp.backend.web.repository.BaseRepository;
 import com.pdp.json.serializer.JsonSerializer;
