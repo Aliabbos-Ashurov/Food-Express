@@ -2,6 +2,7 @@ package com.pdp.backend.web.model.brand;
 
 import com.google.gson.annotations.SerializedName;
 import com.pdp.backend.web.model.BaseModel;
+import com.pdp.java.console.support.Displayable;
 import lombok.Getter;
 import lombok.ToString;
 
@@ -22,7 +23,7 @@ import java.util.UUID;
  */
 @Getter
 @ToString(callSuper = true)
-public class Brand extends BaseModel {
+public class Brand extends BaseModel implements Displayable {
     private final String name;
     private final double rating;
     @SerializedName("description_id")
@@ -37,5 +38,10 @@ public class Brand extends BaseModel {
         this.descriptionID = descriptionID;
         this.openingTime = openingTime;
         this.closingTime = closingTime;
+    }
+
+    @Override
+    public String getDisplayName() {
+        return this.name;
     }
 }

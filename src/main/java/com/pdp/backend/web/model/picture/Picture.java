@@ -3,6 +3,7 @@ package com.pdp.backend.web.model.picture;
 import com.google.gson.annotations.SerializedName;
 import com.pdp.backend.web.enums.format.PictureFormat;
 import com.pdp.backend.web.model.BaseModel;
+import com.pdp.java.console.support.Displayable;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
@@ -20,11 +21,22 @@ import lombok.ToString;
 @Getter
 @ToString(callSuper = true)
 @AllArgsConstructor
-public class Picture extends BaseModel {
+public class Picture extends BaseModel implements Displayable{
     private String name;
     private PictureFormat format;
-    private final boolean width;
-    private final boolean height;
+    private boolean width;
+    private boolean height;
     @SerializedName("image_url")
     private String imageUrl;
+
+    public Picture(String name, String imageUrl) {
+        this.name = name;
+        this.imageUrl = imageUrl;
+        this.format = PictureFormat.JPEG;
+    }
+
+    @Override
+    public String getDisplayName() {
+        return this.name;
+    }
 }

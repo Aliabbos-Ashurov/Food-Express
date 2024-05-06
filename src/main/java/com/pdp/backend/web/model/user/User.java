@@ -4,6 +4,7 @@ import com.google.gson.annotations.SerializedName;
 import com.pdp.backend.web.enums.Language;
 import com.pdp.backend.web.enums.role.Role;
 import com.pdp.backend.web.model.BaseModel;
+import com.pdp.java.console.support.Displayable;
 import lombok.*;
 
 /**
@@ -29,7 +30,7 @@ import lombok.*;
 @ToString(callSuper = true, exclude = {"profilPictureUrl", "isEmailVerified", "isNumberVerified"})
 @AllArgsConstructor
 @NoArgsConstructor
-public class User extends BaseModel {
+public class User extends BaseModel implements Displayable {
     private String fullname;
     private String username;
     private String password;
@@ -44,4 +45,9 @@ public class User extends BaseModel {
     private Language language;
     @SerializedName("profil_picture_url")
     private String profilPictureUrl;
+
+    @Override
+    public String getDisplayName() {
+        return this.fullname;
+    }
 }

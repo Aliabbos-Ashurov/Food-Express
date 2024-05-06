@@ -1,6 +1,7 @@
 package com.pdp.backend.web.model.description;
 
 import com.pdp.backend.web.model.BaseModel;
+import com.pdp.java.console.support.Displayable;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
@@ -18,7 +19,12 @@ import lombok.ToString;
 @Getter
 @ToString(callSuper = true)
 @AllArgsConstructor
-public class Description extends BaseModel {
+public class Description extends BaseModel implements Displayable {
     private String name;
     private String text;
+
+    @Override
+    public String getDisplayName() {
+        return this.name;
+    }
 }
