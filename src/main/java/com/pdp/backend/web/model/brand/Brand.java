@@ -5,6 +5,7 @@ import com.pdp.backend.web.model.BaseModel;
 import lombok.Getter;
 import lombok.ToString;
 
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.UUID;
 
@@ -27,10 +28,10 @@ public class Brand extends BaseModel {
     @SerializedName("description_id")
     private UUID descriptionID;
     @SerializedName("opening_time")
-    private LocalTime openingTime;
+    private LocalDateTime openingTime;
     @SerializedName("closing_time")
-    private LocalTime closingTime;
-    public Brand(String name, UUID descriptionID, LocalTime openingTime, LocalTime closingTime) {
+    private LocalDateTime closingTime;
+    public Brand(String name, UUID descriptionID, LocalDateTime openingTime, LocalDateTime closingTime) {
         this.name = name;
         this.rating = 1.0;
         this.descriptionID = descriptionID;
