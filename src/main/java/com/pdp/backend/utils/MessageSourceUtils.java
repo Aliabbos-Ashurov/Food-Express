@@ -22,7 +22,7 @@ import java.util.ResourceBundle;
  * @since 07/May/2024 20:46
  */
 public class MessageSourceUtils {
-    private static final String BASE_NAME = "messages";
+    private static final String BASE_NAME = "message";
     private static final ThreadLocal<ResourceBundle> ENGLISH_BUNDLE = ThreadLocal.withInitial(() -> ResourceBundle.getBundle(BASE_NAME, Locale.forLanguageTag("en")));
     private static final ThreadLocal<ResourceBundle> UZBEK_BUNDLE = ThreadLocal.withInitial(() -> ResourceBundle.getBundle(BASE_NAME, Locale.forLanguageTag("uz")));
 
