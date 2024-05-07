@@ -1,10 +1,4 @@
-package com.pdp.backend.web.config.jsonFilePath;
-
-import jdk.jfr.StackTrace;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.With;
+package com.pdp.backend.config.jsonFilePath;
 
 /**
  * Defines the paths to various JSON resource files within the 'db' directory.

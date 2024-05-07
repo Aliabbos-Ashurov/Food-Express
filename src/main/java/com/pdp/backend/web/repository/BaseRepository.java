@@ -1,11 +1,9 @@
 package com.pdp.backend.web.repository;
 
-import com.pdp.backend.web.config.jsonFilePath.JsonFilePath;
+import com.pdp.backend.config.jsonFilePath.JsonFilePath;
 import com.pdp.backend.web.model.BaseModel;
-import com.pdp.java.console.support.Displayable;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.UUID;
 
 /**

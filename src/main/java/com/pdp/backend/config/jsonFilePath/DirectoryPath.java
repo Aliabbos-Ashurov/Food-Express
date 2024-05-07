@@ -1,4 +1,4 @@
-package com.pdp.backend.web.config.jsonFilePath;
+package com.pdp.backend.config.jsonFilePath;
 
 /**
  * @author Aliabbos Ashurov

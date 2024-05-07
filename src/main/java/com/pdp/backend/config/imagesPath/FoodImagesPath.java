@@ -1,4 +1,4 @@
-package com.pdp.backend.web.config.imagesPath;
+package com.pdp.backend.config.imagesPath;
 
 /**
  * @author Aliabbos Ashurov
