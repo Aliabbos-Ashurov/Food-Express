@@ -1,6 +1,5 @@
 package com.pdp.backend.web.repository.user;
 
-import com.pdp.backend.web.config.jsonFilePath.JsonFilePath;
 import com.pdp.backend.web.model.user.User;
 import com.pdp.backend.web.repository.BaseRepository;
 import com.pdp.json.serializer.JsonSerializer;
@@ -77,7 +76,6 @@ public class UserRepository implements BaseRepository<User,List<User>> {
 
     /**
      * Returns an unmodifiable list of all users currently in the repository.
-     *
      * @return An unmodifiable list view of users.
      */
     @Override
@@ -87,9 +85,9 @@ public class UserRepository implements BaseRepository<User,List<User>> {
 
     /**
      * Loads the list of users from the data file into the repository's memory.
-     *
      * @return A list of users; if the file does not exist or an error occurs during reading, returns an empty list.
-     */    @Override
+     */
+    @Override
     public List<User> load() {
         try {
             return jsonSerializer.read(User.class);
