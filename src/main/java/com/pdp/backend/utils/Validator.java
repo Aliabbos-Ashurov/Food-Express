@@ -9,13 +9,14 @@ package com.pdp.backend.utils;
 public class Validator {
 
     /**
-     * Checks if the given string contains the query, is equal to it (ignoring case), or starts with the query (ignoring case).
+     * Checks if the given string contains, is equal to (case-insensitive),
+     * or starts with the specified query string.
      *
-     * @param string The string to be validated against the query.
-     * @param query The query that is being checked for within the string.
-     * @return {@code true} if the string matches the query according to the conditions, {@code false} otherwise.
+     * @param string The string to be validated.
+     * @param query  The query string to match against the string.
+     * @return {@code true} if the string matches the query (case-insensitively); {@code false} otherwise.
      */
-    public static boolean isValid(String string,String query) {
+    public static boolean isValid(String string, String query) {
         return string.contains(query) || string.equalsIgnoreCase(query) || string.toUpperCase().equals(query.toUpperCase());
     }
 }
