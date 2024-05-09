@@ -22,6 +22,8 @@ import java.util.UUID;
 @ToString(callSuper = true)
 @AllArgsConstructor
 public class FoodBrandMapping extends BaseModel {
+    @SerializedName("category_name")
+    private String categoryName;
     @SerializedName("food_id")
     private UUID foodID;
     @SerializedName("brand_id")

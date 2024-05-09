@@ -4,6 +4,7 @@ import com.google.gson.annotations.SerializedName;
 import com.pdp.backend.web.model.BaseModel;
 import com.pdp.java.console.support.Displayable;
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
@@ -22,6 +23,7 @@ import java.util.UUID;
 @Getter
 @ToString(callSuper = true)
 @AllArgsConstructor
+@EqualsAndHashCode(of = {"brand_id"})
 public class Category extends BaseModel implements Displayable {
     private String name;
     @SerializedName("brand_id")

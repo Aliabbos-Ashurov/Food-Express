@@ -16,13 +16,13 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum OrderStatus {
-    ORDER_RECEIVED("Order Received"),
-    PROCESSING("Processing"),
-    IN_TRANSIT("In Transit"),
-    OUT_FOR_DELIVERY("Out for Delivery"),
-    DELIVERED("Delivered"),
-    FAILED_DELIVERY("Failed Delivery"),
-    RETURNED("Returned");
+    LOOKING_FOR_A_DELIVERER("LOOKING_FOR_A_DELIVERER"),
+    YOUR_ORDER_RECEIVED("YOUR_ORDER_RECEIVED"),
+    PROCESSING("PROCESSING"),
+    IN_TRANSIT("IN_TRANSIT"),
+    DELIVERED("DELIVERED"),
+    FAILED_DELIVERY("FAILED_DELIVERY"),
+    RETURNED("RETURNED");
 
     private final String description;
 }
