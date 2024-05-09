@@ -33,12 +33,5 @@ public interface BannedService extends BaseService<Banned, List<Banned>> {
      * @return {@code true} if the user is banned; {@code false} otherwise.
      */
     boolean isUserBanned(UUID userId);
-
-    /**
-     * Retrieves a list of all banned users.
-     *
-     * @return A list of {@link Banned} instances representing the banned users.
-     */
-    List<Banned> getBannedUsers();
 }
 

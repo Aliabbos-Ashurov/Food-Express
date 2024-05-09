@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * Implementation of the UserService interface that provides user-related operations.
@@ -56,7 +57,7 @@ public class UserServiceImp implements UserService {
         List<User> users = getAll();
         return users.stream()
                 .filter(user -> Validator.isValid(user.getUsername(), query))
-                .toList();
+                .collect(Collectors.toList());
     }
 
     @Override
