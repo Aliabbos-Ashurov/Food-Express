@@ -1,4 +1,4 @@
-package com.pdp.backend.web.model.person;
+package com.pdp.backend.web.model.user;
 
 import com.google.gson.annotations.SerializedName;
 import com.pdp.backend.web.enums.Language;
@@ -30,7 +30,7 @@ import lombok.*;
 @ToString(callSuper = true, exclude = {"profilPictureUrl", "isEmailVerified", "isNumberVerified"})
 @AllArgsConstructor
 @NoArgsConstructor
-public class Person extends BaseModel implements Displayable {
+public class User extends BaseModel implements Displayable {
     private String fullname;
     private String username;
     private String password;
