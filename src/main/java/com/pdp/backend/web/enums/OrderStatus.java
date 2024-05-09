@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum OrderStatus {
+    NOT_CONFIRMED("NOT_CONFIRMED"),
     LOOKING_FOR_A_DELIVERER("LOOKING_FOR_A_DELIVERER"),
     YOUR_ORDER_RECEIVED("YOUR_ORDER_RECEIVED"),
     PROCESSING("PROCESSING"),

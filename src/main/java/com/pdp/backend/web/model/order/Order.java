@@ -2,9 +2,7 @@ package com.pdp.backend.web.model.order;
 
 import com.google.gson.annotations.SerializedName;
 import com.pdp.backend.web.model.BaseModel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.ToString;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.util.UUID;
@@ -22,6 +20,8 @@ import java.util.UUID;
 @Getter
 @ToString(callSuper = true)
 @AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class Order extends BaseModel {
     @SerializedName("food_id")
     private UUID foodID;
