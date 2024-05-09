@@ -1,6 +1,6 @@
-package com.pdp.backend.web.repository.user;
+package com.pdp.backend.web.repository.person;
 
-import com.pdp.backend.web.model.user.User;
+import com.pdp.backend.web.model.person.Person;
 import com.pdp.backend.web.repository.BaseRepository;
 import com.pdp.json.serializer.JsonSerializer;
 import lombok.SneakyThrows;
@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * Handles storage, retrieval, and manipulation of {@link User} entities in a JSON serialized file.
+ * Handles storage, retrieval, and manipulation of {@link Person} entities in a JSON serialized file.
  * Implements the {@link BaseRepository} interface for CRUD operations.
  *
  * This repository uses a local JSON file as its data store, and performs operations such as add, remove,
@@ -22,28 +22,28 @@ import java.util.UUID;
  * @author Aliabbos Ashurov
  * @since 04/May/2024 17:06
  */
-public class UserRepository implements BaseRepository<User,List<User>> {
-    private final JsonSerializer<User> jsonSerializer;
-    private final List<User> users;
+public class PersonRepository implements BaseRepository<Person,List<Person>> {
+    private final JsonSerializer<Person> jsonSerializer;
+    private final List<Person> people;
 
     /**
      * Initializes a new instance of the UserRepository, setting up the JSON serializer
      * with the path to the users data file and loading the current set of users from that file.
      */
-    public UserRepository() {
+    public PersonRepository() {
         this.jsonSerializer = new JsonSerializer<>(Path.of(PATH_USER));
-        this.users = load();
+        this.people = load();
     }
 
     /**
-     * Adds a new {@link User} to the repository and persists the changes to the data file.
+     * Adds a new {@link Person} to the repository and persists the changes to the data file.
      *
-     * @param user The user to add.
+     * @param person The user to add.
      * @return Always returns {@code true} after adding and saving the user.
      */
     @Override
-    public boolean add(User user) {
-        users.add(user);
+    public boolean add(Person person) {
+        people.add(person);
         save();
         return true;
     }
@@ -56,7 +56,7 @@ public class UserRepository implements BaseRepository<User,List<User>> {
      */
     @Override
     public boolean remove(UUID id) {
-        boolean removed = users.removeIf(user -> user.getId().equals(id));
+        boolean removed = people.removeIf(person -> person.getId().equals(id));
         if (removed) save();
         return removed;
     }
@@ -68,9 +68,9 @@ public class UserRepository implements BaseRepository<User,List<User>> {
      * @return The found user or {@code null} if no user with the given ID exists.
      */
     @Override
-    public User findById(UUID id) {
-        return users.stream()
-                .filter(user -> user.getId().equals(id))
+    public Person findById(UUID id) {
+        return people.stream()
+                .filter(person -> person.getId().equals(id))
                 .findFirst().orElse(null);
     }
 
@@ -79,8 +79,8 @@ public class UserRepository implements BaseRepository<User,List<User>> {
      * @return An unmodifiable list view of users.
      */
     @Override
-    public List<User> getAll() {
-        return Collections.unmodifiableList(users);
+    public List<Person> getAll() {
+        return Collections.unmodifiableList(people);
     }
 
     /**
@@ -88,9 +88,9 @@ public class UserRepository implements BaseRepository<User,List<User>> {
      * @return A list of users; if the file does not exist or an error occurs during reading, returns an empty list.
      */
     @Override
-    public List<User> load() {
+    public List<Person> load() {
         try {
-            return jsonSerializer.read(User.class);
+            return jsonSerializer.read(Person.class);
         } catch (IOException e) {
             e.printStackTrace();
             return new ArrayList<>();
@@ -105,6 +105,6 @@ public class UserRepository implements BaseRepository<User,List<User>> {
     @SneakyThrows
     @Override
     public void save() {
-        jsonSerializer.write(users);
+        jsonSerializer.write(people);
     }
 }
