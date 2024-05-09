@@ -5,6 +5,7 @@ import com.pdp.backend.web.enums.OrderStatus;
 import com.pdp.backend.web.enums.PaymentType;
 import com.pdp.backend.web.model.BaseModel;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
 
@@ -23,7 +24,7 @@ import java.util.UUID;
  */
 @Getter
 @ToString(callSuper = true)
-@AllArgsConstructor
+@Builder
 public class CustomerOrder extends BaseModel{
     @SerializedName("user_id")
     private UUID userID;
@@ -32,7 +33,8 @@ public class CustomerOrder extends BaseModel{
     @SerializedName("address_id")
     private UUID addressID;
     @SerializedName("order_status")
-    private OrderStatus orderStatus;
+    @Builder.Default
+    private OrderStatus orderStatus = OrderStatus.LOOKING_FOR_A_DELIVERER;
     @SerializedName("payment_type")
     private PaymentType paymentType;
     @SerializedName("deliver_id")
