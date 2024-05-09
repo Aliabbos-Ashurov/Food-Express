@@ -5,5 +5,5 @@ package com.pdp.backend.config.jsonFilePath;
  * @since 06/May/2024  09:33
  **/
 public interface DirectoryPath {
-     String DIRECTORY = "db/";
+     String DIRECTORY = "src/main/resources/dataJson/";
 }
