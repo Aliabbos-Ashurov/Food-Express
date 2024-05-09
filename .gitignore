@@ -40,5 +40,4 @@ build/
 /docs/
 /.idea/
 /target/
-/src/main/resources/settings.properties
 /src/main/java/com/pdp/frontend/Test.java
