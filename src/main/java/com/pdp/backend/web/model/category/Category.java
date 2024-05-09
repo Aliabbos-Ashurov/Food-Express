@@ -1,10 +1,13 @@
 package com.pdp.backend.web.model.category;
 
+import com.google.gson.annotations.SerializedName;
 import com.pdp.backend.web.model.BaseModel;
 import com.pdp.java.console.support.Displayable;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
+
+import java.util.UUID;
 
 /**
  * Represents a categorization for items or entities within the system. Each category
@@ -21,6 +24,10 @@ import lombok.ToString;
 @AllArgsConstructor
 public class Category extends BaseModel implements Displayable {
     private String name;
+    @SerializedName("brand_id")
+    private UUID brandId;
+    @SerializedName("image_url")
+    private String imageUrl;
 
     @Override
     public String getDisplayName() {

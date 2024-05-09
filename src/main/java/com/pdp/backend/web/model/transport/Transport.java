@@ -20,7 +20,7 @@ import java.util.UUID;
  * @since 03/May/2024 13:14
  */
 @Getter
-@ToString(callSuper = true, exclude = {"pictureID"})
+@ToString(callSuper = true,exclude = {"imageUrl"})
 @AllArgsConstructor
 public class Transport extends BaseModel implements Displayable {
     @SerializedName("deliver_id")
@@ -28,8 +28,8 @@ public class Transport extends BaseModel implements Displayable {
     private String name;
     @SerializedName("registered_number")
     private String registeredNumber;
-    @SerializedName("picture_id")
-    private UUID pictureID;
+    @SerializedName("image_url")
+    private String imageUrl;
 
     @Override
     public String getDisplayName() {

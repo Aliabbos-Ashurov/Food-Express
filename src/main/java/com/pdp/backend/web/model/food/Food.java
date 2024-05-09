@@ -24,8 +24,8 @@ import java.util.UUID;
 @AllArgsConstructor
 public class Food extends BaseModel implements Displayable {
     private String name;
-    @SerializedName("pictur_id")
-    private UUID pictureID;
+    @SerializedName("image_url")
+    private String imageUrl;
     @SerializedName("description_id")
     private UUID descriptionID;
     private String price;
