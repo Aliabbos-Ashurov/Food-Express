@@ -80,7 +80,7 @@ public class UserRepository implements BaseRepository<User,List<User>> {
      */
     @Override
     public List<User> getAll() {
-        return Collections.unmodifiableList(people);
+        return people;
     }
 
     /**

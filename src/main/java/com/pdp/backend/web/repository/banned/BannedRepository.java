@@ -66,7 +66,7 @@ public class BannedRepository implements BaseRepository<Banned,List<Banned>> {
      */
     @Override
     public List<Banned> getAll() {
-        return Collections.unmodifiableList(banneds);
+        return banneds;
     }
 
     @Override

@@ -82,7 +82,7 @@ public class TransportRepository implements BaseRepository<Transport,List<Transp
      */
     @Override
     public List<Transport> getAll() {
-        return Collections.unmodifiableList(transports);
+        return transports;
     }
 
     /**

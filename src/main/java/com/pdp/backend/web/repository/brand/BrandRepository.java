@@ -69,7 +69,7 @@ public class BrandRepository implements BaseRepository<Brand,List<Brand>> {
 
     @Override
     public List<Brand> getAll() {
-        return Collections.unmodifiableList(brands);
+        return brands;
     }
 
     @Override

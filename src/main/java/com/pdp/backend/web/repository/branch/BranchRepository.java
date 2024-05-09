@@ -68,7 +68,7 @@ public class BranchRepository implements BaseRepository<Branch,List<Branch>> {
 
     @Override
     public List<Branch> getAll() {
-        return Collections.unmodifiableList(branches);
+        return branches;
     }
 
     @Override

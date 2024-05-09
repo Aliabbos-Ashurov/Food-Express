@@ -78,7 +78,7 @@ public class OrderRepository implements BaseRepository<Order,List<Order>> {
 
     @Override
     public List<Order> getAll() {
-        return Collections.unmodifiableList(orders);
+        return orders;
     }
 
     /**

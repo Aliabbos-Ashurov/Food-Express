@@ -82,7 +82,7 @@ public class PictureRepository implements BaseRepository<Picture,List<Picture>> 
      */
     @Override
     public List<Picture> getAll() {
-        return Collections.unmodifiableList(pictures);
+        return pictures;
     }
 
     /**

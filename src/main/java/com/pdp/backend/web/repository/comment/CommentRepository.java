@@ -70,7 +70,7 @@ public class CommentRepository implements BaseRepository<Comment,List<Comment>> 
      */
     @Override
     public List<Comment> getAll() {
-        return Collections.unmodifiableList(comments);
+        return comments;
     }
 
     @Override

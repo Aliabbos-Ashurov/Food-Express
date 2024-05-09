@@ -57,7 +57,7 @@ public class CategoryRepository implements BaseRepository<Category, Set<Category
 
     @Override
     public Set<Category> getAll() {
-        return Collections.unmodifiableSet(categories);
+        return categories;
     }
 
     /**

@@ -73,7 +73,7 @@ public class CustomerOrderRepository implements BaseRepository<CustomerOrder,Lis
 
     @Override
     public List<CustomerOrder> getAll() {
-        return Collections.unmodifiableList(customerOrders);
+        return customerOrders;
     }
 
     @Override

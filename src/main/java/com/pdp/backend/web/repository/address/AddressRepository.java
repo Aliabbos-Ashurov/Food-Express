@@ -71,7 +71,7 @@ public class AddressRepository implements BaseRepository<Address,List<Address>> 
 
     @Override
     public List<Address> getAll() {
-        return Collections.unmodifiableList(addresses);
+        return addresses;
     }
 
     @Override

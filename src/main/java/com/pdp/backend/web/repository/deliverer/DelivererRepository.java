@@ -61,7 +61,7 @@ public class DelivererRepository implements BaseRepository<Deliverer,List<Delive
 
     @Override
     public List<Deliverer> getAll() {
-        return Collections.unmodifiableList(deliverers);
+        return deliverers;
     }
 
     /**

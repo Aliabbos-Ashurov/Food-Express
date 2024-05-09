@@ -77,7 +77,7 @@ public class DiscountRepository implements BaseRepository<Discount,List<Discount
      */
     @Override
     public List<Discount> getAll() {
-        return Collections.unmodifiableList(discounts);
+        return discounts;
     }
 
     /**

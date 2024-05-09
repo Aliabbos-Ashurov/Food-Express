@@ -79,7 +79,7 @@ public class FoodRepository implements BaseRepository<Food,List<Food>> {
 
     @Override
     public List<Food> getAll() {
-        return Collections.unmodifiableList(foods);
+        return foods;
     }
 
     /**

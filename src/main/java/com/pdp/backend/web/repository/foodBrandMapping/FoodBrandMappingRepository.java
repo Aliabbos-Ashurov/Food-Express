@@ -74,7 +74,7 @@ public class FoodBrandMappingRepository implements BaseRepository<FoodBrandMappi
 
     @Override
     public List<FoodBrandMapping> getAll() {
-        return Collections.unmodifiableList(foodBrandMappings);
+        return foodBrandMappings;
     }
 
     @Override

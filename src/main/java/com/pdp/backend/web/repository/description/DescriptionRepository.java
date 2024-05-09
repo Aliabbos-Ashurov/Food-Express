@@ -63,7 +63,7 @@ public class DescriptionRepository implements BaseRepository<Description,List<De
 
     @Override
     public List<Description> getAll() {
-        return Collections.unmodifiableList(descriptions);
+        return descriptions;
     }
 
     @Override
