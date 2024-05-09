@@ -29,6 +29,6 @@ public class Order extends BaseModel {
     private BigDecimal foodPrice;
     @SerializedName("food_quantity")
     private int foodQuantity;
-    @SerializedName("my_order_id")
-    private UUID myOrderID;
+    @SerializedName("customer_order_id")
+    private UUID customerOrderID;
 }
