@@ -27,6 +27,7 @@ import lombok.*;
  */
 @Getter
 @Builder
+@Setter
 @ToString(callSuper = true, exclude = {"profilPictureUrl", "isEmailVerified", "isNumberVerified"})
 @AllArgsConstructor
 @NoArgsConstructor
