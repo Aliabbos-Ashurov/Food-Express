@@ -24,7 +24,7 @@ import java.util.UUID;
  */
 public class UserRepository implements BaseRepository<User,List<User>> {
     private final JsonSerializer<User> jsonSerializer;
-    private final List<User> users;
+    private final List<User> people;
 
     /**
      * Initializes a new instance of the UserRepository, setting up the JSON serializer
@@ -32,7 +32,7 @@ public class UserRepository implements BaseRepository<User,List<User>> {
      */
     public UserRepository() {
         this.jsonSerializer = new JsonSerializer<>(Path.of(PATH_USER));
-        this.users = load();
+        this.people = load();
     }
 
     /**
@@ -43,7 +43,7 @@ public class UserRepository implements BaseRepository<User,List<User>> {
      */
     @Override
     public boolean add(User user) {
-        users.add(user);
+        people.add(user);
         save();
         return true;
     }
@@ -56,7 +56,7 @@ public class UserRepository implements BaseRepository<User,List<User>> {
      */
     @Override
     public boolean remove(UUID id) {
-        boolean removed = users.removeIf(user -> user.getId().equals(id));
+        boolean removed = people.removeIf(user -> user.getId().equals(id));
         if (removed) save();
         return removed;
     }
@@ -69,7 +69,7 @@ public class UserRepository implements BaseRepository<User,List<User>> {
      */
     @Override
     public User findById(UUID id) {
-        return users.stream()
+        return people.stream()
                 .filter(user -> user.getId().equals(id))
                 .findFirst().orElse(null);
     }
@@ -80,7 +80,7 @@ public class UserRepository implements BaseRepository<User,List<User>> {
      */
     @Override
     public List<User> getAll() {
-        return Collections.unmodifiableList(users);
+        return Collections.unmodifiableList(people);
     }
 
     /**
@@ -105,6 +105,6 @@ public class UserRepository implements BaseRepository<User,List<User>> {
     @SneakyThrows
     @Override
     public void save() {
-        jsonSerializer.write(users);
+        jsonSerializer.write(people);
     }
 }

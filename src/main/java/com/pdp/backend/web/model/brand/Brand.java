@@ -28,14 +28,17 @@ public class Brand extends BaseModel implements Displayable {
     private final double rating;
     @SerializedName("description_id")
     private UUID descriptionID;
+    @SerializedName("image_url")
+    private String imageURL;
     @SerializedName("opening_time")
     private LocalDateTime openingTime;
     @SerializedName("closing_time")
     private LocalDateTime closingTime;
-    public Brand(String name, UUID descriptionID, LocalDateTime openingTime, LocalDateTime closingTime) {
+    public Brand(String name, UUID descriptionID,String imageURL, LocalDateTime openingTime, LocalDateTime closingTime) {
         this.name = name;
         this.rating = 1.0;
         this.descriptionID = descriptionID;
+        this.imageURL = imageURL;
         this.openingTime = openingTime;
         this.closingTime = closingTime;
     }
