@@ -4,10 +4,7 @@ import com.google.gson.annotations.SerializedName;
 import com.pdp.backend.web.enums.OrderStatus;
 import com.pdp.backend.web.enums.PaymentType;
 import com.pdp.backend.web.model.BaseModel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.ToString;
+import lombok.*;
 
 import java.util.UUID;
 
@@ -23,6 +20,7 @@ import java.util.UUID;
  * @since 03/May/2024 13:21
  */
 @Getter
+@Setter
 @ToString(callSuper = true)
 @Builder
 public class CustomerOrder extends BaseModel{
