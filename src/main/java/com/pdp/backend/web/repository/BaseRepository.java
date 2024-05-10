@@ -2,8 +2,10 @@ package com.pdp.backend.web.repository;
 
 import com.pdp.backend.config.jsonFilePath.JsonFilePath;
 import com.pdp.backend.web.model.BaseModel;
+import lombok.NonNull;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -27,7 +29,7 @@ public interface BaseRepository<T extends BaseModel,R extends Collection<T>> ext
      * @param object The entity to add.
      * @return True if the entity is successfully added, false otherwise.
      */
-    boolean add(T object);
+    boolean add(@NonNull T object);
 
     /**
      * Removes an entity from the repository by its unique identifier.
@@ -35,7 +37,7 @@ public interface BaseRepository<T extends BaseModel,R extends Collection<T>> ext
      * @param id The unique identifier of the entity to remove.
      * @return True if the entity is successfully removed, false otherwise.
      */
-    boolean remove(UUID id);
+    boolean remove(@NonNull UUID id);
 
     /**
      * Retrieves an entity from the repository by its unique identifier.
@@ -43,7 +45,7 @@ public interface BaseRepository<T extends BaseModel,R extends Collection<T>> ext
      * @param id The unique identifier of the entity to retrieve.
      * @return The entity if found, null otherwise.
      */
-    T findById(UUID id);
+    T findById(@NonNull UUID id);
 
     /**
      * Retrieves all entities from the repository.
@@ -53,5 +55,5 @@ public interface BaseRepository<T extends BaseModel,R extends Collection<T>> ext
     R getAll();
 
     R load();
-    void save();
+    void save(@NonNull R r);
 }
