@@ -1,6 +1,16 @@
 package com.pdp.backend.web.service.order;
 
+import com.pdp.backend.config.ThreadSafeBeansContainer;
+import com.pdp.backend.dto.CustomOrderDTO;
+import com.pdp.backend.web.enums.OrderStatus;
+import com.pdp.backend.web.model.branch.Branch;
+import com.pdp.backend.web.model.customerOrder.CustomerOrder;
+import com.pdp.backend.web.model.food.Food;
 import com.pdp.backend.web.model.order.Order;
+import com.pdp.backend.web.service.branch.BranchService;
+import com.pdp.backend.web.service.customerOrder.CustomerOrderService;
+import com.pdp.backend.web.service.food.FoodService;
+import com.pdp.backend.web.service.foodBrandMapping.FoodBrandMappingService;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -15,6 +25,10 @@ import java.util.UUID;
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class OrderServiceImp implements OrderService {
+    CustomerOrderService customerOrderService = ThreadSafeBeansContainer.customerOrderServiceThreadLocal.get();
+    FoodBrandMappingService foodBrandMappingService = ThreadSafeBeansContainer.foodBrandMappingServiceThreadLocal.get();
+    BranchService branchService = ThreadSafeBeansContainer.branchServiceThreadLocal.get();
+    FoodService foodService = ThreadSafeBeansContainer.foodServiceThreadLocal.get();
     private static volatile OrderServiceImp instance;
 
     public static OrderServiceImp getInstance() {
@@ -26,6 +40,76 @@ public class OrderServiceImp implements OrderService {
             }
         }
         return instance;
+    }
+
+    @Override
+    public Order getOrCreate(CustomOrderDTO dto, Order order) {
+        CustomerOrder exists = findExistingOrder(dto);
+        if (Objects.nonNull(exists)) {
+            boolean foodFromCurrentBrand = isFoodFromCurrentBrand(order, exists.getBranchID());
+            if (foodFromCurrentBrand) {
+                Order orderWithSameFood = findOrderWithSameFood(order);
+                if (Objects.nonNull(orderWithSameFood)) updateOrderQuantityAndPrice(orderWithSameFood, order);
+                else return createNewOrder(order, exists);
+
+            } else {
+                customerOrderService.remove(exists.getId());
+                CustomerOrder build = CustomerOrder.builder()
+                        .userID(dto.userID())
+                        .branchID(dto.branchID())
+                        .build();
+                customerOrderService.add(build);
+                order.setCustomerOrderID(build.getId());
+                add(order);
+                removeAllOrdersFromCustomer(exists);
+                return order;
+            }
+        }
+        return null;
+    }
+
+    private CustomerOrder findExistingOrder(CustomOrderDTO dto) {
+        return customerOrderService.getAll().stream()
+                .filter(customerOrder -> isMatchingOrder(dto, customerOrder))
+                .findFirst()
+                .orElse(null);
+    }
+
+    private boolean isMatchingOrder(CustomOrderDTO dto, CustomerOrder order) {
+        return order.getUserID().equals(dto.userID()) &&
+                order.getBranchID().equals(dto.branchID()) &&
+                order.getOrderStatus().equals(OrderStatus.NOT_CONFIRMED);
+    }
+
+    private boolean isFoodFromCurrentBrand(Order order, UUID branchId) {
+        Branch branch = branchService.getByID(branchId);
+        return foodBrandMappingService.isFoodFromBrand(order.getFoodID(), branch.getBrandID());
+    }
+
+    private Order findOrderWithSameFood(Order order) {
+        return getAll().stream()
+                .filter(existingOrder -> existingOrder.getFoodID().equals(order.getFoodID()))
+                .findFirst()
+                .orElse(null);
+    }
+
+    private Order createNewOrder(Order order, CustomerOrder existingOrder) {
+        order.setCustomerOrderID(existingOrder.getId());
+        add(order);
+        return order;
+    }
+
+    private void updateOrderQuantityAndPrice(Order foundOrder, Order newOrder) {
+        foundOrder.setFoodQuantity(foundOrder.getFoodQuantity() + newOrder.getFoodQuantity());
+        Food food = foodService.getByID(foundOrder.getFoodID());
+        foundOrder.setFoodPrice(new BigDecimal(foundOrder.getFoodQuantity() * food.getPrice().longValue()));
+        update(foundOrder);
+    }
+
+    private void removeAllOrdersFromCustomer(CustomerOrder customerOrder) {
+        getAll().stream()
+                .filter(existingOrder -> existingOrder.getCustomerOrderID().equals(customerOrder.getId()))
+                .forEach(o -> remove(o.getId()));
     }
 
     /**
@@ -73,7 +157,17 @@ public class OrderServiceImp implements OrderService {
      */
     @Override
     public boolean update(Order order) {
-        return false;
+        List<Order> orders = getAll();
+        orders.stream()
+                .filter(o -> o.getId().equals(order.getId()))
+                .forEach((o) -> {
+                    o.setFoodID(order.getFoodID());
+                    o.setFoodPrice(order.getFoodPrice());
+                    o.setFoodQuantity(order.getFoodQuantity());
+                    o.setCustomerOrderID(order.getCustomerOrderID());
+                });
+        repository.save(orders);
+        return true;
     }
 
     /**
