@@ -1,5 +1,6 @@
 package com.pdp.backend.web.service.login;
 
+import com.pdp.backend.config.ThreadSafeBeansContainer;
 import com.pdp.backend.dto.LoginDTO;
 import com.pdp.backend.utils.PasswordEncoderUtils;
 import com.pdp.backend.web.model.user.User;
@@ -19,7 +20,7 @@ import java.util.List;
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class LoginServiceImpl implements LoginService {
-    private final UserService userService = UserServiceImp.getInstance();
+    private static final UserService userService = ThreadSafeBeansContainer.userServiceThreadLocal.get();
     private static volatile LoginServiceImpl instance;
 
     public static LoginServiceImpl getInstance() {
