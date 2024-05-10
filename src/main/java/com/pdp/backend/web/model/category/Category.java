@@ -23,7 +23,7 @@ import java.util.UUID;
 @Getter
 @ToString(callSuper = true)
 @AllArgsConstructor
-@EqualsAndHashCode(of = {"brand_id"})
+@EqualsAndHashCode(of = "brandId",callSuper = true)
 public class Category extends BaseModel implements Displayable {
     private String name;
     @SerializedName("brand_id")

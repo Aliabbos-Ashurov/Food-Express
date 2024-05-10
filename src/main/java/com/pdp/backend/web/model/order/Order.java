@@ -18,6 +18,7 @@ import java.util.UUID;
  * @since 03/May/2024 13:17
  */
 @Getter
+@Setter
 @ToString(callSuper = true)
 @AllArgsConstructor
 @NoArgsConstructor

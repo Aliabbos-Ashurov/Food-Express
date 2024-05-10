@@ -33,4 +33,5 @@ public interface FoodBrandMappingService extends BaseService<FoodBrandMapping, L
      * @return A list of {@link FoodBrandMapping} representing the food items within the specified category.
      */
     List<FoodBrandMapping> getBrandFoodsByCategoryName(String categoryName);
+    boolean isFoodFromBrand(UUID foodID, UUID brandID);
 }

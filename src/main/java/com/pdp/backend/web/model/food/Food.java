@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 /**
@@ -28,7 +29,7 @@ public class Food extends BaseModel implements Displayable {
     private String imageUrl;
     @SerializedName("description_id")
     private UUID descriptionID;
-    private String price;
+    private BigDecimal price;
     @SerializedName("category_id")
     private UUID categoryID;
 

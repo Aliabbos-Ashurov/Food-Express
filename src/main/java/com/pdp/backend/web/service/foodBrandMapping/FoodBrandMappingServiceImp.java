@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -27,6 +28,12 @@ public class FoodBrandMappingServiceImp implements FoodBrandMappingService {
         return instance;
     }
 
+    @Override
+    public boolean isFoodFromBrand(UUID foodID, UUID brandID) {
+        List<FoodBrandMapping> foodBrandMappings = getAll();
+        return foodBrandMappings.stream()
+                .anyMatch(foodBrandMapping -> foodBrandMapping.getBrandID().equals(brandID) && foodBrandMapping.getFoodID().equals(foodID));
+    }
     /**
      * Retrieves all food brand mappings associated with a specific brand ID.
      *
