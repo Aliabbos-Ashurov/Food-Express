@@ -7,5 +7,5 @@ import com.pdp.backend.web.service.BaseService;
 import java.util.List;
 
 public interface DiscountService extends BaseService<Discount, List<Discount>> {
-    DiscountRepository repository = new DiscountRepository();
+    DiscountRepository repository = DiscountRepository.getInstance();
 }

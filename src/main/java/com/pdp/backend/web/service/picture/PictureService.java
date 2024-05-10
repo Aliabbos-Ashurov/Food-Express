@@ -7,5 +7,5 @@ import com.pdp.backend.web.service.BaseService;
 import java.util.List;
 
 public interface PictureService extends BaseService<Picture, List<Picture>> {
-    PictureRepository repository = new PictureRepository();
+    PictureRepository repository = PictureRepository.getInstance();
 }

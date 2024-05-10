@@ -16,7 +16,7 @@ import java.util.UUID;
  * @see CustomerOrder
  */
 public interface CustomerOrderService extends BaseService<CustomerOrder, List<CustomerOrder>> {
-    CustomerOrderRepository repository = new CustomerOrderRepository();
+    CustomerOrderRepository repository = CustomerOrderRepository.getInstance();
 
     /**
      * Retrieves a list of archived orders for a specific user.

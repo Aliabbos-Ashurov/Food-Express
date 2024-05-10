@@ -16,7 +16,7 @@ import java.util.UUID;
  * @see FoodBrandMapping
  */
 public interface FoodBrandMappingService extends BaseService<FoodBrandMapping, List<FoodBrandMapping>> {
-    FoodBrandMappingRepository repository = new FoodBrandMappingRepository();
+    FoodBrandMappingRepository repository = FoodBrandMappingRepository.getInstance();
 
     /**
      * Retrieves a list of food items associated with a particular brand by its UUID.

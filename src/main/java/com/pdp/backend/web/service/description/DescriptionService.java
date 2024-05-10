@@ -7,5 +7,5 @@ import com.pdp.backend.web.service.BaseService;
 import java.util.List;
 
 public interface DescriptionService extends BaseService<Description, List<Description>> {
-    DescriptionRepository repository = new DescriptionRepository();
+    DescriptionRepository repository = DescriptionRepository.getInstance();
 }

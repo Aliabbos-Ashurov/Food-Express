@@ -7,5 +7,5 @@ import com.pdp.backend.web.service.BaseService;
 import java.util.List;
 
 public interface TransportService extends BaseService<Transport, List<Transport>> {
-    TransportRepository repository = new TransportRepository();
+    TransportRepository repository = TransportRepository.getInstance();
 }

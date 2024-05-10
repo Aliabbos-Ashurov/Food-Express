@@ -7,5 +7,5 @@ import com.pdp.backend.web.service.BaseService;
 import java.util.List;
 
 public interface FoodService extends BaseService<Food, List<Food>> {
-    FoodRepository repository = new FoodRepository();
+    FoodRepository repository = FoodRepository.getInstance();
 }

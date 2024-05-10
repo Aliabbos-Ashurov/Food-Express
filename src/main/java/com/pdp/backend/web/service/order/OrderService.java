@@ -14,7 +14,7 @@ import java.util.UUID;
  * and categories.
  */
 public interface OrderService extends BaseService<Order, List<Order>> {
-    OrderRepository repository = new OrderRepository();
+    OrderRepository repository = OrderRepository.getInstance();
 
     /**
      * Calculates the total price of an order identified by its UUID.

@@ -7,5 +7,5 @@ import com.pdp.backend.web.service.BaseService;
 import java.util.List;
 
 public interface DelivererService extends BaseService<Deliverer, List<Deliverer>> {
-    DelivererRepository repository = new DelivererRepository();
+    DelivererRepository repository = DelivererRepository.getInstance();
 }
