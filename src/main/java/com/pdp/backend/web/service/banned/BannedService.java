@@ -16,7 +16,7 @@ import java.util.UUID;
  * @see Banned
  */
 public interface BannedService extends BaseService<Banned, List<Banned>> {
-    BannedRepository repository = new BannedRepository();
+    BannedRepository repository = BannedRepository.getInstance();
 
     /**
      * Unbans a user, allowing them access again.

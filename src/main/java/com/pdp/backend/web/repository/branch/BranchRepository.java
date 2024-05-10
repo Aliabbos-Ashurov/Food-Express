@@ -3,6 +3,7 @@ package com.pdp.backend.web.repository.branch;
 import com.pdp.backend.web.model.branch.Branch;
 import com.pdp.backend.web.repository.BaseRepository;
 import com.pdp.json.serializer.JsonSerializer;
+import lombok.NonNull;
 import lombok.SneakyThrows;
 
 import java.io.IOException;
@@ -15,7 +16,7 @@ import java.util.UUID;
 /**
  * Implements a repository for managing Branch entities, providing CRUD operations,
  * such as addition, removal, searching by ID, and retrieval of all branches.
- *
+ * <p>
  * This class interacts with the JsonSerializer for serializing and deserializing
  * Branch objects to a JSON formatted storage, making the data persistent across
  * application sessions.
@@ -23,19 +24,30 @@ import java.util.UUID;
  * @author Aliabbos Ashurov
  * @since 04/May/2024 15:48
  */
-public class BranchRepository implements BaseRepository<Branch,List<Branch>> {
-    private final JsonSerializer<Branch> jsonSerializer;
-    private final List<Branch> branches;
+public class BranchRepository implements BaseRepository<Branch, List<Branch>> {
+    private static volatile BranchRepository instance;
+    private static JsonSerializer<Branch> jsonSerializer;
 
-    public BranchRepository() {
-        this.jsonSerializer = new JsonSerializer<>(Path.of(PATH_BRANCH));
-        this.branches = load();
+    private BranchRepository() {
+    }
+
+    public static BranchRepository getInstance() {
+        if (instance == null) {
+            synchronized (BranchRepository.class) {
+                if (instance == null) {
+                    instance = new BranchRepository();
+                    jsonSerializer = new JsonSerializer<>(Path.of(PATH_BRANCH));
+                }
+            }
+        }
+        return instance;
     }
 
     @Override
-    public boolean add(Branch branch) {
+    public boolean add(@NonNull Branch branch) {
+        List<Branch> branches = load();
         branches.add(branch);
-        save();
+        save(branches);
         return true;
     }
 
@@ -47,9 +59,10 @@ public class BranchRepository implements BaseRepository<Branch,List<Branch>> {
      * @return True if successful, false otherwise.
      */
     @Override
-    public boolean remove(UUID id) {
+    public boolean remove(@NonNull UUID id) {
+        List<Branch> branches = load();
         boolean removed = branches.removeIf((branch -> branch.getId().equals(id)));
-        if (removed) save();
+        if (removed) save(branches);
         return removed;
     }
 
@@ -60,30 +73,29 @@ public class BranchRepository implements BaseRepository<Branch,List<Branch>> {
      * @return The Branch object if found, null otherwise.
      */
     @Override
-    public Branch findById(UUID id) {
+    public Branch findById(@NonNull UUID id) {
+        List<Branch> branches = load();
         return branches.stream()
                 .filter((branch -> branch.getId().equals(id)))
-                .findFirst().orElse(null);
+                .findFirst()
+                .orElse(null);
     }
+
 
     @Override
     public List<Branch> getAll() {
-        return branches;
-    }
-
-    @Override
-    public List<Branch> load() {
-        try {
-            return jsonSerializer.read(Branch.class);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return new ArrayList<>();
-        }
+        return load();
     }
 
     @SneakyThrows
     @Override
-    public void save() {
-        jsonSerializer.write(branches);
+    public List<Branch> load() {
+        return jsonSerializer.read(Branch.class);
+    }
+
+    @SneakyThrows
+    @Override
+    public void save(@NonNull List<Branch> list) {
+        jsonSerializer.write(list);
     }
 }

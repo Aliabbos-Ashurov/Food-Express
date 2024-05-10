@@ -3,36 +3,41 @@ package com.pdp.backend.web.repository.user;
 import com.pdp.backend.web.model.user.User;
 import com.pdp.backend.web.repository.BaseRepository;
 import com.pdp.json.serializer.JsonSerializer;
+import lombok.NonNull;
 import lombok.SneakyThrows;
 
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
 /**
  * Handles storage, retrieval, and manipulation of {@link User} entities in a JSON serialized file.
  * Implements the {@link BaseRepository} interface for CRUD operations.
- *
+ * <p>
  * This repository uses a local JSON file as its data store, and performs operations such as add, remove,
  * find, and list all users. All changes to the repository are immediately saved to the file.
  *
  * @author Aliabbos Ashurov
  * @since 04/May/2024 17:06
  */
-public class UserRepository implements BaseRepository<User,List<User>> {
-    private final JsonSerializer<User> jsonSerializer;
-    private final List<User> people;
+public class UserRepository implements BaseRepository<User, List<User>> {
+    private static volatile UserRepository instance;
+    private static JsonSerializer<User> jsonSerializer;
 
-    /**
-     * Initializes a new instance of the UserRepository, setting up the JSON serializer
-     * with the path to the users data file and loading the current set of users from that file.
-     */
-    public UserRepository() {
-        this.jsonSerializer = new JsonSerializer<>(Path.of(PATH_USER));
-        this.people = load();
+    private UserRepository() {
+    }
+
+    public static UserRepository getInstance() {
+        if (instance == null) {
+            synchronized (UserRepository.class) {
+                if (instance == null) {
+                    instance = new UserRepository();
+                    jsonSerializer = new JsonSerializer<>(Path.of(PATH_USER));
+                }
+            }
+        }
+        return instance;
     }
 
     /**
@@ -42,9 +47,10 @@ public class UserRepository implements BaseRepository<User,List<User>> {
      * @return Always returns {@code true} after adding and saving the user.
      */
     @Override
-    public boolean add(User user) {
-        people.add(user);
-        save();
+    public boolean add(@NonNull User user) {
+        List<User> users = load();
+        users.add(user);
+        save(users);
         return true;
     }
 
@@ -55,9 +61,10 @@ public class UserRepository implements BaseRepository<User,List<User>> {
      * @return {@code true} if a user was found and removed, {@code false} otherwise.
      */
     @Override
-    public boolean remove(UUID id) {
-        boolean removed = people.removeIf(user -> user.getId().equals(id));
-        if (removed) save();
+    public boolean remove(@NonNull UUID id) {
+        List<User> users = load();
+        boolean removed = users.removeIf(user -> user.getId().equals(id));
+        if (removed) save(users);
         return removed;
     }
 
@@ -68,33 +75,33 @@ public class UserRepository implements BaseRepository<User,List<User>> {
      * @return The found user or {@code null} if no user with the given ID exists.
      */
     @Override
-    public User findById(UUID id) {
+    public User findById(@NonNull UUID id) {
+        List<User> people = load();
         return people.stream()
                 .filter(user -> user.getId().equals(id))
-                .findFirst().orElse(null);
+                .findFirst()
+                .orElse(null);
     }
 
     /**
      * Returns an unmodifiable list of all users currently in the repository.
+     *
      * @return An unmodifiable list view of users.
      */
     @Override
     public List<User> getAll() {
-        return people;
+        return load();
     }
 
     /**
      * Loads the list of users from the data file into the repository's memory.
+     *
      * @return A list of users; if the file does not exist or an error occurs during reading, returns an empty list.
      */
+    @SneakyThrows
     @Override
     public List<User> load() {
-        try {
-            return jsonSerializer.read(User.class);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return new ArrayList<>();
-        }
+        return jsonSerializer.read(User.class);
     }
 
     /**
@@ -104,7 +111,7 @@ public class UserRepository implements BaseRepository<User,List<User>> {
      */
     @SneakyThrows
     @Override
-    public void save() {
-        jsonSerializer.write(people);
+    public void save(@NonNull List<User> users) {
+        jsonSerializer.write(users);
     }
 }

@@ -16,7 +16,7 @@ import java.util.UUID;
  * @see Branch
  */
 public interface BranchService extends BaseService<Branch, List<Branch>> {
-    BranchRepository repository = new BranchRepository();
+    BranchRepository repository = BranchRepository.getInstance();
 
     /**
      * Retrieves a list of branches associated with a particular brand, identified by UUID.

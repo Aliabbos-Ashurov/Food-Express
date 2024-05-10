@@ -11,5 +11,5 @@ import java.util.List;
  * Provides methods to manage address entities such as retrieving, adding, updating, or deleting addresses.
  */
 public interface AddressService extends BaseService<Address, List<Address>> {
-    AddressRepository repository = new AddressRepository();
+    AddressRepository repository = AddressRepository.getInstance();
 }

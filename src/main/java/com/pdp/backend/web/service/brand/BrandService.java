@@ -11,5 +11,5 @@ import java.util.List;
  * This extends BaseService to provide common CRUD operations specific to Brand entities.
  */
 public interface BrandService extends BaseService<Brand, List<Brand>> {
-    BrandRepository repository = new BrandRepository();
+    BrandRepository repository = BrandRepository.getInstance();
 }

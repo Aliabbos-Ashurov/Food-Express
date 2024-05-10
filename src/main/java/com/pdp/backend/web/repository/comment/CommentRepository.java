@@ -3,6 +3,7 @@ package com.pdp.backend.web.repository.comment;
 import com.pdp.backend.web.model.comment.Comment;
 import com.pdp.backend.web.repository.BaseRepository;
 import com.pdp.json.serializer.JsonSerializer;
+import lombok.NonNull;
 import lombok.SneakyThrows;
 
 import java.io.IOException;
@@ -22,23 +23,30 @@ import java.util.UUID;
  * @author Aliabbos Ashurov
  * @since 04/May/2024 16:34
  */
-public class CommentRepository implements BaseRepository<Comment,List<Comment>> {
-    private final JsonSerializer<Comment> jsonSerializer;
-    private final List<Comment> comments;
+public class CommentRepository implements BaseRepository<Comment, List<Comment>> {
+    private static volatile CommentRepository instance;
+    private static JsonSerializer<Comment> jsonSerializer;
 
-    /**
-     * Constructs a CommentRepository, setting up a JsonSerializer with the correct
-     * file path from JsonFilePath and loading existing comments from the file.
-     */
-    public CommentRepository() {
-        this.jsonSerializer = new JsonSerializer<>(Path.of(PATH_COMMENT));
-        this.comments = load();
+    private CommentRepository() {
+    }
+
+    public static CommentRepository getInstance() {
+        if (instance == null) {
+            synchronized (CommentRepository.class) {
+                if (instance == null) {
+                    instance = new CommentRepository();
+                    jsonSerializer = new JsonSerializer<>(Path.of(PATH_COMMENT));
+                }
+            }
+        }
+        return instance;
     }
 
     @Override
-    public boolean add(Comment comment) {
+    public boolean add(@NonNull Comment comment) {
+        List<Comment> comments = load();
         comments.add(comment);
-        save();
+        save(comments);
         return true;
     }
 
@@ -50,42 +58,36 @@ public class CommentRepository implements BaseRepository<Comment,List<Comment>> 
      * @return True if the removal was successful, false otherwise.
      */
     @Override
-    public boolean remove(UUID id) {
+    public boolean remove(@NonNull UUID id) {
+        List<Comment> comments = load();
         boolean removed = comments.removeIf((comment -> comment.getId().equals(id)));
-        if (removed) save();
+        if (removed) save(comments);
         return removed;
     }
 
     @Override
-    public Comment findById(UUID id) {
+    public Comment findById(@NonNull UUID id) {
+        List<Comment> comments = load();
         return comments.stream()
                 .filter(comment -> comment.getId().equals(id))
-                .findFirst().orElse(null);
+                .findFirst()
+                .orElse(null);
     }
 
-    /**
-     * Returns an unmodifiable list of all comments stored in the repository.
-     *
-     * @return An unmodifiable List of Comments.
-     */
     @Override
     public List<Comment> getAll() {
-        return comments;
-    }
-
-    @Override
-    public List<Comment> load() {
-        try {
-            return jsonSerializer.read(Comment.class);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return new ArrayList<>();
-        }
+        return load();
     }
 
     @SneakyThrows
     @Override
-    public void save() {
+    public List<Comment> load() {
+        return jsonSerializer.read(Comment.class);
+    }
+
+    @SneakyThrows
+    @Override
+    public void save(@NonNull List<Comment> comments) {
         jsonSerializer.write(comments);
     }
 }

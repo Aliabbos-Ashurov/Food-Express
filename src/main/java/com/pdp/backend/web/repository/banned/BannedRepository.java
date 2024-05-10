@@ -3,12 +3,10 @@ package com.pdp.backend.web.repository.banned;
 import com.pdp.backend.web.model.banned.Banned;
 import com.pdp.backend.web.repository.BaseRepository;
 import com.pdp.json.serializer.JsonSerializer;
+import lombok.NonNull;
 import lombok.SneakyThrows;
 
-import java.io.IOException;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -23,26 +21,56 @@ import java.util.UUID;
  * @author Aliabbos Ashurov
  * @since 04/May/2024 15:43
  */
-public class BannedRepository implements BaseRepository<Banned,List<Banned>> {
-    private final JsonSerializer<Banned> jsonSerializer;
-    private final List<Banned> banneds;
+public class BannedRepository implements BaseRepository<Banned, List<Banned>> {
+    private static volatile BannedRepository instance;
+    private static JsonSerializer<Banned> jsonSerializer;
 
-    public BannedRepository() {
-        this.jsonSerializer = new JsonSerializer<>(Path.of(PATH_BANNED));
-        this.banneds = load();
+
+    private BannedRepository() {
     }
 
+    /**
+     * Gets the singleton instance of BannedRepository.
+     *
+     * @return The singleton instance of BannedRepository.
+     */
+    public static BannedRepository getInstance() {
+        if (instance == null) {
+            synchronized (BannedRepository.class) {
+                if (instance == null) {
+                    instance = new BannedRepository();
+                    jsonSerializer = new JsonSerializer<>(Path.of(PATH_BANNED));
+                }
+            }
+        }
+        return instance;
+    }
+
+    /**
+     * Adds a new banned entity to the repository and persists changes.
+     *
+     * @param banned The {@link Banned} object to add.
+     * @return True if the banned entity is added successfully, false otherwise.
+     */
     @Override
-    public boolean add(Banned banned) {
+    public boolean add(@NonNull Banned banned) {
+        List<Banned> banneds = load();
         banneds.add(banned);
-        save();
+        save(banneds);
         return true;
     }
 
+    /**
+     * Removes a banned entity from the repository based on the given ID and persists changes.
+     *
+     * @param id The UUID of the banned entity to remove.
+     * @return True if a banned entity with the specified ID was found and removed, false otherwise.
+     */
     @Override
-    public boolean remove(UUID id) {
+    public boolean remove(@NonNull UUID id) {
+        List<Banned> banneds = load();
         boolean removed = banneds.removeIf((banned -> banned.getId().equals(id)));
-        if (removed) save();
+        if (removed) save(banneds);
         return removed;
     }
 
@@ -53,10 +81,12 @@ public class BannedRepository implements BaseRepository<Banned,List<Banned>> {
      * @return The {@link Banned} entity if found; null otherwise.
      */
     @Override
-    public Banned findById(UUID id) {
+    public Banned findById(@NonNull UUID id) {
+        List<Banned> banneds = load();
         return banneds.stream()
                 .filter((banned -> banned.getId().equals(id)))
-                .findFirst().orElse(null);
+                .findFirst()
+                .orElse(null);
     }
 
     /**
@@ -66,22 +96,18 @@ public class BannedRepository implements BaseRepository<Banned,List<Banned>> {
      */
     @Override
     public List<Banned> getAll() {
-        return banneds;
-    }
-
-    @Override
-    public List<Banned> load() {
-        try {
-            return jsonSerializer.read(Banned.class);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return new ArrayList<>();
-        }
+        return load();
     }
 
     @SneakyThrows
     @Override
-    public void save() {
-        jsonSerializer.write(banneds);
+    public List<Banned> load() {
+        return jsonSerializer.read(Banned.class);
+    }
+
+    @SneakyThrows
+    @Override
+    public void save(@NonNull List<Banned> list) {
+        jsonSerializer.write(list);
     }
 }

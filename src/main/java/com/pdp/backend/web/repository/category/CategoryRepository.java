@@ -3,6 +3,7 @@ package com.pdp.backend.web.repository.category;
 import com.pdp.backend.web.model.category.Category;
 import com.pdp.backend.web.repository.BaseRepository;
 import com.pdp.json.serializer.JsonSerializer;
+import lombok.NonNull;
 import lombok.SneakyThrows;
 
 import java.io.IOException;
@@ -20,25 +21,37 @@ import java.util.*;
  * @since 04/May/2024 16:29
  */
 public class CategoryRepository implements BaseRepository<Category, Set<Category>> {
-    private final JsonSerializer<Category> jsonSerializer;
-    private final Set<Category> categories;
+    private static volatile CategoryRepository instance;
+    private static JsonSerializer<Category> jsonSerializer;
 
-    public CategoryRepository() {
-        this.jsonSerializer = new JsonSerializer<>(Path.of(PATH_CATEGORY));
-        this.categories = load();
+    private CategoryRepository() {
+    }
+
+    public static CategoryRepository getInstance() {
+        if (instance == null) {
+            synchronized (CategoryRepository.class) {
+                if (instance == null) {
+                    instance = new CategoryRepository();
+                    jsonSerializer = new JsonSerializer<>(Path.of(PATH_CATEGORY));
+                }
+            }
+        }
+        return instance;
     }
 
     @Override
-    public boolean add(Category category) {
-        categories.add(category);
-        save();
-        return true;
+    public boolean add(@NonNull Category category) {
+        Set<Category> categories = load();
+        boolean removed = categories.add(category);
+        if (removed) save(categories);
+        return removed;
     }
 
     @Override
-    public boolean remove(UUID id) {
+    public boolean remove(@NonNull UUID id) {
+        Set<Category> categories = load();
         boolean removed = categories.removeIf((category -> category.getId().equals(id)));
-        if (removed) save();
+        if (removed) save(categories);
         return removed;
     }
 
@@ -49,15 +62,18 @@ public class CategoryRepository implements BaseRepository<Category, Set<Category
      * @return The {@link Category} object if found; null otherwise.
      */
     @Override
-    public Category findById(UUID id) {
+    public Category findById(@NonNull UUID id) {
+        Set<Category> categories = load();
         return categories.stream()
                 .filter((category -> category.getId().equals(id)))
-                .findFirst().orElse(null);
+                .findFirst()
+                .orElse(null);
     }
+
 
     @Override
     public Set<Category> getAll() {
-        return categories;
+        return load();
     }
 
     /**
@@ -65,15 +81,11 @@ public class CategoryRepository implements BaseRepository<Category, Set<Category
      *
      * @return A list of loaded {@link Category} objects.
      */
+    @SneakyThrows
     @Override
     public Set<Category> load() {
-        try {
-            List<Category> list = jsonSerializer.read(Category.class);
-            return new HashSet<>(list);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return new HashSet<>();
-        }
+        List<Category> list = jsonSerializer.read(Category.class);
+        return new HashSet<>(list);
     }
 
     /**
@@ -83,7 +95,7 @@ public class CategoryRepository implements BaseRepository<Category, Set<Category
      */
     @SneakyThrows
     @Override
-    public void save() {
+    public void save(@NonNull Set<Category> categories) {
         jsonSerializer.write(new ArrayList<>(categories));
     }
 }

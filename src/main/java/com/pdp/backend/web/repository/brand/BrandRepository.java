@@ -3,6 +3,7 @@ package com.pdp.backend.web.repository.brand;
 import com.pdp.backend.web.model.brand.Brand;
 import com.pdp.backend.web.repository.BaseRepository;
 import com.pdp.json.serializer.JsonSerializer;
+import lombok.NonNull;
 import lombok.SneakyThrows;
 
 import java.io.IOException;
@@ -16,22 +17,32 @@ import java.util.UUID;
  * Handles the persistence of Brand entities, providing a mechanism to add, remove,
  * find, and list all Brands. This repository leverages JsonSerializer for the
  * serialization and deserialization of Brand instances to and from JSON format.
- *
+ * <p>
  * Implements the BaseRepository interface, utilizing a local in-memory list that
  * is synchronized with a JSON file defined by JsonFilePath.BRAND.
- *
+ * <p>
  * Operations to this repository are persisted to the JSON storage immediately.
  *
  * @author Aliabbos Ashurov
  * @since 04/May/2024 15:51
  */
-public class BrandRepository implements BaseRepository<Brand,List<Brand>> {
-    private final JsonSerializer<Brand> jsonSerializer;
-    private final List<Brand> brands;
+public class BrandRepository implements BaseRepository<Brand, List<Brand>> {
+    private static volatile BrandRepository instance;
+    private static JsonSerializer<Brand> jsonSerializer;
 
-    public BrandRepository() {
-        this.jsonSerializer = new JsonSerializer<>(Path.of(PATH_BRAND));
-        this.brands = load();
+    private BrandRepository() {
+    }
+
+    public static BrandRepository getInstance() {
+        if (instance == null) {
+            synchronized (BrandRepository.class) {
+                if (instance == null) {
+                    instance = new BrandRepository();
+                    jsonSerializer = new JsonSerializer<>(Path.of(PATH_BRAND));
+                }
+            }
+        }
+        return instance;
     }
 
     /**
@@ -41,9 +52,10 @@ public class BrandRepository implements BaseRepository<Brand,List<Brand>> {
      * @return true if the addition is successful, false otherwise.
      */
     @Override
-    public boolean add(Brand brand) {
+    public boolean add(@NonNull Brand brand) {
+        List<Brand> brands = load();
         brands.add(brand);
-        save();
+        save(brands);
         return true;
     }
 
@@ -54,37 +66,37 @@ public class BrandRepository implements BaseRepository<Brand,List<Brand>> {
      * @return true if the Brand is successfully removed, false otherwise.
      */
     @Override
-    public boolean remove(UUID id) {
+    public boolean remove(@NonNull UUID id) {
+        List<Brand> brands = load();
         boolean removed = brands.removeIf((brand -> brand.getId().equals(id)));
-        if (removed) save();
+        if (removed) save(brands);
         return removed;
     }
 
+
     @Override
-    public Brand findById(UUID id) {
+    public Brand findById(@NonNull UUID id) {
+        List<Brand> brands = load();
         return brands.stream()
                 .filter((brand -> brand.getId().equals(id)))
-                .findFirst().orElse(null);
+                .findFirst()
+                .orElse(null);
     }
 
     @Override
     public List<Brand> getAll() {
-        return brands;
-    }
-
-    @Override
-    public List<Brand> load() {
-        try {
-            return jsonSerializer.read(Brand.class);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return new ArrayList<>();
-        }
+        return load();
     }
 
     @SneakyThrows
     @Override
-    public void save() {
-        jsonSerializer.write(brands);
+    public List<Brand> load() {
+        return jsonSerializer.read(Brand.class);
+    }
+
+    @SneakyThrows
+    @Override
+    public void save(@NonNull List<Brand> list) {
+        jsonSerializer.write(list);
     }
 }

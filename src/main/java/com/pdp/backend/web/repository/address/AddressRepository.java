@@ -3,12 +3,10 @@ package com.pdp.backend.web.repository.address;
 import com.pdp.backend.web.model.address.Address;
 import com.pdp.backend.web.repository.BaseRepository;
 import com.pdp.json.serializer.JsonSerializer;
+import lombok.NonNull;
 import lombok.SneakyThrows;
 
-import java.io.IOException;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -27,13 +25,28 @@ import java.util.UUID;
  * @author Aliabbos Ashurov
  * @since 04/May/2024 15:34
  */
-public class AddressRepository implements BaseRepository<Address,List<Address>> {
-    private final JsonSerializer<Address> jsonSerializer;
-    private final List<Address> addresses;
+public class AddressRepository implements BaseRepository<Address, List<Address>> {
+    private static volatile AddressRepository instance;
+    private static JsonSerializer<Address> jsonSerializer;
 
-    public AddressRepository() {
-        this.jsonSerializer = new JsonSerializer<>(Path.of(PATH_ADDRESS));
-        this.addresses = load();
+    private AddressRepository() {
+    }
+
+    /**
+     * Gets the singleton instance of AddressRepository.
+     *
+     * @return The singleton instance of AddressRepository.
+     */
+    public static AddressRepository getInstance() {
+        if (instance == null) {
+            synchronized (AddressRepository.class) {
+                if (instance == null) {
+                    instance = new AddressRepository();
+                    jsonSerializer = new JsonSerializer<>(Path.of(PATH_ADDRESS));
+                }
+            }
+        }
+        return instance;
     }
 
     /**
@@ -43,9 +56,10 @@ public class AddressRepository implements BaseRepository<Address,List<Address>> 
      * @return True if the address is added successfully, false otherwise.
      */
     @Override
-    public boolean add(Address address) {
+    public boolean add(@NonNull Address address) {
+        List<Address> addresses = load();
         addresses.add(address);
-        save();
+        save(addresses);
         return true;
     }
 
@@ -56,37 +70,46 @@ public class AddressRepository implements BaseRepository<Address,List<Address>> 
      * @return True if an address with the specified ID was found and removed, false otherwise.
      */
     @Override
-    public boolean remove(UUID id) {
+    public boolean remove(@NonNull UUID id) {
+        List<Address> addresses = load();
         boolean removed = addresses.removeIf(address -> address.getId().equals(id));
-        if (removed) save();
+        if (removed) save(addresses);
         return removed;
     }
 
+    /**
+     * Finds an Address record by its ID.
+     *
+     * @param id The UUID of the Address to find.
+     * @return The Address object if found, or null if not found.
+     */
     @Override
-    public Address findById(UUID id) {
+    public Address findById(@NonNull UUID id) {
+        List<Address> addresses = load();
         return addresses.stream()
                 .filter((address -> address.getId().equals(id)))
                 .findFirst().orElse(null);
     }
 
+    /**
+     * Retrieves all addresses from the repository.
+     *
+     * @return A list of all Address objects in the repository.
+     */
     @Override
     public List<Address> getAll() {
-        return addresses;
-    }
-
-    @Override
-    public List<Address> load() {
-        try {
-            return jsonSerializer.read(Address.class);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return new ArrayList<>();
-        }
+        return load();
     }
 
     @SneakyThrows
     @Override
-    public void save() {
-        jsonSerializer.write(addresses);
+    public List<Address> load() {
+        return jsonSerializer.read(Address.class);
+    }
+
+    @SneakyThrows
+    @Override
+    public void save(@NonNull List<Address> list) {
+        jsonSerializer.write(list);
     }
 }

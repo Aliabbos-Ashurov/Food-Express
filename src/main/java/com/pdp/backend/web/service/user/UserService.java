@@ -11,5 +11,5 @@ import java.util.List;
  * This extends BaseService to provide common CRUD operations specific to User entities.
  */
 public interface UserService extends BaseService<User, List<User>> {
-    UserRepository repository = new UserRepository();
+    UserRepository repository = UserRepository.getInstance();
 }
