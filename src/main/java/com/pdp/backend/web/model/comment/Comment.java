@@ -2,6 +2,7 @@ package com.pdp.backend.web.model.comment;
 
 import com.google.gson.annotations.SerializedName;
 import com.pdp.backend.web.model.BaseModel;
+import com.pdp.java.console.support.Displayable;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
@@ -21,8 +22,13 @@ import java.util.UUID;
 @Getter
 @ToString(callSuper = true)
 @AllArgsConstructor
-public class Comment extends BaseModel {
+public class Comment extends BaseModel implements Displayable {
     @SerializedName("food_id")
     private UUID foodID;
     private String text;
+
+    @Override
+    public String getDisplayName() {
+        return this.text;
+    }
 }
