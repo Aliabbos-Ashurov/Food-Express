@@ -3,6 +3,7 @@ package com.pdp.backend.web.repository.discount;
 import com.pdp.backend.web.model.discount.Discount;
 import com.pdp.backend.web.repository.BaseRepository;
 import com.pdp.json.serializer.JsonSerializer;
+import lombok.NonNull;
 import lombok.SneakyThrows;
 
 import java.io.IOException;
@@ -25,13 +26,23 @@ import java.util.UUID;
  * @see BaseRepository
  * @since 04/May/2024 16:47
  */
-public class DiscountRepository implements BaseRepository<Discount,List<Discount>> {
-    private final JsonSerializer<Discount> jsonSerializer;
-    private final List<Discount> discounts;
+public class DiscountRepository implements BaseRepository<Discount, List<Discount>> {
+    private static JsonSerializer<Discount> jsonSerializer;
+    private static volatile DiscountRepository instance;
 
-    public DiscountRepository() {
-        this.jsonSerializer = new JsonSerializer<>(Path.of(PATH_DISCOUNT));
-        this.discounts = load();
+    private DiscountRepository() {
+    }
+
+    public static DiscountRepository getInstance() {
+        if (instance == null) {
+            synchronized (DiscountRepository.class) {
+                if (instance == null) {
+                    instance = new DiscountRepository();
+                    jsonSerializer = new JsonSerializer<>(Path.of(PATH_DISCOUNT));
+                }
+            }
+        }
+        return instance;
     }
 
     /**
@@ -43,8 +54,9 @@ public class DiscountRepository implements BaseRepository<Discount,List<Discount
      */
     @Override
     public boolean add(Discount discount) {
+        List<Discount> discounts = load();
         discounts.add(discount);
-        save();
+        save(discounts);
         return true;
     }
 
@@ -57,13 +69,15 @@ public class DiscountRepository implements BaseRepository<Discount,List<Discount
      */
     @Override
     public boolean remove(UUID id) {
+        List<Discount> discounts = load();
         boolean removed = discounts.removeIf(discount -> discount.getId().equals(id));
-        if (removed) save();
+        if (removed) save(discounts);
         return removed;
     }
 
     @Override
     public Discount findById(UUID id) {
+        List<Discount> discounts = load();
         return discounts.stream()
                 .filter(discount -> discount.getId().equals(id))
                 .findFirst().orElse(null);
@@ -77,7 +91,7 @@ public class DiscountRepository implements BaseRepository<Discount,List<Discount
      */
     @Override
     public List<Discount> getAll() {
-        return discounts;
+        return load();
     }
 
     /**
@@ -85,19 +99,15 @@ public class DiscountRepository implements BaseRepository<Discount,List<Discount
      *
      * @return A list of Discounts, empty in case of an IOException.
      */
+    @SneakyThrows
     @Override
     public List<Discount> load() {
-        try {
-            return jsonSerializer.read(Discount.class);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return new ArrayList<>();
-        }
+        return jsonSerializer.read(Discount.class);
     }
 
     @SneakyThrows
     @Override
-    public void save() {
+    public void save(@NonNull List<Discount> discounts) {
         jsonSerializer.write(discounts);
     }
 }

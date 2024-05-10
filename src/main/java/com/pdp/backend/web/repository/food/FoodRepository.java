@@ -3,12 +3,11 @@ package com.pdp.backend.web.repository.food;
 import com.pdp.backend.web.model.food.Food;
 import com.pdp.backend.web.repository.BaseRepository;
 import com.pdp.json.serializer.JsonSerializer;
+import lombok.NonNull;
 import lombok.SneakyThrows;
 
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -28,13 +27,23 @@ import java.util.UUID;
  * @see JsonSerializer
  * @since 04/May/2024 16:51
  */
-public class FoodRepository implements BaseRepository<Food,List<Food>> {
-    private final JsonSerializer<Food> jsonSerializer;
-    private final List<Food> foods;
+public class FoodRepository implements BaseRepository<Food, List<Food>> {
+    private static JsonSerializer<Food> jsonSerializer;
+    private static volatile FoodRepository instance;
 
-    public FoodRepository() {
-        this.jsonSerializer = new JsonSerializer<>(Path.of(PATH_FOOD));
-        this.foods = load();
+    private FoodRepository() {
+    }
+
+    public static FoodRepository getInstance() {
+        if (instance == null) {
+            synchronized (FoodRepository.class) {
+                if (instance == null) {
+                    instance = new FoodRepository();
+                    jsonSerializer = new JsonSerializer<>(Path.of(PATH_FOOD));
+                }
+            }
+        }
+        return instance;
     }
 
     /**
@@ -45,8 +54,9 @@ public class FoodRepository implements BaseRepository<Food,List<Food>> {
      */
     @Override
     public boolean add(Food food) {
+        List<Food> foods = load();
         foods.add(food);
-        save();
+        save(foods);
         return true;
     }
 
@@ -59,8 +69,9 @@ public class FoodRepository implements BaseRepository<Food,List<Food>> {
      */
     @Override
     public boolean remove(UUID id) {
+        List<Food> foods = load();
         boolean removed = foods.removeIf(food -> food.getId().equals(id));
-        if (removed) save();
+        if (removed) save(foods);
         return removed;
     }
 
@@ -72,6 +83,7 @@ public class FoodRepository implements BaseRepository<Food,List<Food>> {
      */
     @Override
     public Food findById(UUID id) {
+        List<Food> foods = load();
         return foods.stream()
                 .filter(food -> food.getId().equals(id))
                 .findFirst().orElse(null);
@@ -79,7 +91,7 @@ public class FoodRepository implements BaseRepository<Food,List<Food>> {
 
     @Override
     public List<Food> getAll() {
-        return foods;
+        return load();
     }
 
     /**
@@ -88,14 +100,10 @@ public class FoodRepository implements BaseRepository<Food,List<Food>> {
      *
      * @return A List populated with Food items or an empty List if an exception occurs.
      */
+    @SneakyThrows
     @Override
     public List<Food> load() {
-        try {
-            return jsonSerializer.read(Food.class);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return new ArrayList<>();
-        }
+        return jsonSerializer.read(Food.class);
     }
 
     /**
@@ -106,7 +114,7 @@ public class FoodRepository implements BaseRepository<Food,List<Food>> {
      */
     @SneakyThrows
     @Override
-    public void save() {
+    public void save(@NonNull List<Food> foods) {
         jsonSerializer.write(foods);
     }
 }

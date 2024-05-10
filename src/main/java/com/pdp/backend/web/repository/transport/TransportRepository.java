@@ -3,12 +3,11 @@ package com.pdp.backend.web.repository.transport;
 import com.pdp.backend.web.model.transport.Transport;
 import com.pdp.backend.web.repository.BaseRepository;
 import com.pdp.json.serializer.JsonSerializer;
+import lombok.NonNull;
 import lombok.SneakyThrows;
 
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -24,18 +23,27 @@ import java.util.UUID;
  * @since 04/May/2024 17:03
  */
 public class TransportRepository implements BaseRepository<Transport,List<Transport>> {
-    private final JsonSerializer<Transport> jsonSerializer;
-    private final List<Transport> transports;
+    private static volatile TransportRepository instance;
+    private static JsonSerializer<Transport> jsonSerializer;
 
     /**
      * Constructs a new TransportRepository, initializing the serializer with the file path for transport data,
      * and loading the existing transport data from this file into memory.
      */
-    public TransportRepository() {
-        this.jsonSerializer = new JsonSerializer<>(Path.of(PATH_TRANSPORT));
-        this.transports = load();
+    private TransportRepository() {
     }
 
+    public static TransportRepository getInstance() {
+        if (instance == null) {
+            synchronized (TransportRepository.class) {
+                if (instance == null) {
+                    instance = new TransportRepository();
+                    jsonSerializer = new JsonSerializer<>(Path.of(PATH_TRANSPORT));
+                }
+            }
+        }
+        return instance;
+    }
     /**
      * Adds a {@link Transport} object to the repository and saves the updated list to the JSON file.
      *
@@ -44,8 +52,9 @@ public class TransportRepository implements BaseRepository<Transport,List<Transp
      */
     @Override
     public boolean add(Transport transport) {
+        List<Transport> transports = load();
         transports.add(transport);
-        save();
+        save(transports);
         return true;
     }
 
@@ -56,9 +65,10 @@ public class TransportRepository implements BaseRepository<Transport,List<Transp
      * @return {@code true} if the transport entity was found and removed, {@code false} otherwise.
      */
     @Override
-    public boolean remove(UUID id) {
+    public boolean remove(@NonNull UUID id) {
+        List<Transport> transports = load();
         boolean removed = transports.removeIf(transport -> transport.getId().equals(id));
-        if (removed) save();
+        if (removed) save(load());
         return removed;
     }
 
@@ -69,7 +79,8 @@ public class TransportRepository implements BaseRepository<Transport,List<Transp
      * @return The transport entity if found, or {@code null} if no such entity exists.
      */
     @Override
-    public Transport findById(UUID id) {
+    public Transport findById(@NonNull UUID id) {
+        List<Transport> transports = load();
         return transports.stream()
                 .filter(transport -> transport.getId().equals(id))
                 .findFirst().orElse(null);
@@ -82,7 +93,7 @@ public class TransportRepository implements BaseRepository<Transport,List<Transp
      */
     @Override
     public List<Transport> getAll() {
-        return transports;
+        return load();
     }
 
     /**
@@ -90,14 +101,10 @@ public class TransportRepository implements BaseRepository<Transport,List<Transp
      *
      * @return A list of {@link Transport} entities. Returns an empty list if there are errors during file reading.
      */
+    @SneakyThrows
     @Override
     public List<Transport> load() {
-        try {
-            return jsonSerializer.read(Transport.class);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return new ArrayList<>();
-        }
+        return jsonSerializer.read(Transport.class);
     }
 
     /**
@@ -107,7 +114,7 @@ public class TransportRepository implements BaseRepository<Transport,List<Transp
      */
     @SneakyThrows
     @Override
-    public void save() {
+    public void save(@NonNull List<Transport> transports) {
         jsonSerializer.write(transports);
     }
 }

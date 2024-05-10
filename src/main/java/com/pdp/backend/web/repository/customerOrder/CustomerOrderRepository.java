@@ -3,12 +3,10 @@ package com.pdp.backend.web.repository.customerOrder;
 import com.pdp.backend.web.model.customerOrder.CustomerOrder;
 import com.pdp.backend.web.repository.BaseRepository;
 import com.pdp.json.serializer.JsonSerializer;
+import lombok.NonNull;
 import lombok.SneakyThrows;
 
-import java.io.IOException;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -27,13 +25,23 @@ import java.util.UUID;
  * @see BaseRepository
  * @since 04/May/2024 16:37
  */
-public class CustomerOrderRepository implements BaseRepository<CustomerOrder,List<CustomerOrder>> {
-    private final JsonSerializer<CustomerOrder> jsonSerializer;
-    private final List<CustomerOrder> customerOrders;
+public class CustomerOrderRepository implements BaseRepository<CustomerOrder, List<CustomerOrder>> {
+    private static JsonSerializer<CustomerOrder> jsonSerializer;
+    private static volatile CustomerOrderRepository instance;
 
-    public CustomerOrderRepository() {
-        this.jsonSerializer = new JsonSerializer<>(Path.of(PATH_CUSTOMER_ORDER));
-        this.customerOrders = load();
+    private CustomerOrderRepository() {
+    }
+
+    public static CustomerOrderRepository getInstance() {
+        if (instance == null) {
+            synchronized (CustomerOrderRepository.class) {
+                if (instance == null) {
+                    instance = new CustomerOrderRepository();
+                    jsonSerializer = new JsonSerializer<>(Path.of(PATH_CUSTOMER_ORDER));
+                }
+            }
+        }
+        return instance;
     }
 
     /**
@@ -44,9 +52,10 @@ public class CustomerOrderRepository implements BaseRepository<CustomerOrder,Lis
      * was added and the list was saved.
      */
     @Override
-    public boolean add(CustomerOrder customerOrder) {
+    public boolean add(@NonNull CustomerOrder customerOrder) {
+        List<CustomerOrder> customerOrders = load();
         customerOrders.add(customerOrder);
-        save();
+        save(customerOrders);
         return true;
     }
 
@@ -58,14 +67,16 @@ public class CustomerOrderRepository implements BaseRepository<CustomerOrder,Lis
      * @return True if the customerOrder was successfully found and removed, false otherwise.
      */
     @Override
-    public boolean remove(UUID id) {
+    public boolean remove(@NonNull UUID id) {
+        List<CustomerOrder> customerOrders = load();
         boolean removed = customerOrders.removeIf(customerOrder -> customerOrder.getId().equals(id));
-        if (removed) save();
+        if (removed) save(customerOrders);
         return removed;
     }
 
     @Override
-    public CustomerOrder findById(UUID id) {
+    public CustomerOrder findById(@NonNull UUID id) {
+        List<CustomerOrder> customerOrders = load();
         return customerOrders.stream()
                 .filter(customerOrder -> customerOrder.getId().equals(id))
                 .findFirst().orElse(null);
@@ -73,22 +84,18 @@ public class CustomerOrderRepository implements BaseRepository<CustomerOrder,Lis
 
     @Override
     public List<CustomerOrder> getAll() {
-        return customerOrders;
-    }
-
-    @Override
-    public List<CustomerOrder> load() {
-        try {
-            return jsonSerializer.read(CustomerOrder.class);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return new ArrayList<>();
-        }
+        return load();
     }
 
     @SneakyThrows
     @Override
-    public void save() {
+    public List<CustomerOrder> load() {
+        return jsonSerializer.read(CustomerOrder.class);
+    }
+
+    @SneakyThrows
+    @Override
+    public void save(@NonNull List<CustomerOrder> customerOrders) {
         jsonSerializer.write(customerOrders);
     }
 }

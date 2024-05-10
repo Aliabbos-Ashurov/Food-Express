@@ -3,12 +3,11 @@ package com.pdp.backend.web.repository.picture;
 import com.pdp.backend.web.model.picture.Picture;
 import com.pdp.backend.web.repository.BaseRepository;
 import com.pdp.json.serializer.JsonSerializer;
+import lombok.NonNull;
 import lombok.SneakyThrows;
 
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -23,18 +22,27 @@ import java.util.UUID;
  * @since 04/May/2024 16:59
  */
 public class PictureRepository implements BaseRepository<Picture,List<Picture>> {
-    private final JsonSerializer<Picture> jsonSerializer;
-    private final List<Picture> pictures;
+    private static JsonSerializer<Picture> jsonSerializer;
+    private static volatile PictureRepository instance;
 
     /**
      * Constructs a new PictureRepository, setting up the JSON serializer with the file path for picture data,
      * and loading the existing pictures from this file into the memory.
      */
-    public PictureRepository() {
-        this.jsonSerializer = new JsonSerializer<>(Path.of(PATH_PICTURE));
-        this.pictures = load();
+    private PictureRepository() {
     }
 
+    public static PictureRepository getInstance() {
+        if (instance == null) {
+            synchronized (PictureRepository.class) {
+                if (instance == null) {
+                    instance = new PictureRepository();
+                    jsonSerializer = new JsonSerializer<>(Path.of(PATH_PICTURE));
+                }
+            }
+        }
+        return instance;
+    }
     /**
      * Adds a {@link Picture} to the repository and saves the updated list to the JSON file.
      *
@@ -43,8 +51,9 @@ public class PictureRepository implements BaseRepository<Picture,List<Picture>> 
      */
     @Override
     public boolean add(Picture picture) {
+        List<Picture> pictures = load();
         pictures.add(picture);
-        save();
+        save(pictures);
         return true;
     }
 
@@ -56,8 +65,9 @@ public class PictureRepository implements BaseRepository<Picture,List<Picture>> 
      */
     @Override
     public boolean remove(UUID id) {
+        List<Picture> pictures = load();
         boolean removed = pictures.removeIf(picture -> picture.getId().equals(id));
-        if (removed) save();
+        if (removed) save(pictures);
         return removed;
     }
 
@@ -70,6 +80,7 @@ public class PictureRepository implements BaseRepository<Picture,List<Picture>> 
 
     @Override
     public Picture findById(UUID id) {
+        List<Picture> pictures = load();
         return pictures.stream()
                 .filter(picture -> picture.getId().equals(id))
                 .findFirst().orElse(null);
@@ -82,7 +93,7 @@ public class PictureRepository implements BaseRepository<Picture,List<Picture>> 
      */
     @Override
     public List<Picture> getAll() {
-        return pictures;
+        return load();
     }
 
     /**
@@ -90,14 +101,10 @@ public class PictureRepository implements BaseRepository<Picture,List<Picture>> 
      *
      * @return A list of {@link Picture} entities. Returns an empty list if there is an error during the file reading.
      */
+    @SneakyThrows
     @Override
     public List<Picture> load() {
-        try {
-            return jsonSerializer.read(Picture.class);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return new ArrayList<>();
-        }
+        return jsonSerializer.read(Picture.class);
     }
 
     /**
@@ -107,7 +114,7 @@ public class PictureRepository implements BaseRepository<Picture,List<Picture>> 
      */
     @SneakyThrows
     @Override
-    public void save() {
+    public void save(@NonNull List<Picture> pictures) {
         jsonSerializer.write(pictures);
     }
 }
