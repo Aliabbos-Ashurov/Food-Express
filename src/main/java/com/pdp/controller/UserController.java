@@ -17,6 +17,14 @@ public class UserController {
     }
 
     private static void afterLog() {
+        if (curUser.getRole().equals(Role.USER)) {
+            while (true) {
+                CustomerOrderController.start();
+            }
+        } else if (curUser.getRole().equals(Role.DELIVERER)) {
+            while (true) {
 
+            }
+        }
     }
 }

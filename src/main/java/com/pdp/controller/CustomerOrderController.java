@@ -58,7 +58,7 @@ public class CustomerOrderController {
     private static final TransportService transportService = ThreadSafeBeansContainer.transportServiceThreadLocal.get();
     private static final UserService userService = ThreadSafeBeansContainer.userServiceThreadLocal.get();
 
-    public static void customerOrder() {
+    public static void start() {
         while (true) {
             displayUserMenu();
             switch (Scan.scanInt()) {
