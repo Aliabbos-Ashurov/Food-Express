@@ -24,7 +24,7 @@ import java.util.UUID;
 @Setter
 @ToString(callSuper = true)
 @Builder
-public class CustomerOrder extends BaseModel{
+public class CustomerOrder extends BaseModel {
     @SerializedName("user_id")
     private UUID userID;
     @SerializedName("branch_id")
@@ -38,6 +38,8 @@ public class CustomerOrder extends BaseModel{
     private BigDecimal orderPrice;
     @SerializedName("payment_type")
     private PaymentType paymentType;
+    @SerializedName("description_id")
+    private UUID descriptionID;
     @SerializedName("deliver_id")
     private UUID deliverID;
 }
