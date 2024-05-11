@@ -140,7 +140,10 @@ public class CustomerOrderController {
         NotificationHandler.checkData(brands);
         if (ListUtils.checkDataForNotNull(brands)) {
             ListUtils.displayListByName(brands);
-            return Utils.getElementByIndex(brands, Scan.scanInt());
+            Brand brand = Utils.getElementByIndex(brands, Scan.scanInt());
+            if (Objects.isNull(brand)) return null;
+            displayBrandDescription(brand);
+            return brand;
         }
         return null;
     }

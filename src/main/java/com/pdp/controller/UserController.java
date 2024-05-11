@@ -5,12 +5,11 @@ import com.pdp.web.model.user.User;
 
 /**
  * Controller to manage user interactions within the application.
- *
  * Date: 11/May/2024 14:37
  * @author Doniyor Nishonov
  **/
 public class UserController {
-    private static User currentUser;
+    public static User curUser;
 
     public static void startApplication() {
         boolean signedIn = LoginController.userSignInSignUp();
@@ -22,9 +21,9 @@ public class UserController {
     }
 
     private static void handlePostLogin() {
-        if (currentUser.getRole() == Role.USER) {
+        if (curUser.getRole() == Role.USER) {
             CustomerOrderController.start();
-        } else if (currentUser.getRole() == Role.DELIVERER) {
+        } else if (curUser.getRole() == Role.DELIVERER) {
             //...
         }
     }
