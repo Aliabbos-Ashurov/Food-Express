@@ -25,4 +25,5 @@ public interface OrderService extends BaseService<Order, List<Order>> {
      */
     BigDecimal getOrderPrice(UUID customerOrderID);
     Order getOrCreate(CustomOrderDTO dto, Order order);
+    List<Order> getOdersByCustomerID(UUID customerOrderID);
 }

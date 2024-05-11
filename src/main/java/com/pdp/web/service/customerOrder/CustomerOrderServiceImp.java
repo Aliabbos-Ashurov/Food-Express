@@ -28,24 +28,7 @@ public class CustomerOrderServiceImp implements CustomerOrderService {
     }
 
     @Override
-    public List<CustomerOrder> getOrdersInProcessByDeliverer(UUID delivererId) {
-        return getAll().stream()
-                .filter(c -> Objects.equals(c.getDeliverID(), delivererId) &&
-                        (Objects.equals(c.getOrderStatus(), OrderStatus.IN_TRANSIT)
-                                || Objects.equals(c.getOrderStatus(), OrderStatus.YOUR_ORDER_RECEIVED)
-                                || Objects.equals(c.getOrderStatus(), OrderStatus.PROCESSING)))
-                .toList();
-    }
-
-    @Override
-    public List<CustomerOrder> getPendingOrdersForDeliverer() {
-        return getAll().stream()
-                .filter(customerOrder -> customerOrder.getOrderStatus().equals(OrderStatus.LOOKING_FOR_A_DELIVERER))
-                .toList();
-    }
-
-    @Override
-    public CustomerOrder getOrCreate(UUID userId, UUID branchID) {
+    public CustomerOrder getOrCreate(UUID userId,UUID branchID) {
         return getAll().stream()
                 .filter(customerOrder -> customerOrder.getUserID().equals(userId)
                         && customerOrder.getOrderStatus().equals(OrderStatus.NOT_CONFIRMED))
@@ -69,8 +52,7 @@ public class CustomerOrderServiceImp implements CustomerOrderService {
     @Override
     public List<CustomerOrder> getArchive(UUID userID) {
         return getAll().stream()
-                .filter(c -> Objects.equals(c.getOrderStatus(), OrderStatus.DELIVERED)
-                        && c.getUserID().equals(userID))
+                .filter(c -> Objects.equals(c.getOrderStatus(), OrderStatus.DELIVERED))
                 .toList();
     }
 
@@ -122,19 +104,7 @@ public class CustomerOrderServiceImp implements CustomerOrderService {
      */
     @Override
     public boolean update(CustomerOrder customerOrder) {
-        List<CustomerOrder> customerOrders = getAll();
-        customerOrders.stream()
-                .filter(c -> Objects.equals(c.getId(), customerOrder.getId()))
-                .forEach((c) -> {
-                    c.setAddressID(customerOrder.getAddressID());
-                    c.setOrderStatus(customerOrder.getOrderStatus());
-                    c.setOrderPrice(customerOrder.getOrderPrice());
-                    c.setBranchID(customerOrder.getBranchID());
-                    c.setDeliverID(customerOrder.getDeliverID());
-                    c.setPaymentType(customerOrder.getPaymentType());
-                });
-        repository.save(customerOrders);
-        return true;
+        return false;
     }
 
     /**

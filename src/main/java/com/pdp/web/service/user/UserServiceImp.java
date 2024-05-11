@@ -48,8 +48,24 @@ public class UserServiceImp implements UserService {
     }
 
     @Override
-    public boolean update(User object) {
-        return false;
+    public boolean update(User user) {
+        List<User> users = getAll();
+        return users.stream()
+                .filter(o -> o.getId().equals(user.getId()))
+                .peek((o) -> {
+                    o.setRole(user.getRole());
+                    o.setPassword(user.getPassword());
+                    o.setEmail(user.getEmail());
+                    o.setLanguage(user.getLanguage());
+                    o.setPhoneNumber(user.getPhoneNumber());
+                    o.setFullname(user.getFullname());
+                    o.setEmailVerified(user.isEmailVerified());
+                    o.setNumberVerified(user.isNumberVerified());
+                    o.setUsername(user.getUsername());
+                    o.setProfilPictureUrl(user.getProfilPictureUrl());
+                })
+                .findFirst()
+                .isPresent();
     }
 
     @Override
