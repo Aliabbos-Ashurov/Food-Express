@@ -32,7 +32,7 @@ public class CustomerOrder extends BaseModel{
     private UUID addressID;
     @SerializedName("order_status")
     @Builder.Default
-    private OrderStatus orderStatus = OrderStatus.LOOKING_FOR_A_DELIVERER;
+    private OrderStatus orderStatus = OrderStatus.NOT_CONFIRMED;
     @SerializedName("payment_type")
     private PaymentType paymentType;
     @SerializedName("deliver_id")
