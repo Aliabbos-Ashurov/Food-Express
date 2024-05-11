@@ -5,11 +5,15 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class PictureServiceImp {
-    private static PictureServiceImp instance;
+    private static volatile PictureServiceImp instance;
 
     public static PictureServiceImp getInstance() {
         if (instance == null) {
-            instance = new PictureServiceImp();
+            synchronized (PictureServiceImp.class) {
+                if (instance == null) {
+                    instance = new PictureServiceImp();
+                }
+            }
         }
         return instance;
     }

@@ -13,7 +13,7 @@ import static com.pdp.java.console.Scan.*;
  * Date: 10/May/2024  20:59
  **/
 public class LoginController {
-    private static LoginService loginService = LoginServiceImpl.getInstance();
+    private static final LoginService loginService = LoginServiceImpl.getInstance();
 
     public static void signIn() {
         String username = scanStr("Username");
