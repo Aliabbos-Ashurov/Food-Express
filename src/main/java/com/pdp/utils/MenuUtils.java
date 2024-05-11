@@ -11,6 +11,7 @@ public interface MenuUtils {
     //---USER MENU
     String BACK = "main.menu.back";
     String LANGUAGE = "main.menu.language";
+    String LANGUAGE_MENU = "[1] - UZ\n[2] - EN\n[0] - EXIT";
     String SIGN_IN_UP = "main.menu.signInUP";
     String USER_MENU_AFTER_LOG = "menu.after.log.department";
     String MAKE_ORDER = "menu.after.department.order";
