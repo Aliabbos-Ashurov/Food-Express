@@ -28,6 +28,15 @@ public class CustomerOrderServiceImp implements CustomerOrderService {
     }
 
     @Override
+    public CustomerOrder getNotConfirmedOrder(UUID userID) {
+        List<CustomerOrder> customerOrders = getAll();
+        return customerOrders.stream()
+                .filter(customerOrder -> customerOrder.getUserID().equals(userID) && customerOrder.getOrderStatus().equals(OrderStatus.NOT_CONFIRMED))
+                .findFirst()
+                .orElse(null);
+    }
+
+    @Override
     public CustomerOrder getOrCreate(UUID userId,UUID branchID) {
         return getAll().stream()
                 .filter(customerOrder -> customerOrder.getUserID().equals(userId)

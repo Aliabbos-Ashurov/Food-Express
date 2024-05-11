@@ -33,6 +33,7 @@ public class FoodBrandMappingServiceImp implements FoodBrandMappingService {
         return foodBrandMappings.stream()
                 .anyMatch(foodBrandMapping -> foodBrandMapping.getBrandID().equals(brandID) && foodBrandMapping.getFoodID().equals(foodID));
     }
+
     /**
      * Retrieves all food brand mappings associated with a specific brand ID.
      *
@@ -53,9 +54,9 @@ public class FoodBrandMappingServiceImp implements FoodBrandMappingService {
      * @return a list of {@link FoodBrandMapping} within the specified category
      */
     @Override
-    public List<FoodBrandMapping> getBrandFoodsByCategoryName(String categoryName) {
+    public List<FoodBrandMapping> getBrandFoodsByCategoryName(UUID brandID, String categoryName) {
         return getAll().stream()
-                .filter(f -> Objects.equals(f.getCategoryName(), categoryName))
+                .filter(o -> Objects.equals(o.getCategoryName(),categoryName) && Objects.equals(o.getBrandID(),brandID))
                 .toList();
     }
 

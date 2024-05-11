@@ -43,13 +43,21 @@ public class OrderServiceImp implements OrderService {
     }
 
     @Override
+    public List<Order> getOdersByCustomerID(UUID customerOrderID) {
+        List<Order> orderList = getAll();
+        return orderList.stream()
+                .filter(order -> order.getCustomerOrderID().equals(customerOrderID))
+                .toList();
+    }
+
+    @Override
     public Order getOrCreate(CustomOrderDTO dto, Order order) {
         CustomerOrder exists = findExistingOrder(dto);
         if (Objects.nonNull(exists)) {
             boolean foodFromCurrentBrand = isFoodFromCurrentBrand(order, exists.getBranchID());
             if (foodFromCurrentBrand) {
                 Order orderWithSameFood = findOrderWithSameFood(order);
-                if (Objects.nonNull(orderWithSameFood)) updateOrderQuantityAndPrice(orderWithSameFood, order);
+                if (Objects.nonNull(orderWithSameFood)) return updateOrderQuantityAndPrice(orderWithSameFood, order);
                 else return createNewOrder(order, exists);
 
             } else {
@@ -99,11 +107,12 @@ public class OrderServiceImp implements OrderService {
         return order;
     }
 
-    private void updateOrderQuantityAndPrice(Order foundOrder, Order newOrder) {
+    private Order updateOrderQuantityAndPrice(Order foundOrder, Order newOrder) {
         foundOrder.setFoodQuantity(foundOrder.getFoodQuantity() + newOrder.getFoodQuantity());
         Food food = foodService.getByID(foundOrder.getFoodID());
         foundOrder.setFoodPrice(new BigDecimal(foundOrder.getFoodQuantity() * food.getPrice().longValue()));
         update(foundOrder);
+        return foundOrder;
     }
 
     private void removeAllOrdersFromCustomer(CustomerOrder customerOrder) {
