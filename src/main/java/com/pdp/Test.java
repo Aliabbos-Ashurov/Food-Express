@@ -1,4 +1,4 @@
-package com.pdp.frontend;
+package com.pdp;
 
 /**
  * @author Aliabbos Ashurov
