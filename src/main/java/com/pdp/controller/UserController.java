@@ -24,7 +24,7 @@ public class UserController {
         if (curUser.getRole() == Role.USER) {
             CustomerOrderController.start();
         } else if (curUser.getRole() == Role.DELIVERER) {
-            //...
+            DelivererController.deliverer();
         }
     }
 }

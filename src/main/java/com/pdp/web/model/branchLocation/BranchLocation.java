@@ -21,6 +21,6 @@ import java.util.UUID;
 public class BranchLocation extends BaseModel {
     @SerializedName("branch_id")
     private UUID branchID;
-    private float latidue;
-    private float longtidue;
+    private double latidue;
+    private double longtidue;
 }
