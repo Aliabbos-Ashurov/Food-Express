@@ -42,7 +42,8 @@ public class User extends BaseModel implements Displayable {
     private boolean isNumberVerified;
     @SerializedName("is_email_verified")
     private boolean isEmailVerified;
-    private Role role;
+    @Builder.Default
+    private Role role = Role.USER;
     private Language language;
     @SerializedName("profil_picture_url")
     private String profilPictureUrl;
