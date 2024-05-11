@@ -28,6 +28,20 @@ public class CustomerOrderServiceImp implements CustomerOrderService {
     }
 
     @Override
+    public List<CustomerOrder> getOrdersInProcessByDeliverer(UUID id) {
+        return getAll().stream()
+                .filter(c -> c.getUserID().equals(id) && c.getOrderStatus().equals(OrderStatus.YOUR_ORDER_RECEIVED))
+                .toList();
+    }
+
+    @Override
+    public List<CustomerOrder> getPendingOrdersForDeliverer() {
+        return getAll().stream()
+                .filter(c -> c.getOrderStatus().equals(OrderStatus.LOOKING_FOR_A_DELIVERER))
+                .toList();
+    }
+
+    @Override
     public CustomerOrder getNotConfirmedOrder(UUID userID) {
         List<CustomerOrder> customerOrders = getAll();
         return customerOrders.stream()
@@ -37,7 +51,7 @@ public class CustomerOrderServiceImp implements CustomerOrderService {
     }
 
     @Override
-    public CustomerOrder getOrCreate(UUID userId,UUID branchID) {
+    public CustomerOrder getOrCreate(UUID userId, UUID branchID) {
         return getAll().stream()
                 .filter(customerOrder -> customerOrder.getUserID().equals(userId)
                         && customerOrder.getOrderStatus().equals(OrderStatus.NOT_CONFIRMED))
