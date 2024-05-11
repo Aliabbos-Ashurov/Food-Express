@@ -4,6 +4,7 @@ import com.google.gson.annotations.SerializedName;
 import com.pdp.web.model.BaseModel;
 import com.pdp.java.console.support.Displayable;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
 
@@ -22,6 +23,7 @@ import java.util.UUID;
 @Getter
 @ToString(callSuper = true,exclude = {"imageUrl"})
 @AllArgsConstructor
+@Builder
 public class Transport extends BaseModel implements Displayable {
     @SerializedName("deliver_id")
     private UUID deliverID;
