@@ -26,6 +26,8 @@ import com.pdp.web.service.food.FoodService;
 import com.pdp.web.service.food.FoodServiceImp;
 import com.pdp.web.service.foodBrandMapping.FoodBrandMappingService;
 import com.pdp.web.service.foodBrandMapping.FoodBrandMappingServiceImp;
+import com.pdp.web.service.login.LoginService;
+import com.pdp.web.service.login.LoginServiceImpl;
 import com.pdp.web.service.order.OrderService;
 import com.pdp.web.service.order.OrderServiceImp;
 import com.pdp.web.service.transport.TransportService;
@@ -75,4 +77,5 @@ public class ThreadSafeBeansContainer {
     public static final ThreadLocal<TransportService> transportServiceThreadLocal = ThreadLocal.withInitial(TransportServiceImp::getInstance);
     public static final ThreadLocal<UserService> userServiceThreadLocal = ThreadLocal.withInitial(UserServiceImp::getInstance);
     public static final ThreadLocal<BranchLocationService> branchLocationServiceThreadLocal = ThreadLocal.withInitial(BranchLocationServiceImp::getInstance);
+    public static final ThreadLocal<LoginService> loginServiceThreadLocal = ThreadLocal.withInitial(LoginServiceImpl::getInstance);
 }

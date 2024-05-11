@@ -6,6 +6,7 @@ import com.pdp.web.enums.PaymentType;
 import com.pdp.web.model.BaseModel;
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 /**
@@ -33,6 +34,8 @@ public class CustomerOrder extends BaseModel{
     @SerializedName("order_status")
     @Builder.Default
     private OrderStatus orderStatus = OrderStatus.NOT_CONFIRMED;
+    @SerializedName("order_price")
+    private BigDecimal orderPrice;
     @SerializedName("payment_type")
     private PaymentType paymentType;
     @SerializedName("deliver_id")

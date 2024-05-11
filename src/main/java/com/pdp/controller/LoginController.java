@@ -1,12 +1,13 @@
 package com.pdp.controller;
 
+import com.pdp.config.ThreadSafeBeansContainer;
 import com.pdp.dto.LoginDTO;
 import com.pdp.java.console.NotificationHandler;
 import com.pdp.java.console.Scan;
 import com.pdp.utils.MenuUtils;
+import com.pdp.web.enums.Language;
 import com.pdp.web.model.user.User;
 import com.pdp.web.service.login.LoginService;
-import com.pdp.web.service.login.LoginServiceImpl;
 
 import static com.pdp.java.console.Scan.*;
 
@@ -15,11 +16,32 @@ import static com.pdp.java.console.Scan.*;
  * Date: 10/May/2024  20:59
  **/
 public class LoginController {
-    private static final LoginService loginService = LoginServiceImpl.getInstance();
+    private static final LoginService loginService = ThreadSafeBeansContainer.loginServiceThreadLocal.get();
+    private static Language language;
+
+    private static Language getLanguage() {
+        while (true) {
+            MenuUtils.menu(MenuUtils.LANGUAGE, Language.UZ);
+            System.out.println(MenuUtils.LANGUAGE_MENU);
+            switch (scanInt()) {
+                case 1 -> {
+                    return Language.UZ;
+                }
+                case 0 -> {
+                    System.exit(0);
+                    return null;
+                }
+                default -> {
+                    return Language.EN;
+                }
+            }
+        }
+    }
 
     public static boolean userSignInSignUp() {
+        language = getLanguage();
         while (true) {
-            MenuUtils.menu(MenuUtils.MENU);
+            MenuUtils.menu(MenuUtils.DELIVERER_MENU, Language.UZ);
             switch (Scan.scanInt()) {
                 case 1 -> {
                     return signIn();
@@ -39,8 +61,8 @@ public class LoginController {
     private static boolean signIn() {
         String username = scanStr("Username");
         String password = scanStr("Password");
-        User user = loginService.checkUser(new LoginDTO(username, password));
-        boolean isSuccessful = user != null;
+        UserController.curUser = loginService.checkUser(new LoginDTO(username, password));
+        boolean isSuccessful = UserController.curUser != null;
         NotificationHandler.notifyAction("User", "find", isSuccessful);
         return isSuccessful;
     }
@@ -57,5 +79,9 @@ public class LoginController {
         boolean isWorked = loginService.signUp(user);
         NotificationHandler.notifyAction("User", "added", isWorked);
         return isWorked;
+    }
+
+    public static Language getCurUserLanguage() {
+        return language;
     }
 }
