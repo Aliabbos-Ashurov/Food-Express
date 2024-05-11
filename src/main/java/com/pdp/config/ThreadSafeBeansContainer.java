@@ -6,6 +6,8 @@ import com.pdp.web.service.banned.BannedService;
 import com.pdp.web.service.banned.BannedServiceImp;
 import com.pdp.web.service.branch.BranchService;
 import com.pdp.web.service.branch.BranchServiceImp;
+import com.pdp.web.service.branchLocation.BranchLocationService;
+import com.pdp.web.service.branchLocation.BranchLocationServiceImp;
 import com.pdp.web.service.brand.BrandService;
 import com.pdp.web.service.brand.BrandServiceImp;
 import com.pdp.web.service.category.CategoryService;
@@ -51,6 +53,7 @@ import com.pdp.web.service.user.UserServiceImp;
  * @see OrderService
  * @see TransportService
  * @see UserService
+ * @see BranchLocationService
  * @since 10/May/2024 10:48
  */
 public class ThreadSafeBeansContainer {
@@ -71,4 +74,5 @@ public class ThreadSafeBeansContainer {
     public static final ThreadLocal<OrderService> orderServiceThreadLocal = ThreadLocal.withInitial(OrderServiceImp::getInstance);
     public static final ThreadLocal<TransportService> transportServiceThreadLocal = ThreadLocal.withInitial(TransportServiceImp::getInstance);
     public static final ThreadLocal<UserService> userServiceThreadLocal = ThreadLocal.withInitial(UserServiceImp::getInstance);
+    public static final ThreadLocal<BranchLocationService> branchLocationServiceThreadLocal = ThreadLocal.withInitial(BranchLocationServiceImp::getInstance);
 }
