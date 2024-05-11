@@ -22,15 +22,16 @@ import java.util.UUID;
 public class Branch extends BaseModel{
     @SerializedName("brand_id")
     private UUID brandID;
-    private final String location;
+    @SerializedName("location_id")
+    private final UUID locationID;
     @SerializedName("is_active")
     private boolean isActive;
     @SerializedName("phone_number")
     private String phoneNumber;
 
-    public Branch(UUID brandID, String location, String phoneNumber) {
+    public Branch(UUID brandID, UUID locationID, String phoneNumber) {
         this.brandID = brandID;
-        this.location = location;
+        this.locationID = locationID;
         this.isActive = true;
         this.phoneNumber = phoneNumber;
     }
