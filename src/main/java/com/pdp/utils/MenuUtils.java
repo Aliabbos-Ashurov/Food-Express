@@ -13,7 +13,7 @@ public interface MenuUtils {
             [2] Sign Up
             [0] Exit
             """;
-    static int menu(String str){
-        return scanInt(str);
+    static void menu(String str){
+        System.out.println(str);
     }
 }
