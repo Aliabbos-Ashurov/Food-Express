@@ -1,9 +1,12 @@
 package com.pdp.backend.web.model.branchLocation;
 
+import com.google.gson.annotations.SerializedName;
 import com.pdp.backend.web.model.BaseModel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
+
+import java.util.UUID;
 
 /**
  * Represents a branch location with longitude and latitude coordinates.
@@ -16,6 +19,8 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString(callSuper = true)
 public class BranchLocation extends BaseModel {
-    private float longtidue;
+    @SerializedName("branch_id")
+    private UUID branchID;
     private float latidue;
+    private float longtidue;
 }
