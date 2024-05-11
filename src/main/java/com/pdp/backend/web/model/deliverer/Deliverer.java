@@ -10,7 +10,7 @@ import lombok.ToString;
 /**
  * Defines the characteristics of a deliverer within the system,
  * including their full name and phone number.
- *
+ * <p>
  * Inherits from {@link BaseModel}, which includes fields for the
  * unique identifier, timestamp of creation, and a flag indicating
  * whether the entity has been soft-deleted.
