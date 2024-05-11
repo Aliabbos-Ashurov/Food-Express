@@ -35,4 +35,5 @@ public interface JsonFilePath extends DirectoryPath {
     String PATH_PICTURE = DIRECTORY + "picture.json";
     String PATH_TRANSPORT = DIRECTORY + "transport.json";
     String PATH_USER = DIRECTORY + "user.json";
+    String PATH_BRANCH_LOCATION = DIRECTORY + "branchLocation.json";
 }
