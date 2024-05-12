@@ -8,6 +8,8 @@ import com.pdp.java.console.Scan;
 import com.pdp.utils.MenuUtils;
 import com.pdp.utils.Utils;
 import com.pdp.utils.source.MessageSourceUtils;
+import com.pdp.web.enums.OrderStatus;
+import com.pdp.web.enums.PaymentType;
 import com.pdp.web.enums.role.Role;
 import com.pdp.web.model.address.Address;
 import com.pdp.web.model.branch.Branch;
@@ -88,8 +90,57 @@ public class CustomerOrderController {
     }
     private static void cart() {
         CustomerOrder notConfirmedOrder = customerOrderService.getNotConfirmedOrder(getCurrentUser().getId());
+        if (Objects.isNull(notConfirmedOrder)) {
+            System.out.println(MessageSourceUtils.getLocalizedMessage("error.cartEmpty",getCurrentUser().getLanguage()));
+            return;
+        }
         List<Order> orders = orderService.getOdersByCustomerID(notConfirmedOrder.getId());
         orders.forEach(CustomerOrderController::displayOrderDetails);
+        displayCartMenu();
+        switch (Scan.scanInt()) {
+            case 1 -> activateMyOrder(notConfirmedOrder);
+            case 2 -> makeEmpty(notConfirmedOrder);
+        }
+    }
+    private static void activateMyOrder(CustomerOrder customerOrder) {
+        customerOrder.setOrderStatus(OrderStatus.LOOKING_FOR_A_DELIVERER);
+        Address address = confirmAddress();
+        PaymentType paymentType = confirmPaymentType();
+        customerOrder.setAddressID(address.getId());
+        customerOrder.setPaymentType(paymentType);
+        customerOrder.setUserID(getCurrentUser().getId());
+        customerOrder.setOrderPrice(priceOfOrder(customerOrder));
+        customerOrderService.update(customerOrder);
+        System.out.println(MessageSourceUtils.getLocalizedMessage("success.orderPlaced", getCurrentUser().getLanguage()));
+    }
+    private static BigDecimal priceOfOrder(CustomerOrder customerOrder) {
+        return orderService.getOrderPrice(customerOrder.getId());
+    }
+    private static void makeEmpty(CustomerOrder customerOrder) {
+        displayCartMenu();
+        int i = Scan.scanInt();
+        boolean success = i == 1;
+        if (success) {
+            List<Order> orders = orderService.getOdersByCustomerID(customerOrder.getId());
+            orders.forEach(order -> orderService.remove(order.getId()));
+            boolean removed = customerOrderService.remove(customerOrder.getId());
+            NotificationHandler.notifyAction("Cart","cleaned",removed);
+        }
+
+    }
+    private static PaymentType confirmPaymentType() {
+        List<PaymentType> paymentTypes = List.of(PaymentType.values());
+        ListUtils.displayList(paymentTypes);
+        return Utils.getElementByIndex(paymentTypes, Scan.scanInt());
+    }
+    private static Address confirmAddress() {
+        String city = Scan.scanStr("Enter city");
+        String street = Scan.scanStr("Enter street");
+        int apartmentNumber = Scan.scanInt("Enter apartment number");
+        int houseNumber = Scan.scanInt("Enter house number");
+        Address address = new Address(city, street, apartmentNumber, houseNumber);
+        addressService.add(address);
+        return address;
     }
 
     private static void registerAsCourier() {
@@ -250,6 +301,9 @@ public class CustomerOrderController {
 
     private static void displayDepartmentOrderMenu() {
         MenuUtils.menu(MenuUtils.MAKE_ORDER, getCurrentUser().getLanguage());
+    }
+    private static void displayCartMenu() {
+        MenuUtils.menu(MenuUtils.CART_OPERATION,getCurrentUser().getLanguage());
     }
 
     private static void displayUserMenu() {

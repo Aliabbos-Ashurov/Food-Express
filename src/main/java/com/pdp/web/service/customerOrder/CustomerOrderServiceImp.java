@@ -127,7 +127,21 @@ public class CustomerOrderServiceImp implements CustomerOrderService {
      */
     @Override
     public boolean update(CustomerOrder customerOrder) {
-        return false;
+        List<CustomerOrder> customerOrders = getAll();
+        customerOrders.stream()
+                .filter(o -> o.getId().equals(customerOrder.getId()))
+                .forEach(o -> {
+                    o.setUserID(customerOrder.getUserID());
+                    o.setBranchID(customerOrder.getBranchID());
+                    o.setAddressID(customerOrder.getAddressID());
+                    o.setDeliverID(customerOrder.getDeliverID());
+                    o.setDescriptionID(customerOrder.getDescriptionID());
+                    o.setPaymentType(customerOrder.getPaymentType());
+                    o.setOrderPrice(customerOrder.getOrderPrice());
+                    o.setOrderStatus(customerOrder.getOrderStatus());
+                });
+        repository.save(customerOrders);
+        return true;
     }
 
     /**
