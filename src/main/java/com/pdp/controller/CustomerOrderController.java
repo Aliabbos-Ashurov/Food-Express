@@ -37,10 +37,7 @@ import com.pdp.web.service.transport.TransportService;
 import com.pdp.web.service.user.UserService;
 
 import java.math.BigDecimal;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * @author Aliabbos Ashurov
@@ -68,7 +65,7 @@ public class CustomerOrderController {
                 case 2 -> myOrder();
                 case 3 -> registerAsCourier();
                 case 0 -> {
-                    return;
+                    LoginController.userSignInSignUp();
                 }
                 default -> printInvalidSelectionError();
             }
@@ -91,6 +88,7 @@ public class CustomerOrderController {
     private static void cart() {
         CustomerOrder notConfirmedOrder = customerOrderService.getNotConfirmedOrder(getCurrentUser().getId());
         if (Objects.isNull(notConfirmedOrder)) {
+            NotificationHandler.checkData(Collections.EMPTY_LIST);
             System.out.println(MessageSourceUtils.getLocalizedMessage("error.cartEmpty",getCurrentUser().getLanguage()));
             return;
         }
@@ -150,13 +148,14 @@ public class CustomerOrderController {
         Transport transport = Transport.builder()
                 .deliverID(deliverer.getId())
                 .name(Scan.scanStr("Enter transport name"))
-                .registeredNumber("Enter registered number")
+                .registeredNumber(Scan.scanStr("Enter registered number"))
                 .build();
         User currentUser = getCurrentUser();
         currentUser.setRole(Role.DELIVERER);
         boolean updated = userService.update(currentUser);
         boolean isDelivererSuccesfull = delivererService.add(deliverer);
         boolean isTransportSuccesfull = transportService.add(transport);
+        UserController.curUser = currentUser;
         NotificationHandler.notifyAction("Deliverer", "added", updated && isDelivererSuccesfull && isTransportSuccesfull);
     }
 
@@ -200,11 +199,15 @@ public class CustomerOrderController {
     }
 
     private static Category selectCategory(UUID brandID) {
-        List<Category> categories = categoryService.getBrandCategories(brandID);
-        NotificationHandler.checkData(categories);
-        if (ListUtils.checkDataForNotNull(categories)) {
-            ListUtils.displayListByName(categories);
-            return Utils.getElementByIndex(categories, Scan.scanInt());
+        Set<Category> categories = categoryService.getBrandCategories(brandID);
+        NotificationHandler.checkData(List.of(categories));
+        if (ListUtils.checkDataForNotNull(List.of(categories))) {
+            int i = 0;
+            for (Category category : categories) {
+                System.out.println((i + 1) + " " + category.getName());
+                i += 1;
+            }
+            return Utils.getElementByIndexForSet(categories, Scan.scanInt());
         }
         return null;
     }
@@ -244,11 +247,13 @@ public class CustomerOrderController {
 
     private static void showOrdersInProcess() {
         List<CustomerOrder> ordersInProcessByUser = customerOrderService.getOrdersInProcessByUser(getCurrentUser().getId());
+        NotificationHandler.checkData(ordersInProcessByUser);
         displayOrders(ordersInProcessByUser);
     }
 
     private static void showArchive() {
         List<CustomerOrder> customerOrdersArchive = customerOrderService.getArchive(getCurrentUser().getId());
+        NotificationHandler.checkData(customerOrdersArchive);
         displayOrders(customerOrdersArchive);
     }
 
@@ -273,7 +278,7 @@ public class CustomerOrderController {
         Description description = descriptionService.getByID(brand.getDescriptionID());
         System.out.println("------------------------------");
         System.out.println(brand.getName());
-        System.out.println(description.getName());
+        System.out.println(description.getText());
         System.out.println("------------------------------");
     }
 

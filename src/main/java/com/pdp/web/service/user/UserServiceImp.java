@@ -62,7 +62,7 @@ public class UserServiceImp implements UserService {
                     o.setEmailVerified(user.isEmailVerified());
                     o.setNumberVerified(user.isNumberVerified());
                     o.setUsername(user.getUsername());
-                    o.setProfilPictureUrl(user.getProfilPictureUrl());
+                    o.setProfilePictureUrl(user.getProfilePictureUrl());
                 })
                 .findFirst()
                 .isPresent();
