@@ -22,7 +22,7 @@ public class LoginController {
     private static Language getLanguage() {
         while (true) {
             MenuUtils.menu(MenuUtils.LANGUAGE, Language.UZ);
-            System.out.println(MenuUtils.LANGUAGE_MENU);
+            System.out.println("[1] - UZ\n[2] - EN\n[0] - EXIT");
             switch (scanInt()) {
                 case 1 -> {
                     return Language.UZ;
@@ -41,7 +41,7 @@ public class LoginController {
     public static boolean userSignInSignUp() {
         language = getLanguage();
         while (true) {
-            MenuUtils.menu(MenuUtils.DELIVERER_MENU, Language.UZ);
+            MenuUtils.menu(MenuUtils.SIGN_IN_UP, Language.UZ);
             switch (Scan.scanInt()) {
                 case 1 -> {
                     return signIn();
@@ -50,8 +50,7 @@ public class LoginController {
                     return signUp();
                 }
                 case 0 -> {
-                    System.exit(0);
-                    return false;
+                   getLanguage();
                 }
             }
         }
@@ -63,7 +62,8 @@ public class LoginController {
         String password = scanStr("Password");
         UserController.curUser = loginService.checkUser(new LoginDTO(username, password));
         boolean isSuccessful = UserController.curUser != null;
-        NotificationHandler.notifyAction("User", "find", isSuccessful);
+        if (isSuccessful) language = UserController.curUser.getLanguage();
+        NotificationHandler.notifyAction("User", "sign-in", isSuccessful);
         return isSuccessful;
     }
 
@@ -75,9 +75,11 @@ public class LoginController {
                 .fullname(fullname)
                 .username(username)
                 .password(password)
+                .language(language)
                 .build();
         boolean isWorked = loginService.signUp(user);
-        NotificationHandler.notifyAction("User", "added", isWorked);
+        if (isWorked) UserController.curUser = user;
+        NotificationHandler.notifyAction("User", "sing-up", isWorked);
         return isWorked;
     }
 

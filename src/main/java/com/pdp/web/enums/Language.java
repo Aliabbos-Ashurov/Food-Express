@@ -17,8 +17,8 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum Language {
-    UZ("uz"),
-    RU("ru"),
-    EN("en");
+    UZ("UZ"),
+    RU("RU"),
+    EN("EN");
     private final String type;
 }

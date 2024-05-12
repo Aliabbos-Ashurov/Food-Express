@@ -36,11 +36,11 @@ public class CategoryServiceImp implements CategoryService {
      * @return A List of Category entities associated with the specified brand.
      */
     @Override
-    public List<Category> getBrandCategories(UUID brandID) {
+    public Set<Category> getBrandCategories(UUID brandID) {
         Set<Category> categories = getAll();
         return categories.stream()
                 .filter(category -> category.getBrandId().equals(brandID))
-                .collect(Collectors.toList());
+                .collect(Collectors.toSet());
     }
 
     /**

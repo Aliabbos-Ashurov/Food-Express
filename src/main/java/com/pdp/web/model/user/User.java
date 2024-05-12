@@ -28,7 +28,7 @@ import lombok.*;
 @Getter
 @Builder
 @Setter
-@ToString(callSuper = true, exclude = {"profilPictureUrl", "isEmailVerified", "isNumberVerified"})
+@ToString(callSuper = true, exclude = {"profilePictureUrl", "isEmailVerified", "isNumberVerified"})
 @AllArgsConstructor
 @NoArgsConstructor
 public class User extends BaseModel implements Displayable {
@@ -45,8 +45,8 @@ public class User extends BaseModel implements Displayable {
     @Builder.Default
     private Role role = Role.USER;
     private Language language;
-    @SerializedName("profil_picture_url")
-    private String profilPictureUrl;
+    @SerializedName("profile_picture_url")
+    private String profilePictureUrl;
 
     @Override
     public String getDisplayName() {

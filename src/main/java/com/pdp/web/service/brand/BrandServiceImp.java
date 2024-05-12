@@ -96,6 +96,6 @@ public class BrandServiceImp implements BrandService {
      */
     @Override
     public List<Brand> getAll() {
-        return getAll();
+        return repository.getAll();
     }
 }

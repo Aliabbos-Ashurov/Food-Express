@@ -1,1 +1,47 @@
-[]
+[
+  {
+    "fullname": "Aliabbos Ashurov",
+    "username": "a",
+    "password": "$2a$10$JY0611cwMdxJdM3oHmiE9OsHWeXjZC.jlhVAQK35u1dh/bTVYkeEC",
+    "phone_number": null,
+    "email": null,
+    "is_number_verified": false,
+    "is_email_verified": false,
+    "role": "USER",
+    "language": "EN",
+    "profile_picture_url": null,
+    "id": "ddd6c1df-afb1-4bcc-95ff-6e495d481774",
+    "created_at": "12/05/2024 18:06:36",
+    "is_deleted": false
+  },
+  {
+    "fullname": "Jonathan Bell",
+    "username": "d",
+    "password": "$2a$10$qAZkap3b45BAg3f6eP2wseurus7MSru3R1/eTRU/Ylc78v1LnU5gS",
+    "phone_number": null,
+    "email": null,
+    "is_number_verified": false,
+    "is_email_verified": false,
+    "role": "DELIVERER",
+    "language": "UZ",
+    "profile_picture_url": null,
+    "id": "020210b3-24cb-411d-98dd-14352d91f095",
+    "created_at": "12/05/2024 20:05:10",
+    "is_deleted": false
+  },
+  {
+    "fullname": "Levin Tim",
+    "username": "t",
+    "password": "$2a$10$6NcgkQOcpO0kxwLXZSrc3.KtPnQm5TbtYXkTqm27x9b/47PQwpNxS",
+    "phone_number": null,
+    "email": null,
+    "is_number_verified": false,
+    "is_email_verified": false,
+    "role": "USER",
+    "language": "UZ",
+    "profile_picture_url": null,
+    "id": "4498be06-ef0e-4df8-bb2a-fd07d83aee61",
+    "created_at": "12/05/2024 20:45:55",
+    "is_deleted": false
+  }
+]

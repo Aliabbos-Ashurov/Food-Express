@@ -7,4 +7,4 @@ package com.pdp.dto;
  * @author Aliabbos Ashurov
  * @since 11/May/2024 10:20
  */
-public record LocationDTO(float latidue,float longtidue) {}
+public record LocationDTO(double latidue,double longtidue) {}

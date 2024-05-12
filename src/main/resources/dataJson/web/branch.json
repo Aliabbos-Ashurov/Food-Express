@@ -1,1 +1,38 @@
-[]
+[
+  {
+    "brand_id": "f60fc7f6-930b-4d00-ad64-2526e1459bce",
+    "location_id": "35dbd14c-fa7e-4fc1-859c-000e9fc2cff3",
+    "is_active": true,
+    "phone_number": "+998781297000",
+    "id": "c8a6a1bf-3a87-4d68-9c14-3cc9e50c4b48",
+    "created_at": "12/05/2024 17:38:36",
+    "is_deleted": false
+  },
+  {
+    "brand_id": "75cb24b7-8404-4cae-b8cc-bb14307185a1",
+    "location_id": "339c4eb8-66a4-4329-b2fe-528be4bc9d10",
+    "is_active": true,
+    "phone_number": "+998712320008",
+    "id": "7dd71651-f6ec-4b48-af26-62f6dc0984e0",
+    "created_at": "12/05/2024 17:38:36",
+    "is_deleted": false
+  },
+  {
+    "brand_id": "8cecd430-ec65-427d-9fc7-c6e2b7ebd13c",
+    "location_id": "7238668b-330e-4ff6-8d15-f077bda2fcfa",
+    "is_active": true,
+    "phone_number": "+998712031212",
+    "id": "580d15ad-1259-4fd4-8d02-c251e6ab8e88",
+    "created_at": "12/05/2024 17:38:36",
+    "is_deleted": false
+  },
+  {
+    "brand_id": "01188cf2-3ccf-4692-9e01-7859e65fc46d",
+    "location_id": "501eb1d8-03bd-4e17-bdd8-9b65403bc66e",
+    "is_active": true,
+    "phone_number": "+998781500030",
+    "id": "2fb13cd7-6d21-4991-8588-904bbdb9050b",
+    "created_at": "12/05/2024 17:38:36",
+    "is_deleted": false
+  }
+]
