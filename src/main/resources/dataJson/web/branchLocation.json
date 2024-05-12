@@ -1,1 +1,34 @@
-[]
+[
+  {
+    "branch_id": "c8a6a1bf-3a87-4d68-9c14-3cc9e50c4b48",
+    "latidue": 41.31201655943021,
+    "longtidue": 69.29026205881249,
+    "id": "35dbd14c-fa7e-4fc1-859c-000e9fc2cff3",
+    "created_at": "12/05/2024 17:38:36",
+    "is_deleted": false
+  },
+  {
+    "branch_id": "7dd71651-f6ec-4b48-af26-62f6dc0984e0",
+    "latidue": 41.30991332057316,
+    "longtidue": 69.2916847126298,
+    "id": "339c4eb8-66a4-4329-b2fe-528be4bc9d10",
+    "created_at": "12/05/2024 17:38:36",
+    "is_deleted": false
+  },
+  {
+    "branch_id": "580d15ad-1259-4fd4-8d02-c251e6ab8e88",
+    "latidue": 41.32650452028879,
+    "longtidue": 69.25337075886324,
+    "id": "7238668b-330e-4ff6-8d15-f077bda2fcfa",
+    "created_at": "12/05/2024 17:38:36",
+    "is_deleted": false
+  },
+  {
+    "branch_id": "2fb13cd7-6d21-4991-8588-904bbdb9050b",
+    "latidue": 41.32314498615789,
+    "longtidue": 69.23414373069218,
+    "id": "501eb1d8-03bd-4e17-bdd8-9b65403bc66e",
+    "created_at": "12/05/2024 17:38:36",
+    "is_deleted": false
+  }
+]

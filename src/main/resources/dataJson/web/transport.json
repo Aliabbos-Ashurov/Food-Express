@@ -1,1 +1,11 @@
-[]
+[
+  {
+    "deliver_id": "5cbfd610-55c0-452c-9a04-d575aba28368",
+    "name": "Spark",
+    "registered_number": "Enter registered number",
+    "image_url": null,
+    "id": "f8a6efff-6428-486e-825d-1aa05980232a",
+    "created_at": "12/05/2024 20:05:28",
+    "is_deleted": false
+  }
+]

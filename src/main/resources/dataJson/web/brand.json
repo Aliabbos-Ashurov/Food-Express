@@ -1,1 +1,46 @@
-[]
+[
+  {
+    "name": "KFC",
+    "rating": 1.0,
+    "description_id": "e88041b3-204c-423c-a4e5-fd7e185839e6",
+    "image_url": "AgACAgIAAxkBAAID-WY5-CZ2V8CgHpcpPFqFGqVGZrxeAAJk2TEbAAGP0UkraG0HtByhGAEAAwIAA3MAAzUE",
+    "opening_time": "12/05/2024 17:34:44",
+    "closing_time": "12/05/2024 17:34:44",
+    "id": "f60fc7f6-930b-4d00-ad64-2526e1459bce",
+    "created_at": "12/05/2024 17:34:44",
+    "is_deleted": false
+  },
+  {
+    "name": "Bon!",
+    "rating": 1.0,
+    "description_id": "75396d74-fa64-4526-adc9-22087e2a4748",
+    "image_url": "AgACAgIAAxkBAAIEAmY5-Ql_vyD_oxrELna5Zlp93pSTAAJ32TEbAAGP0Ulxwb1wCgFa3AEAAwIAA3gAAzUE",
+    "opening_time": "12/05/2024 17:34:44",
+    "closing_time": "12/05/2024 17:34:44",
+    "id": "75cb24b7-8404-4cae-b8cc-bb14307185a1",
+    "created_at": "12/05/2024 17:34:44",
+    "is_deleted": false
+  },
+  {
+    "name": "Evos",
+    "rating": 1.0,
+    "description_id": "5e4e1933-95dc-4153-842c-899a6e39586e",
+    "image_url": "AgACAgIAAxkBAAIEAAFmOfj640S_OtZiLj9ZOlqSIIyTbgACddkxGwABj9FJ3g97j6jUKowBAAMCAANzAAM1BA",
+    "opening_time": "12/05/2024 17:34:44",
+    "closing_time": "12/05/2024 17:34:44",
+    "id": "8cecd430-ec65-427d-9fc7-c6e2b7ebd13c",
+    "created_at": "12/05/2024 17:34:44",
+    "is_deleted": false
+  },
+  {
+    "name": "Oq-Tepa Lavash",
+    "rating": 1.0,
+    "description_id": "2a904705-0e55-4af4-aae0-b18d4db76315",
+    "image_url": "AgACAgIAAxkBAAIEBGY5-RfermaSOydz-X1WRz_ez7CZAAJ42TEbAAGP0UnTr3Jsj97ayQEAAwIAA3kAAzUE",
+    "opening_time": "12/05/2024 17:34:44",
+    "closing_time": "12/05/2024 17:34:44",
+    "id": "01188cf2-3ccf-4692-9e01-7859e65fc46d",
+    "created_at": "12/05/2024 17:34:44",
+    "is_deleted": false
+  }
+]
