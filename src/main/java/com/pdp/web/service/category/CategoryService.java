@@ -25,5 +25,5 @@ public interface CategoryService extends BaseService<Category, Set<Category>> {
      * @param brandID The UUID of the brand whose categories are to be retrieved.
      * @return A list of {@link Category} instances associated with the given brand.
      */
-    List<Category> getBrandCategories(UUID brandID);
+    Set<Category> getBrandCategories(UUID brandID);
 }
