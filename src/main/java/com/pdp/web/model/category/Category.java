@@ -8,6 +8,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -23,7 +24,6 @@ import java.util.UUID;
 @Getter
 @ToString(callSuper = true)
 @AllArgsConstructor
-@EqualsAndHashCode(of = "brandId",callSuper = true)
 public class Category extends BaseModel implements Displayable {
     private String name;
     @SerializedName("brand_id")
@@ -34,5 +34,18 @@ public class Category extends BaseModel implements Displayable {
     @Override
     public String getDisplayName() {
         return this.name;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Category)) return false;
+        Category category = (Category) o;
+        return Objects.equals(name, category.name) &&
+                Objects.equals(brandId, category.brandId);
+    }
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, brandId);
     }
 }
