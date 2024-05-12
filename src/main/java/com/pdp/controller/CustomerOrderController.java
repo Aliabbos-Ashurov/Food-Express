@@ -65,6 +65,7 @@ public class CustomerOrderController {
                 case 2 -> myOrder();
                 case 3 -> registerAsCourier();
                 case 0 -> {
+                    UserController.curUser = null;
                     LoginController.userSignInSignUp();
                 }
                 default -> printInvalidSelectionError();
@@ -115,7 +116,7 @@ public class CustomerOrderController {
         return orderService.getOrderPrice(customerOrder.getId());
     }
     private static void makeEmpty(CustomerOrder customerOrder) {
-        displayCartMenu();
+        displayConfirmationMenu();
         int i = Scan.scanInt();
         boolean success = i == 1;
         if (success) {
@@ -176,11 +177,14 @@ public class CustomerOrderController {
             int quantity = Scan.scanInt("Enter quantity");
             BigDecimal orderPrice = food.getPrice().multiply(BigDecimal.valueOf(quantity));
             Branch branch = branchService.getBrandBranches(brand.getId()).getFirst();
+            if (Objects.isNull(branch)) return;
             CustomerOrder customerOrder = customerOrderService.getOrCreate(getCurrentUser().getId(), branch.getId());
+            if (Objects.isNull(customerOrder)) return;
             CustomOrderDTO dto = new CustomOrderDTO(customerOrder.getUserID(), customerOrder.getBranchID());
             Order order = new Order(food.getId(), orderPrice, quantity, customerOrder.getId());
             Order serviceOrCreate = orderService.getOrCreate(dto, order);
-            NotificationHandler.notifyAction("Order","added",Objects.nonNull(serviceOrCreate));
+            if (Objects.isNull(serviceOrCreate)) return;
+            NotificationHandler.notifyAction("Order","added", true);
             MessageSourceUtils.getLocalizedMessage("success.itemAddedToCart", getCurrentUser().getLanguage());
         }
     }
