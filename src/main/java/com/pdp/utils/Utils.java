@@ -1,6 +1,8 @@
 package com.pdp.utils;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author Aliabbos Ashurov
@@ -19,5 +21,9 @@ public class Utils {
     public static <T> T getElementByIndex(List<T> list, int choice) {
         if (choice < 1 || choice > list.size()) return null;
         return list.get(choice - 1);
+    }
+    public static <T> T getElementByIndexForSet(Set<T> set, int choice) {
+        if (choice < 1 || choice > set.size()) return null;
+        return new ArrayList<>(set).get(choice - 1);
     }
 }
