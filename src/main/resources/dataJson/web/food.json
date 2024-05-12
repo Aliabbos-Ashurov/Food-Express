@@ -1,1 +1,92 @@
-[]
+[
+  {
+    "name": "Sanders burger original",
+    "image_url": null,
+    "description_id": "345eaaa1-561d-45f7-9d3b-5cc0cdbd2053",
+    "price": 23000,
+    "category_id": "c617f712-d95e-4d85-a4c0-71de8c2cf3e8",
+    "id": "7d83ea1f-870d-430d-96fb-aa5db8099088",
+    "created_at": "12/05/2024 20:27:19",
+    "is_deleted": false
+  },
+  {
+    "name": "Big sanders burger original",
+    "image_url": null,
+    "description_id": "0ce4136f-68fe-4557-8cd1-b5562529fa07",
+    "price": 37000,
+    "category_id": "9439c4f8-8799-4ab1-82cb-6987c0a706ad",
+    "id": "2af5b56c-d9d9-42c5-ba9c-a3d1124cc38d",
+    "created_at": "12/05/2024 20:30:56",
+    "is_deleted": false
+  },
+  {
+    "name": "Chizburger de lyuks",
+    "image_url": null,
+    "description_id": "04e53657-4d97-49e4-b9e5-457f177003e4",
+    "price": 23000,
+    "category_id": "83370f8d-7105-47ee-916a-8bf016c7f853",
+    "id": "998fe6dd-c2a1-4d2a-9d7c-c63ccb819407",
+    "created_at": "12/05/2024 20:34:53",
+    "is_deleted": false
+  },
+  {
+    "name": "LANCHBOKS 30000-5",
+    "image_url": null,
+    "description_id": "7183f62c-44ce-4624-b575-8215bdca7325",
+    "price": 30000,
+    "category_id": "479e80eb-256d-4193-8847-db5f5c1489c4",
+    "id": "fbfd2a36-db27-470a-a651-94f5231e0964",
+    "created_at": "12/05/2024 20:37:39",
+    "is_deleted": false
+  },
+  {
+    "name": "LANCHBOKS 45000-5",
+    "image_url": null,
+    "description_id": "8ca5456f-eac2-41bd-a83d-9addc7911097",
+    "price": 45000,
+    "category_id": "75e3d6b4-fa54-4f12-9ff1-d98c7865f97b",
+    "id": "f8ef49e4-5aae-4a3f-8c69-b39814251965",
+    "created_at": "12/05/2024 20:38:43",
+    "is_deleted": false
+  },
+  {
+    "name": "Chili nordon-shirin sousi",
+    "image_url": null,
+    "description_id": "dce8c6e1-4a34-4456-8798-f9e31557359b",
+    "price": 4000,
+    "category_id": "f6b44304-442b-4bc3-9ed0-4c09d6f02b4c",
+    "id": "1f5c909a-6bdb-4e5c-9a99-2e503b7e2511",
+    "created_at": "12/05/2024 20:40:49",
+    "is_deleted": false
+  },
+  {
+    "name": "Sarimsoqli sous",
+    "image_url": null,
+    "description_id": "becd962c-7841-4b65-a955-55f7ade904a6",
+    "price": 4000,
+    "category_id": "50ac177b-8c8c-45ab-9ff8-1a809a89176f",
+    "id": "2752546f-b51f-4ad1-8ae8-49d481869dbb",
+    "created_at": "12/05/2024 20:41:30",
+    "is_deleted": false
+  },
+  {
+    "name": "Tomatli ketchup",
+    "image_url": null,
+    "description_id": "b9216a84-bd28-4b7b-89b9-8faf2206ab9f",
+    "price": 4000,
+    "category_id": "adca1067-bf6a-4749-99e2-513157c5ddc6",
+    "id": "54f47f33-1c37-4cc6-9b41-4f97c4eff09a",
+    "created_at": "12/05/2024 20:42:46",
+    "is_deleted": false
+  },
+  {
+    "name": "Pishloqli, original sous",
+    "image_url": null,
+    "description_id": "ef68144e-eafd-4a1f-9561-544e798d438d",
+    "price": 4000,
+    "category_id": "4e4f23ac-6710-4210-a699-913f175e01dc",
+    "id": "8ce9c91d-1c04-41ab-9b66-de7c70040df4",
+    "created_at": "12/05/2024 20:43:58",
+    "is_deleted": false
+  }
+]
