@@ -33,7 +33,8 @@ public class CustomerOrderServiceImp implements CustomerOrderService {
     public List<CustomerOrder> getOrdersInProcessByDeliverer(UUID deliverId) {
         return getAll().stream()
                 .filter(c -> c.getDeliverID().equals(deliverId)
-                        && c.getOrderStatus().equals(OrderStatus.YOUR_ORDER_RECEIVED))
+                        && (c.getOrderStatus().equals(OrderStatus.YOUR_ORDER_RECEIVED)
+                        || c.getOrderStatus().equals(OrderStatus.IN_TRANSIT)))
                 .toList();
     }
 
