@@ -40,6 +40,17 @@ public class BranchRepository implements BaseRepository<Branch, List<Branch>> {
         return instance;
     }
 
+    /**
+     * Adds a new Branch entity to the repository and serializes the updated list
+     * to permanent storage through {@link JsonSerializer}.
+     * <p>
+     * This method will add the Branch to an in-memory list and save the entire list
+     * to the path defined by {@code PATH_BRANCH}.
+     *
+     * @param branch The Branch entity to be added to the repository.
+     * @return True if the Branch has been successfully added, false otherwise.
+     * @throws Exception If an error occurs during the saving process.
+     */
     @Override
     public boolean add(@NonNull Branch branch) {
         List<Branch> branches = load();
@@ -84,12 +95,30 @@ public class BranchRepository implements BaseRepository<Branch, List<Branch>> {
         return load();
     }
 
+    /**
+     * Loads the existing Branch entities from the permanent storage into memory.
+     * <p>
+     * Branch objects are read from a JSON formatted file using {@link JsonSerializer},
+     * which converts the raw data into a list of Branch entities.
+     *
+     * @return A list of deserialized Branch objects.
+     * @throws Exception If an error occurs during the reading and deserialization process.
+     */
     @SneakyThrows
     @Override
     public List<Branch> load() {
         return jsonSerializer.read(Branch.class);
     }
 
+    /**
+     * Saves the current list of Branch entities to permanent storage.
+     * <p>
+     * The in-memory list of Branches is serialized to a JSON formatted file
+     * by {@link JsonSerializer} ensuring that updates are persisted.
+     *
+     * @param list The list of Branch entities to be serialized and saved.
+     * @throws Exception If an error occurs during serialization or writing to storage.
+     */
     @SneakyThrows
     @Override
     public void save(@NonNull List<Branch> list) {

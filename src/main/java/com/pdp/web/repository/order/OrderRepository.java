@@ -84,7 +84,8 @@ public class OrderRepository implements BaseRepository<Order, List<Order>> {
         List<Order> orders = load();
         return orders.stream()
                 .filter(order -> order.getId().equals(id))
-                .findFirst().orElse(null);
+                .findFirst()
+                .orElse(null);
     }
 
     @Override

@@ -11,18 +11,23 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * Provides repository operations for Address entities, enabling CRUD operations
- * to be performed on address data. This includes adding, removing, finding by ID,
+ * Provides repository operations for {@link Address} entities, enabling CRUD operations
+ * to be conducted on address data. This includes adding, removing, finding by ID,
  * and retrieving all address records.
  * <p>
- * Utilizes JsonSerializer for handling serialization and deserialization of Address
- * objects for persistence to and from a JSON file located at the path provided by
- * JsonFilePath.ADDRESS.
+ * Utilizes {@link JsonSerializer} for the serialization and deserialization of
+ * {@link Address} objects for persistence to and from a JSON file located at the
+ * path provided by {@code JsonFilePath.ADDRESS}.
  * <p>
  * The repository maintains an in-memory list of address objects for runtime data
- * access. Changes to the addresses list are persisted to the JSON file via JsonSerializer.
+ * access. Changes to the addresses list are persisted to the JSON file via
+ * {@link JsonSerializer}.
+ * <p>
+ * This class is a singleton and can be accessed via {@link #getInstance()}.
  *
  * @author Aliabbos Ashurov
+ * @see Address for the entity that {@code AddressRepository} manages.
+ * @see BaseRepository for base repository interface.
  * @since 04/May/2024 15:34
  */
 public class AddressRepository implements BaseRepository<Address, List<Address>> {
@@ -64,10 +69,13 @@ public class AddressRepository implements BaseRepository<Address, List<Address>>
     }
 
     /**
-     * Removes an Address record from the repository based on the given ID and persists changes.
+     * Removes the {@link Address} with the specified unique identifier from the repository.
+     * The removal is persisted by updating the repository's JSON file. This method is
+     * idempotent; calling it on an identifier not present in the repository has no effect.
      *
-     * @param id The UUID of the Address record to remove.
-     * @return True if an address with the specified ID was found and removed, false otherwise.
+     * @param id The unique identifier of the {@link Address} to be removed.
+     * @return {@code true} if an address with the specified identifier was found and removed;
+     * {@code false} otherwise.
      */
     @Override
     public boolean remove(@NonNull UUID id) {
@@ -78,10 +86,11 @@ public class AddressRepository implements BaseRepository<Address, List<Address>>
     }
 
     /**
-     * Finds an Address record by its ID.
+     * Retrieves an {@link Address} entity by its unique identifier. If no such address
+     * exists within the repository, this method returns {@code null}.
      *
-     * @param id The UUID of the Address to find.
-     * @return The Address object if found, or null if not found.
+     * @param id The unique identifier of the {@link Address} to locate.
+     * @return The {@link Address} entity if found; otherwise, {@code null}.
      */
     @Override
     public Address findById(@NonNull UUID id) {
@@ -92,21 +101,39 @@ public class AddressRepository implements BaseRepository<Address, List<Address>>
     }
 
     /**
-     * Retrieves all addresses from the repository.
+     * Obtains a complete list of {@link Address} entities managed by the repository.
      *
-     * @return A list of all Address objects in the repository.
+     * @return A {@link List} of all {@link Address} entities within the repository.
      */
     @Override
     public List<Address> getAll() {
         return load();
     }
 
+    /**
+     * Reads a collection of {@link Address} entities from the repository's data store.
+     * This method depends on {@link JsonSerializer} to read a list of addresses from
+     * the corresponding JSON file and deserialize them.
+     *
+     * @return A list containing all deserialized {@link Address} entities.
+     * @throws Exception if there is an error during the deserialization process.
+     */
     @SneakyThrows
     @Override
     public List<Address> load() {
         return jsonSerializer.read(Address.class);
     }
 
+
+    /**
+     * Persists the current state of the repository's {@link Address} entities to the
+     * data store. This method utilizes {@link JsonSerializer} to serialize and write
+     * the list of addresses to the repository's JSON file.
+     *
+     * @param list The list of {@link Address} entities to be serialized and written
+     *             to the persistent data store.
+     * @throws Exception if there is an error during the serialization or write process.
+     */
     @SneakyThrows
     @Override
     public void save(@NonNull List<Address> list) {

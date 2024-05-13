@@ -84,7 +84,8 @@ public class TransportRepository implements BaseRepository<Transport,List<Transp
         List<Transport> transports = load();
         return transports.stream()
                 .filter(transport -> transport.getId().equals(id))
-                .findFirst().orElse(null);
+                .findFirst()
+                .orElse(null);
     }
 
     /**

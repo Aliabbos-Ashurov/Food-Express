@@ -11,14 +11,17 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * Handles the persistence of Brand entities, providing a mechanism to add, remove,
- * find, and list all Brands. This repository leverages JsonSerializer for the
- * serialization and deserialization of Brand instances to and from JSON format.
+ * The {@code BrandRepository} class handles the persistence of {@link Brand} entities, offering CRUD operations
+ * for managing a collection of brand records. It uses {@link JsonSerializer} to serialize and deserialize
+ * {@code Brand} instances to and from a designated JSON file.
  * <p>
- * Implements the BaseRepository interface, utilizing a local in-memory list that
- * is synchronized with a JSON file defined by JsonFilePath.BRAND.
+ * By implementing the {@link BaseRepository} interface, this class provides a consistent set of methods
+ * for interacting with brand data. The repository maintains an in-memory list of {@code Brand} objects,
+ * ensuring high-performance access, and synchronizes this list with a JSON storage file defined by
+ * {@code PATH_BRAND}.
  * <p>
- * Operations to this repository are persisted to the JSON storage immediately.
+ * All operations performed on the repository are immediately persisted to the JSON storage to ensure data integrity
+ * and seamless recovery on subsequent application runs.
  *
  * @author Aliabbos Ashurov
  * @since 04/May/2024 15:51
@@ -30,6 +33,13 @@ public class BrandRepository implements BaseRepository<Brand, List<Brand>> {
     private BrandRepository() {
     }
 
+    /**
+     * Lazily loads and returns a singleton instance of {@code BrandRepository}, ensuring
+     * thread-safe instantiation. The Json storage path is initialized following the singleton
+     * creation.
+     *
+     * @return The single active {@code BrandRepository} instance.
+     */
     public static BrandRepository getInstance() {
         if (instance == null) {
             synchronized (BrandRepository.class) {
@@ -85,12 +95,26 @@ public class BrandRepository implements BaseRepository<Brand, List<Brand>> {
         return load();
     }
 
+    /**
+     * Synchronously reads the entire list of brand data from persistent JSON storage,
+     * deserializing it into a list of {@code Brand} objects.
+     *
+     * @return A {@link List} of {@code Brand} objects.
+     * @throws Exception If any I/O errors occur during reading from storage.
+     */
     @SneakyThrows
     @Override
     public List<Brand> load() {
         return jsonSerializer.read(Brand.class);
     }
 
+    /**
+     * Synchronously writes the current state of the brand list to persistent JSON storage,
+     * serializing it from the in-memory {@link List} representation.
+     *
+     * @param list The {@link List} of {@code Brand} objects to write to storage.
+     * @throws Exception If any I/O errors occur during writing to storage.
+     */
     @SneakyThrows
     @Override
     public void save(@NonNull List<Brand> list) {

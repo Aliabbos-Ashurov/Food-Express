@@ -18,9 +18,8 @@ import java.util.UUID;
  * @param <T> The type of the entity that the repository will manage.
  * @author Aliabbos Ashurov
  * @since 04/May/2024 14:51
- *
  */
-public interface BaseRepository<T extends BaseModel,R extends Collection<T>> extends JsonFilePath {
+public interface BaseRepository<T extends BaseModel, R extends Collection<T>> extends JsonFilePath {
 
     /**
      * Adds a new entity to the repository.
@@ -54,5 +53,6 @@ public interface BaseRepository<T extends BaseModel,R extends Collection<T>> ext
     R getAll();
 
     R load();
+
     void save(@NonNull R r);
 }

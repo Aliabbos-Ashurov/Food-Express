@@ -30,9 +30,11 @@ public class BannedRepository implements BaseRepository<Banned, List<Banned>> {
     }
 
     /**
-     * Gets the singleton instance of BannedRepository.
+     * Lazily initializes and retrieves the sole instance of {@code BannedRepository}.
+     * Ensures that the instance is created only once using a thread-safe double-checked
+     * locking mechanism.
      *
-     * @return The singleton instance of BannedRepository.
+     * @return the exclusive instance of the {@code BannedRepository}
      */
     public static BannedRepository getInstance() {
         if (instance == null) {
@@ -46,11 +48,13 @@ public class BannedRepository implements BaseRepository<Banned, List<Banned>> {
         return instance;
     }
 
+
     /**
-     * Adds a new banned entity to the repository and persists changes.
+     * Adds a {@code Banned} instance to the repository and serializes the updated list
+     * of banned entities to persistent storage.
      *
-     * @param banned The {@link Banned} object to add.
-     * @return True if the banned entity is added successfully, false otherwise.
+     * @param banned the {@link Banned} instance to be added to the repository
+     * @return {@code true} if the operation was successful, {@code false} otherwise
      */
     @Override
     public boolean add(@NonNull Banned banned) {
@@ -61,10 +65,11 @@ public class BannedRepository implements BaseRepository<Banned, List<Banned>> {
     }
 
     /**
-     * Removes a banned entity from the repository based on the given ID and persists changes.
+     * Removes a {@code Banned} instance identified by the provided {@link UUID} from the
+     * repository and serializes the updated list to persistent storage.
      *
-     * @param id The UUID of the banned entity to remove.
-     * @return True if a banned entity with the specified ID was found and removed, false otherwise.
+     * @param id the unique identifier of the {@link Banned} instance to be removed
+     * @return {@code true} if an instance was found and removed, {@code false} otherwise
      */
     @Override
     public boolean remove(@NonNull UUID id) {
@@ -75,10 +80,10 @@ public class BannedRepository implements BaseRepository<Banned, List<Banned>> {
     }
 
     /**
-     * Retrieves a banned entity based on its unique identifier.
+     * Finds and returns a {@code Banned} instance in the repository, identified by its {@link UUID}.
      *
-     * @param id The UUID of the banned entity to find.
-     * @return The {@link Banned} entity if found; null otherwise.
+     * @param id the unique identifier of the {@link Banned} instance to be retrieved
+     * @return the {@link Banned} instance if it exists, or {@code null} if it does not
      */
     @Override
     public Banned findById(@NonNull UUID id) {
@@ -90,21 +95,33 @@ public class BannedRepository implements BaseRepository<Banned, List<Banned>> {
     }
 
     /**
-     * Gets an unmodifiable list of all banned entities in the repository.
+     * Retrieves an immutable list of all instances of {@code Banned} currently stored in the repository.
      *
-     * @return An unmodifiable list representing all the banned entities.
+     * @return an immutable list of {@link Banned} instances
      */
     @Override
     public List<Banned> getAll() {
         return load();
     }
 
+    /**
+     * Loads a list of all {@code Banned} instances from persistent storage.
+     *
+     * @return a list containing all deserialized {@link Banned} instances
+     * @throws Exception if an issue occurs during deserialization
+     */
     @SneakyThrows
     @Override
     public List<Banned> load() {
         return jsonSerializer.read(Banned.class);
     }
 
+    /**
+     * Serializes and saves the current list of {@code Banned} instances to persistent storage.
+     *
+     * @param list the list of {@link Banned} instances to be serialized
+     * @throws Exception if an issue occurs during serialization or writing storage
+     */
     @SneakyThrows
     @Override
     public void save(@NonNull List<Banned> list) {

@@ -11,14 +11,21 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.*;
 
+
 /**
- * This class provides the repository layer for managing {@link Category} objects, including
- * operations for adding, removing, finding by their unique identifier, and retrieving all category records.
+ * Provides the repository infrastructure for managing Category entities.
+ * Offers standard CRUD operations including addition, removal, search by ID,
+ * and acquisition of all categories.
  * <p>
- * The storage and retrieval of {@link Category} objects from a JSON source is facilitated
- * through use of a {@link JsonSerializer}. This allows categories to be persisted across application sessions.
+ * Utilizes the JsonSerializer to facilitate the serialization and deserialization
+ * processes for Category objects, thereby ensuring data persistence across application sessions.
  *
  * @author Aliabbos Ashurov
+ * @see JsonSerializer
+ * @see BaseRepository
+ * @see UUID
+ * @see Category
+ * @see Set
  * @since 04/May/2024 16:29
  */
 public class CategoryRepository implements BaseRepository<Category, Set<Category>> {
@@ -28,6 +35,16 @@ public class CategoryRepository implements BaseRepository<Category, Set<Category
     private CategoryRepository() {
     }
 
+    /**
+     * Retrieves a singleton instance of {@code CategoryRepository}. On initial access,
+     * synchronizes access to ensure only one instance is created, thereafter returning
+     * said instance for future calls.
+     *
+     * @return A singleton {@code CategoryRepository} instance.
+     * @see #instance
+     * @see JsonSerializer
+     * @see JsonFilePath#PATH_CATEGORY
+     */
     public static CategoryRepository getInstance() {
         if (instance == null) {
             synchronized (CategoryRepository.class) {
@@ -57,10 +74,11 @@ public class CategoryRepository implements BaseRepository<Category, Set<Category
     }
 
     /**
-     * Retrieves a category from the repository based on its UUID.
+     * Retrieves a {@code Category} object by its unique identifier, returning
+     * an {@code Optional}. If the category does not exist, an empty Optional is returned.
      *
-     * @param id The UUID of the desired category.
-     * @return The {@link Category} object if found; null otherwise.
+     * @param id The unique identifier of the category to search.
+     * @return An {@code Optional<Category>} with the category found, or empty if not found.
      */
     @Override
     public Category findById(@NonNull UUID id) {
@@ -72,15 +90,22 @@ public class CategoryRepository implements BaseRepository<Category, Set<Category
     }
 
 
+    /**
+     * Retrieves the entire set of categories currently managed by the repository.
+     *
+     * @return A {@code Set} containing all categories.
+     */
     @Override
     public Set<Category> getAll() {
         return load();
     }
 
     /**
-     * Reads and loads the list of categories from the JSON file.
+     * Reads and deserializes the JSON file into a {@code Set} containing {@code Category} objects.
+     * Uses the {@link JsonSerializer} utility for deserialization.
      *
-     * @return A list of loaded {@link Category} objects.
+     * @return A {@code Set} containing deserialized {@code Category} objects.
+     * @throws IOException If an error occurs during deserialization.
      */
     @SneakyThrows
     @Override
@@ -90,9 +115,11 @@ public class CategoryRepository implements BaseRepository<Category, Set<Category
     }
 
     /**
-     * Persists all current categories from memory back to the JSON storage file.
+     * Serializes and persists all categories from the in-memory {@code Set} to the JSON
+     * storage file. Uses the {@link JsonSerializer} utility for serialization.
      *
-     * @throws IOException if an I/O error occurs during writing to the file.
+     * @param categories The {@code Set} of {@code Category} objects to persist.
+     * @throws IOException If an error occurs during serialization.
      */
     @SneakyThrows
     @Override

@@ -84,7 +84,8 @@ public class PictureRepository implements BaseRepository<Picture,List<Picture>> 
         List<Picture> pictures = load();
         return pictures.stream()
                 .filter(picture -> picture.getId().equals(id))
-                .findFirst().orElse(null);
+                .findFirst()
+                .orElse(null);
     }
 
     /**

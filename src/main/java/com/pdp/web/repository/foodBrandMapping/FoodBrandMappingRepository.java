@@ -12,12 +12,13 @@ import java.util.UUID;
 
 
 /**
- * This repository manages the persistent storage and retrieval of relationships between Food items and their Brands,
- * facilitating mapping operations by providing an abstracted interface to add, remove, and query FoodBrandMapping entities.
- * Serialization and deserialization are handled by JsonSerializer, leveraging JSON format for long-term data management.
+ * Manages the persistence and retrieval of relationships between Food items and their Brands,
+ * facilitating mapping operations by providing CRUD functionality for FoodBrandMapping entities.
+ * Serialization and deserialization of FoodBrandMapping objects are handled by JsonSerializer,
+ * using JSON format for data storage.
  * <p>
- * Extends the functionality of the {@link BaseRepository} to accommodate the specialized requirements of FoodBrandMapping entities,
- * enforcing consistent interaction patterns and behavior across the application.
+ * Extends the BaseRepository interface to ensure consistent interaction patterns and behavior
+ * for managing FoodBrandMapping entities across the application.
  *
  * @author Aliabbos Ashurov
  * @see BaseRepository
@@ -35,6 +36,11 @@ public class FoodBrandMappingRepository implements BaseRepository<FoodBrandMappi
     private FoodBrandMappingRepository() {
     }
 
+    /**
+     * Retrieves the singleton instance of FoodBrandMappingRepository.
+     *
+     * @return The singleton instance of FoodBrandMappingRepository.
+     */
     public static FoodBrandMappingRepository getInstance() {
         if (instance == null) {
             synchronized (FoodBrandMappingRepository.class) {
@@ -48,8 +54,10 @@ public class FoodBrandMappingRepository implements BaseRepository<FoodBrandMappi
     }
 
     /**
-     * {@inheritDoc}
-     * Additionally, saves the updated list to the JSON storage immediately after adding.
+     * Adds a new FoodBrandMapping to the repository and saves the updated list to JSON storage.
+     *
+     * @param foodBrandMapping The FoodBrandMapping object to be added.
+     * @return true if the operation was successful, false otherwise.
      */
     @Override
     public boolean add(FoodBrandMapping foodBrandMapping) {
@@ -60,8 +68,10 @@ public class FoodBrandMappingRepository implements BaseRepository<FoodBrandMappi
     }
 
     /**
-     * {@inheritDoc}
-     * Once an object is removed, the changes are persisted to the JSON storage.
+     * Removes a FoodBrandMapping from the repository based on its UUID and persists the changes.
+     *
+     * @param id The UUID of the FoodBrandMapping to remove.
+     * @return true if the FoodBrandMapping was successfully removed, false otherwise.
      */
     @Override
     public boolean remove(UUID id) {
@@ -72,8 +82,10 @@ public class FoodBrandMappingRepository implements BaseRepository<FoodBrandMappi
     }
 
     /**
-     * {@inheritDoc}
-     * Retrieves a mapping by UUID if it exists, null otherwise.
+     * Finds a FoodBrandMapping in the repository by its UUID.
+     *
+     * @param id The UUID of the FoodBrandMapping to find.
+     * @return The FoodBrandMapping object if found, null otherwise.
      */
     @Override
     public FoodBrandMapping findById(UUID id) {
@@ -83,17 +95,33 @@ public class FoodBrandMappingRepository implements BaseRepository<FoodBrandMappi
                 .findFirst().orElse(null);
     }
 
+    /**
+     * Retrieves all FoodBrandMappings currently stored in the repository.
+     *
+     * @return A list of all FoodBrandMappings in the repository.
+     */
     @Override
     public List<FoodBrandMapping> getAll() {
         return load();
     }
 
+    /**
+     * Loads the list of FoodBrandMappings from JSON storage into memory.
+     *
+     * @return A List containing FoodBrandMappings loaded from storage, or an empty List if loading fails.
+     */
     @SneakyThrows
     @Override
     public List<FoodBrandMapping> load() {
         return jsonSerializer.read(FoodBrandMapping.class);
     }
 
+    /**
+     * Persists the current list of FoodBrandMappings to JSON storage.
+     *
+     * @param foodBrandMappings The list of FoodBrandMappings to save.
+     * @throws IOException if an error occurs during the save operation.
+     */
     @SneakyThrows
     @Override
     public void save(@NonNull List<FoodBrandMapping> foodBrandMappings) {

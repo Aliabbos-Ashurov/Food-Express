@@ -59,10 +59,12 @@ public class DelivererRepository implements BaseRepository<Deliverer, List<Deliv
     }
 
     /**
-     * Searches for a {@code Deliverer} in the repository based on a UUID.
+     * Finds and returns a {@code Deliverer} by its UUID from the local repository cache.
+     * It uses a stream to filter the list of deliverers. If the deliverer is not found,
+     * {@code null} is returned.
      *
-     * @param id The unique identifier of the deliverer to find.
-     * @return The {@code Deliverer} object if present; {@code null} otherwise.
+     * @param id The UUID of the {@code Deliverer} to retrieve.
+     * @return The matching {@code Deliverer} object if found; {@code null} otherwise.
      */
     @Override
     public Deliverer findById(UUID id) {
@@ -72,15 +74,24 @@ public class DelivererRepository implements BaseRepository<Deliverer, List<Deliv
                 .findFirst().orElse(null);
     }
 
+    /**
+     * Retrieves all {@code Deliverer} entities from the repository. The list is dynamically
+     * loaded from the JSON storage upon each call to ensure up-to-date data is returned.
+     *
+     * @return A list of all {@code Deliverer} objects contained in the repository.
+     */
     @Override
     public List<Deliverer> getAll() {
         return load();
     }
 
     /**
-     * Populates the list of {@code Deliverer} entities from persistent storage.
+     * Loads and deserializes the list of {@code Deliverer} entities from the JSON storage file.
+     * The {@link JsonSerializer} is used here to convert the contents of the file to a list of
+     * {@code Deliverer} objects.
      *
-     * @return A list containing the loaded deliverers, or an empty list in case of an error.
+     * @return A list containing all deserialized {@code Deliverer} entities from the file.
+     * @throws IOException If any issues occur during file reading and deserialization.
      */
     @SneakyThrows
     @Override

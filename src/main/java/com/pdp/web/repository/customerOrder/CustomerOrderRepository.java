@@ -75,6 +75,14 @@ public class CustomerOrderRepository implements BaseRepository<CustomerOrder, Li
         return removed;
     }
 
+    /**
+     * Searches and retrieves a {@code CustomerOrder} from the repository using the
+     * specified UUID. If the order is not found, `{@code null}` is returned. This
+     * method reads from the in-memory list, which is synchronized with the JSON file.
+     *
+     * @param id The UUID of the {@code CustomerOrder} to retrieve.
+     * @return The retrieved {@code CustomerOrder}, or {@code null} if not found.
+     */
     @Override
     public CustomerOrder findById(@NonNull UUID id) {
         List<CustomerOrder> customerOrders = load();
@@ -83,17 +91,39 @@ public class CustomerOrderRepository implements BaseRepository<CustomerOrder, Li
                 .findFirst().orElse(null);
     }
 
+    /**
+     * Retrieves all customer orders from the repository. This method reads from the
+     * in-memory list, which reflects the state of the persisted JSON file.
+     *
+     * @return A List of all {@code CustomerOrder} objects
+     */
     @Override
     public List<CustomerOrder> getAll() {
         return load();
     }
 
+    /**
+     * Loads customer orders from the predefined JSON file into memory. The
+     * {@link JsonSerializer} is used to read from the file and deserialize the JSON
+     * into {@code CustomerOrder} objects.
+     *
+     * @return A list containing the deserialized {@code CustomerOrder} objects.
+     * @throws IOException if there is any issue in reading the file.
+     */
     @SneakyThrows
     @Override
     public List<CustomerOrder> load() {
         return jsonSerializer.read(CustomerOrder.class);
     }
 
+    /**
+     * Saves the current state of customer orders into the predefined JSON file. All
+     * customer orders present in the memory are serialized and written to the file
+     * using {@link JsonSerializer}.
+     *
+     * @param customerOrders The List of {@code CustomerOrder} objects to persist.
+     * @throws IOException if there is any issue in writing to the file.
+     */
     @SneakyThrows
     @Override
     public void save(@NonNull List<CustomerOrder> customerOrders) {

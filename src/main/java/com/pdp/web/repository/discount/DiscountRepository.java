@@ -17,7 +17,7 @@ import java.util.UUID;
  * Serialization and deserialization of Discount objects are performed by a JsonSerializer,
  * ensuring the data is maintained in a JSON file as defined in JsonFilePath.
  * <p>
- * Implements the BaseRepository interface, which includes methods guaranteeing
+ * Implements the {@link BaseRepository} interface, which includes methods guaranteeing
  * consistent access to the underlying Discount data.
  *
  * @author Aliabbos Ashurov

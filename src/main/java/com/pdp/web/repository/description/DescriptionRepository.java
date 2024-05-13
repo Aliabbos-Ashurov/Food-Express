@@ -11,20 +11,22 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * Facilitates the storage management of Description entities, allowing operations such
- * as add, remove, findById, and getAll. Interactions with the JSON data storage are
- * accomplished using JsonSerializer, permitting the persistence and retrieval of
- * Description records.
+ * The {@code DescriptionRepository} class provides a specialized storage mechanism
+ * for {@link Description} entities. It supports the basic CRUD operations including addition,
+ * deletion, searching by identifier, and obtaining all records.
  * <p>
- * Inherits the BaseRepository interface's methods for standardized data access and manipulation.
- * This repository ensures all Description objects are up-to-date and synchronized with a
- * JSON-formatted data file identified by JsonFilePath.DESCRIPTION.
+ * Persistence of {@code Description} records is handled by {@link JsonSerializer} which facilitates
+ * serialization to and from JSON format. As such, this repository provides a robust means of storing
+ * Description data to a JSON file specified by {@link JsonFilePath#PATH_DESCRIPTION}.
+ * <p>
+ * Adheres to the {@link BaseRepository} interface for standard interaction with persistence layers.
  *
  * @author Aliabbos Ashurov
  * @see BaseRepository
+ * @see JsonSerializer
+ * @see JsonFilePath#PATH_DESCRIPTION
  * @since 04/May/2024 16:44
  */
-
 public class DescriptionRepository implements BaseRepository<Description, List<Description>> {
     private static JsonSerializer<Description> jsonSerializer;
     private static volatile DescriptionRepository instance;
@@ -37,6 +39,12 @@ public class DescriptionRepository implements BaseRepository<Description, List<D
     private DescriptionRepository() {
     }
 
+    /**
+     * Retrieves the singleton instance of the {@code DescriptionRepository} class, creating it
+     * if necessary. This method is thread-safe.
+     *
+     * @return The single global instance of {@code DescriptionRepository}.
+     */
     public static DescriptionRepository getInstance() {
         if (instance == null) {
             synchronized (DescriptionRepository.class) {
@@ -49,6 +57,13 @@ public class DescriptionRepository implements BaseRepository<Description, List<D
         return instance;
     }
 
+    /**
+     * Adds a new {@link Description} to the repository and updates the JSON storage file to reflect
+     * this addition.
+     *
+     * @param description The {@code Description} entity to be added.
+     * @return {@code true} after the entity is added and the storage file is updated.
+     */
     @Override
     public boolean add(Description description) {
         List<Description> descriptions = load();
@@ -57,6 +72,13 @@ public class DescriptionRepository implements BaseRepository<Description, List<D
         return true;
     }
 
+    /**
+     * Removes a {@link Description} entity from the repository using the provided UUID.
+     * Reflects changes immediately to the JSON storage file.
+     *
+     * @param id The UUID of the {@code Description} entity to remove.
+     * @return {@code true} if the entity is successfully found and removed; {@code false} otherwise.
+     */
     @Override
     public boolean remove(UUID id) {
         List<Description> descriptions = load();
@@ -65,6 +87,12 @@ public class DescriptionRepository implements BaseRepository<Description, List<D
         return removed;
     }
 
+    /**
+     * Looks for a {@link Description} entity within the repository matching the provided UUID.
+     *
+     * @param id The UUID to locate the {@code Description} entity by.
+     * @return The found {@code Description} entity if present; otherwise, {@code null}.
+     */
     @Override
     public Description findById(UUID id) {
         List<Description> descriptions = load();
@@ -73,11 +101,23 @@ public class DescriptionRepository implements BaseRepository<Description, List<D
                 .findFirst().orElse(null);
     }
 
+    /**
+     * Acquires all {@link Description} entities currently available in the repository.
+     *
+     * @return A {@link List} comprising all current {@code Description} entities.
+     */
     @Override
     public List<Description> getAll() {
         return load();
     }
 
+    /**
+     * Reads the contents of the predefined JSON storage file and deserializes the data into a {@link List}
+     * of {@link Description} entities.
+     *
+     * @return A {@link List} of {@code Description} entities.
+     * @throws IOException If any reading errors occur while accessing the JSON file.
+     */
     @SneakyThrows
     @Override
     public List<Description> load() {

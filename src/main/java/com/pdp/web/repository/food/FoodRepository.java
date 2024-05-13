@@ -13,15 +13,14 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * Responsible for managing the persistence of Food entities. This repository defines methods
- * for adding, removing, searching, and listing all food items. It utilizes a JsonSerializer
- * to handle the conversion of Food objects to and from JSON format for disk storage.
+ * Manages persistence operations for Food entities, providing CRUD functionality
+ * for adding, removing, searching, and listing food items. Utilizes JsonSerializer
+ * for serialization of Food objects to JSON format and vice versa.
  * <p>
- * The use of generic types allows for reusability with other entity types that implement
- * the BaseRepository interface, following consistent data access patterns and behaviors.
+ * Implements BaseRepository interface to ensure consistent data access patterns
+ * and behaviors across different entity types.
  * <p>
- * Extends the functionality of the BaseRepository interface to provide tailored
- * operations that fit the specific needs of managing Food entities.
+ * Extends BaseRepository to specialize operations for Food management.
  *
  * @author Aliabbos Ashurov
  * @see BaseRepository
@@ -35,6 +34,11 @@ public class FoodRepository implements BaseRepository<Food, List<Food>> {
     private FoodRepository() {
     }
 
+    /**
+     * Retrieves the singleton instance of FoodRepository.
+     *
+     * @return The singleton instance of FoodRepository.
+     */
     public static FoodRepository getInstance() {
         if (instance == null) {
             synchronized (FoodRepository.class) {
@@ -48,9 +52,9 @@ public class FoodRepository implements BaseRepository<Food, List<Food>> {
     }
 
     /**
-     * Adds a new Food item to the repository and saves this addition to the JSON file.
+     * Adds a new Food item to the repository and persists the change to JSON storage.
      *
-     * @param food The Food object to be added to the repository.
+     * @param food The Food object to be added.
      * @return true if the operation was successful, false otherwise.
      */
     @Override
@@ -62,11 +66,10 @@ public class FoodRepository implements BaseRepository<Food, List<Food>> {
     }
 
     /**
-     * Removes a Food item from the repository identified by a UUID and saves the
-     * changes to the JSON file.
+     * Removes a Food item from the repository based on its UUID.
      *
      * @param id The UUID of the Food item to remove.
-     * @return true if an item with the specified ID was successfully removed, false otherwise.
+     * @return true if the item was successfully removed, false otherwise.
      */
     @Override
     public boolean remove(UUID id) {
@@ -77,10 +80,10 @@ public class FoodRepository implements BaseRepository<Food, List<Food>> {
     }
 
     /**
-     * Retrieves a Food item from the repository using its UUID.
+     * Finds a Food item in the repository by its UUID.
      *
      * @param id The UUID of the Food item to find.
-     * @return The Food object if found, null otherwise.
+     * @return The Food object if found, otherwise null.
      */
     @Override
     public Food findById(UUID id) {
@@ -90,16 +93,20 @@ public class FoodRepository implements BaseRepository<Food, List<Food>> {
                 .findFirst().orElse(null);
     }
 
+    /**
+     * Retrieves all Food items currently stored in the repository.
+     *
+     * @return A list of all Food items in the repository.
+     */
     @Override
     public List<Food> getAll() {
         return load();
     }
 
     /**
-     * Loads and parses the list of Food items from JSON storage into memory.
-     * If the load operation fails due to an IO exception, an empty list is returned.
+     * Loads the list of Food items from JSON storage into memory.
      *
-     * @return A List populated with Food items or an empty List if an exception occurs.
+     * @return A List containing Food items loaded from storage, or an empty List if loading fails.
      */
     @SneakyThrows
     @Override
