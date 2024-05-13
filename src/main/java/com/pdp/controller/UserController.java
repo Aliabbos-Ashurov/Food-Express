@@ -20,7 +20,7 @@ public class UserController {
         }
     }
 
-    private static void handlePostLogin() {
+    public static void handlePostLogin() {
         if (curUser.getRole() == Role.USER) {
             CustomerOrderController.start();
         } else if (curUser.getRole() == Role.DELIVERER) {

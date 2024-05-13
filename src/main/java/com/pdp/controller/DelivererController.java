@@ -38,93 +38,13 @@ public class DelivererController {
             switch (Scan.scanInt()) {
                 case 1 -> orderAcceptance();
                 case 2 -> activeOrder();
-                case 0 -> LoginController.userSignInSignUp(false);
+                case 0 -> {
+                    LoginController.userSignInSignUp(false);
+                    UserController.handlePostLogin();
+                }
                 default -> printInvalidSelectionError();
             }
         }
-    }
-
-    private static void activeOrder() {
-        List<CustomerOrder> customerOrders = customerOrderService.getOrdersInProcessByDeliverer(UserController.curUser.getId());
-        NotificationHandler.checkData(customerOrders);
-        if (ListUtils.checkDataForNotNull(customerOrders)) {
-            displayOrders(customerOrders);
-            int index = Scan.scanInt() - 1;
-            if (index < 0 || index >= customerOrders.size()) {
-                printInvalidSelectionError();
-                return;
-            }
-            CustomerOrder customerOrder = customerOrders.get(index);
-            handleOrderStatus(customerOrder);
-        }
-    }
-
-    private static void handleOrderStatus(CustomerOrder customerOrder) {
-        OrderStatus orderStatus = customerOrder.getOrderStatus();
-        switch (orderStatus) {
-            case YOUR_ORDER_RECEIVED:
-                handleReceivedOrder(customerOrder);
-                break;
-            case IN_TRANSIT:
-                handleInTransitOrder(customerOrder);
-                break;
-            default:
-                printInvalidSelectionError();
-        }
-    }
-
-    private static void handleReceivedOrder(CustomerOrder customerOrder) {
-
-        MenuUtils.menu(MenuUtils.DELIVERER_GENERAL_MENU, LoginController.getCurUserLanguage());
-        switch (Scan.scanInt()) {
-            case 1:
-                confirmOrderReceipt(customerOrder);
-                break;
-            case 2:
-                cancelDelivery(customerOrder);
-                break;
-            case 0:
-                return;
-            default:
-                printInvalidSelectionError();
-        }
-
-    }
-
-    private static void handleInTransitOrder(CustomerOrder customerOrder) {
-
-        MenuUtils.menu(MenuUtils.DELIVERER_GENERAL_FOLLOWING, LoginController.getCurUserLanguage());
-        switch (Scan.scanInt()) {
-            case 1:
-                confirmDelivery(customerOrder);
-                break;
-            case 2:
-                cancelDelivery(customerOrder);
-                break;
-            case 0:
-                return;
-            default:
-                printInvalidSelectionError();
-        }
-
-    }
-
-    private static void confirmDelivery(CustomerOrder customerOrder) {
-        updateOrderStatus(customerOrder, OrderStatus.DELIVERED);
-    }
-
-    private static void confirmOrderReceipt(CustomerOrder customerOrder) {
-        updateOrderStatus(customerOrder, OrderStatus.IN_TRANSIT);
-    }
-
-    private static void cancelDelivery(CustomerOrder customerOrder) {
-        updateOrderStatus(customerOrder, OrderStatus.FAILED_DELIVERY);
-        MenuUtils.menu("menu.deliver.reason", LoginController.getCurUserLanguage());
-        String text = Scan.scanStr();
-        Description description = new Description("Canceled Order", text);
-        descriptionService.add(description);
-        customerOrder.setDescriptionID(description.getId());
-        customerOrderService.update(customerOrder);
     }
 
     private static void orderAcceptance() {
@@ -148,6 +68,73 @@ public class DelivererController {
             }
         }
     }
+
+    private static void activeOrder() {
+        List<CustomerOrder> customerOrders = customerOrderService.getOrdersInProcessByDeliverer(UserController.curUser.getId());
+        NotificationHandler.checkData(customerOrders);
+        if (ListUtils.checkDataForNotNull(customerOrders)) {
+            displayOrders(customerOrders);
+            int index = Scan.scanInt() - 1;
+            if (index < 0 || index >= customerOrders.size()) {
+                printInvalidSelectionError();
+                return;
+            }
+            CustomerOrder customerOrder = customerOrders.get(index);
+            handleOrderStatus(customerOrder);
+        }
+    }
+
+    private static void handleOrderStatus(CustomerOrder customerOrder) {
+        OrderStatus orderStatus = customerOrder.getOrderStatus();
+        switch (orderStatus) {
+            case YOUR_ORDER_RECEIVED -> handleReceivedOrder(customerOrder);
+            case IN_TRANSIT -> handleInTransitOrder(customerOrder);
+            default -> printInvalidSelectionError();
+        }
+    }
+
+    private static void handleReceivedOrder(CustomerOrder customerOrder) {
+
+        MenuUtils.menu(MenuUtils.DELIVERER_GENERAL_MENU, LoginController.getCurUserLanguage());
+        switch (Scan.scanInt()) {
+            case 1 -> confirmOrderReceipt(customerOrder);
+            case 2 -> cancelDelivery(customerOrder);
+            case 0 -> {}
+            default -> printInvalidSelectionError();
+        }
+
+    }
+
+    private static void handleInTransitOrder(CustomerOrder customerOrder) {
+
+        MenuUtils.menu(MenuUtils.DELIVERER_GENERAL_FOLLOWING, LoginController.getCurUserLanguage());
+        switch (Scan.scanInt()) {
+            case 1 -> confirmDelivery(customerOrder);
+            case 2 -> cancelDelivery(customerOrder);
+            case 0 -> {}
+            default -> printInvalidSelectionError();
+        }
+
+    }
+
+    private static void cancelDelivery(CustomerOrder customerOrder) {
+        updateOrderStatus(customerOrder, OrderStatus.FAILED_DELIVERY);
+        MenuUtils.menu("menu.deliver.reason", LoginController.getCurUserLanguage());
+        String text = Scan.scanStr();
+        Description description = new Description("Canceled Order", text);
+        descriptionService.add(description);
+        customerOrder.setDescriptionID(description.getId());
+        customerOrderService.update(customerOrder);
+    }
+
+    private static void confirmDelivery(CustomerOrder customerOrder) {
+        updateOrderStatus(customerOrder, OrderStatus.DELIVERED);
+    }
+
+    private static void confirmOrderReceipt(CustomerOrder customerOrder) {
+        updateOrderStatus(customerOrder, OrderStatus.IN_TRANSIT);
+    }
+
 
     private static void displayOrders(List<CustomerOrder> customerOrders) {
         int i = 1;
