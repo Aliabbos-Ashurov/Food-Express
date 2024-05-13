@@ -185,7 +185,7 @@ public class CustomerOrderController {
             Order serviceOrCreate = orderService.getOrCreate(dto, order);
             if (Objects.isNull(serviceOrCreate)) return;
             NotificationHandler.notifyAction("Order","added", true);
-            MessageSourceUtils.getLocalizedMessage("success.itemAddedToCart", getCurrentUser().getLanguage());
+            System.out.println(MessageSourceUtils.getLocalizedMessage("success.itemAddedToCart", getCurrentUser().getLanguage()));
         }
     }
 
