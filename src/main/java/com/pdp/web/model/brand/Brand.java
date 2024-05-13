@@ -4,6 +4,7 @@ import com.google.gson.annotations.SerializedName;
 import com.pdp.web.model.BaseModel;
 import com.pdp.java.console.support.Displayable;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 
 import java.time.LocalDateTime;
@@ -21,6 +22,7 @@ import java.util.UUID;
  * @since 03/May/2024 12:26
  */
 @Getter
+@Setter
 @ToString(callSuper = true)
 public class Brand extends BaseModel implements Displayable {
     private final String name;
@@ -33,7 +35,8 @@ public class Brand extends BaseModel implements Displayable {
     private LocalDateTime openingTime;
     @SerializedName("closing_time")
     private LocalDateTime closingTime;
-    public Brand(String name, UUID descriptionID,String imageURL, LocalDateTime openingTime, LocalDateTime closingTime) {
+
+    public Brand(String name, UUID descriptionID, String imageURL, LocalDateTime openingTime, LocalDateTime closingTime) {
         this.name = name;
         this.rating = 1.0;
         this.descriptionID = descriptionID;

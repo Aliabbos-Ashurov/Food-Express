@@ -4,13 +4,14 @@ import com.pdp.utils.Validator;
 import com.pdp.web.model.branch.Branch;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 
 import java.util.List;
 import java.util.UUID;
 
 /**
  * Singleton service class for managing branch entities.
- * Provides methods to get branches by brand, add, remove, and search branches.
+ * Provides methods to retrieve branches by brand, add, remove, update, and search for branches.
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class BranchServiceImp implements BranchService {
@@ -28,13 +29,13 @@ public class BranchServiceImp implements BranchService {
     }
 
     /**
-     * Gets a list of branches associated with a specific brand ID.
+     * Retrieves a list of branches associated with a specific brand ID.
      *
      * @param brandID The UUID of the brand.
-     * @return A list of Branch entities.
+     * @return A list of Branch entities associated with the specified brand.
      */
     @Override
-    public List<Branch> getBrandBranches(UUID brandID) {
+    public List<Branch> getBrandBranches(@NonNull UUID brandID) {
         List<Branch> branches = getAll();
         return branches.stream()
                 .filter(branch -> branch.getBrandID().equals(brandID))
@@ -48,12 +49,18 @@ public class BranchServiceImp implements BranchService {
      * @return True if the branch was successfully added, false otherwise.
      */
     @Override
-    public boolean add(Branch branch) {
+    public boolean add(@NonNull Branch branch) {
         return repository.add(branch);
     }
 
+    /**
+     * Removes a branch from the repository by its UUID.
+     *
+     * @param id The UUID of the branch to remove.
+     * @return True if the branch was successfully removed, false otherwise.
+     */
     @Override
-    public boolean remove(UUID id) {
+    public boolean remove(@NonNull UUID id) {
         return repository.remove(id);
     }
 
@@ -65,26 +72,38 @@ public class BranchServiceImp implements BranchService {
      * @return False as the method is not implemented.
      */
     @Override
-    public boolean update(Branch branch) {
+    public boolean update(@NonNull Branch branch) {
         return false;
     }
 
     /**
      * Searches for branches based on a location query.
+     * Note: This method is currently a placeholder and returns null.
      *
      * @param query The search query for the branch location.
-     * @return A list of branches that match the query.
+     * @return A list of branches that match the query (currently null).
      */
     @Override
-    public List<Branch> search(String query) {
+    public List<Branch> search(@NonNull String query) {
         return null;
     }
 
+    /**
+     * Retrieves a branch from the repository by its UUID.
+     *
+     * @param id The UUID of the branch to retrieve.
+     * @return The Branch object if found, or null if not found.
+     */
     @Override
-    public Branch getByID(UUID id) {
+    public Branch getByID(@NonNull UUID id) {
         return repository.findById(id);
     }
 
+    /**
+     * Retrieves all branches from the repository.
+     *
+     * @return A list of all Branch objects in the repository.
+     */
     @Override
     public List<Branch> getAll() {
         return repository.getAll();

@@ -2,10 +2,7 @@ package com.pdp.web.model.address;
 
 import com.google.gson.annotations.SerializedName;
 import com.pdp.web.model.BaseModel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.ToString;
+import lombok.*;
 
 /**
  * Represents an address in the system, containing details about the city,
@@ -21,6 +18,7 @@ import lombok.ToString;
 @Builder
 @ToString(callSuper = true)
 @AllArgsConstructor
+@Setter
 public class Address extends BaseModel {
     private String city;
     private String street;

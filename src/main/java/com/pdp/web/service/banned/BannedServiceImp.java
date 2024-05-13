@@ -3,6 +3,7 @@ package com.pdp.web.service.banned;
 import com.pdp.web.model.banned.Banned;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 
 import java.util.List;
 import java.util.UUID;
@@ -15,6 +16,11 @@ import java.util.UUID;
 public class BannedServiceImp implements BannedService {
     private static volatile BannedServiceImp instance;
 
+    /**
+     * Retrieves the singleton instance of BannedServiceImp.
+     *
+     * @return The singleton instance of BannedServiceImp.
+     */
     public static BannedServiceImp getInstance() {
         if (instance == null)
             synchronized (BannedServiceImp.class) {
@@ -32,7 +38,7 @@ public class BannedServiceImp implements BannedService {
      * @return true if the user was successfully unbanned; false otherwise.
      */
     @Override
-    public boolean unbanUser(UUID userId) {
+    public boolean unbanUser(@NonNull UUID userId) {
         List<Banned> bannedList = getAll();
         return getAll().stream()
                 .filter(banned -> banned.getUserID().equals(userId))
@@ -44,33 +50,63 @@ public class BannedServiceImp implements BannedService {
                 .orElse(false);
     }
 
+    /**
+     * Checks whether a user identified by their UUID is currently banned.
+     *
+     * @param userId UUID of the user to check.
+     * @return true if the user is banned; false otherwise.
+     */
     @Override
-    public boolean isUserBanned(UUID userId) {
+    public boolean isUserBanned(@NonNull UUID userId) {
         return getAll().stream().anyMatch(banned -> banned.getUserID().equals(userId));
     }
 
+    /**
+     * Adds a new banned user entry to the repository.
+     *
+     * @param banned The Banned object representing the user to be banned.
+     * @return true if the user was successfully banned; false otherwise.
+     */
     @Override
-    public boolean add(Banned banned) {
+    public boolean add(@NonNull Banned banned) {
         return repository.add(banned);
     }
 
+    /**
+     * Removes a banned user entry from the repository by its UUID.
+     *
+     * @param id UUID of the banned user entry to remove.
+     * @return true if the user was successfully removed from the banned list; false otherwise.
+     */
     @Override
-    public boolean remove(UUID id) {
+    public boolean remove(@NonNull UUID id) {
         return repository.remove(id);
     }
 
+    /**
+     * Updates a banned user entry in the repository.
+     *
+     * @param object The updated Banned object.
+     * @return true if the update was successful; false otherwise (typically not supported for banned users).
+     */
     @Override
-    public boolean update(Banned object) {
+    public boolean update(@NonNull Banned object) {
         return false;
     }
 
+    /**
+     * Searches for banned users based on a specified query (not typically applicable for banned users).
+     *
+     * @param query The search query (not applicable for banned users).
+     * @return null (not typically applicable for banned users).
+     */
     @Override
-    public List<Banned> search(String query) {
+    public List<Banned> search(@NonNull String query) {
         return null;
     }
 
     @Override
-    public Banned getByID(UUID id) {
+    public Banned getByID(@NonNull UUID id) {
         return repository.findById(id);
     }
 

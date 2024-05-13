@@ -4,6 +4,7 @@ import com.pdp.utils.Validator;
 import com.pdp.web.model.comment.Comment;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 
 import java.util.List;
 import java.util.UUID;
@@ -16,6 +17,11 @@ import java.util.UUID;
 public class CommentServiceImp implements CommentService {
     private static volatile CommentServiceImp instance;
 
+    /**
+     * Returns a singleton instance of CommentServiceImp.
+     *
+     * @return The singleton instance of CommentServiceImp.
+     */
     public static CommentServiceImp getInstance() {
         if (instance == null) {
             synchronized (CommentServiceImp.class) {
@@ -31,10 +37,10 @@ public class CommentServiceImp implements CommentService {
      * Retrieves all comments associated with a particular food item.
      *
      * @param foodID The UUID of the food item whose comments are to be retrieved.
-     * @return A list of comments.
+     * @return A list of comments associated with the specified food item.
      */
     @Override
-    public List<Comment> getComments(UUID foodID) {
+    public List<Comment> getComments(@NonNull UUID foodID) {
         List<Comment> comments = getAll();
         return comments.stream()
                 .filter(comment -> comment.getFoodID().equals(foodID))
@@ -48,7 +54,7 @@ public class CommentServiceImp implements CommentService {
      * @return True if the comment was successfully added, false otherwise.
      */
     @Override
-    public boolean add(Comment comment) {
+    public boolean add(@NonNull Comment comment) {
         return repository.add(comment);
     }
 
@@ -59,30 +65,30 @@ public class CommentServiceImp implements CommentService {
      * @return True if the comment was successfully removed, false otherwise.
      */
     @Override
-    public boolean remove(UUID id) {
+    public boolean remove(@NonNull UUID id) {
         return repository.remove(id);
     }
 
     /**
      * Updates an existing comment.
-     * The method is a placeholder currently not implemented.
+     * This method is a placeholder and currently not implemented.
      *
-     * @param comment The comment object with updated information.
+     * @param comment The updated comment object.
      * @return False as this operation is not supported.
      */
     @Override
-    public boolean update(Comment comment) {
+    public boolean update(@NonNull Comment comment) {
         return false;
     }
 
     /**
-     * Searches for comments based on a query.
+     * Searches for comments based on a query string.
      *
      * @param query The search query.
      * @return A list of comments that match the query.
      */
     @Override
-    public List<Comment> search(String query) {
+    public List<Comment> search(@NonNull String query) {
         List<Comment> comments = getAll();
         return comments.stream()
                 .filter(comment -> Validator.isValid(comment.getText(), query))
@@ -93,15 +99,15 @@ public class CommentServiceImp implements CommentService {
      * Retrieves a comment by its unique ID.
      *
      * @param id The UUID of the comment to retrieve.
-     * @return The comment if found, or null if not found.
+     * @return The comment object if found, otherwise null.
      */
     @Override
-    public Comment getByID(UUID id) {
+    public Comment getByID(@NonNull UUID id) {
         return repository.findById(id);
     }
 
     /**
-     * Retrieves all comments.
+     * Retrieves all comments from the repository.
      *
      * @return A list of all comments.
      */

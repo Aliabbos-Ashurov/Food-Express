@@ -3,14 +3,15 @@ package com.pdp.web.service.branch;
 import com.pdp.web.model.branch.Branch;
 import com.pdp.web.repository.branch.BranchRepository;
 import com.pdp.web.service.BaseService;
+import lombok.NonNull;
 
 import java.util.List;
 import java.util.UUID;
 
 /**
- * Defines the business logic for branch-related operations.
- * This interface is meant to manage the data access for the {@link Branch} model.
- * It extends the generic BaseService interface, inheriting common CRUD operations.
+ * Interface defining the business logic for branch-related operations.
+ * This interface manages the data access for the {@link Branch} model and extends the generic BaseService interface.
+ * It inherits common CRUD operations for managing Branch entities.
  *
  * @see BaseService
  * @see Branch
@@ -24,5 +25,5 @@ public interface BranchService extends BaseService<Branch, List<Branch>> {
      * @param brandID The unique identifier of the brand.
      * @return A list of {@link Branch} instances associated with the specified brand.
      */
-    List<Branch> getBrandBranches(UUID brandID);
+    List<Branch> getBrandBranches(@NonNull UUID brandID);
 }

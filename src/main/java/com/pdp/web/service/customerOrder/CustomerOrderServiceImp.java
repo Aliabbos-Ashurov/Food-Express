@@ -5,6 +5,7 @@ import com.pdp.web.model.customerOrder.CustomerOrder;
 import com.pdp.web.model.user.User;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 
 import java.util.List;
 import java.util.Objects;
@@ -18,6 +19,11 @@ import java.util.UUID;
 public class CustomerOrderServiceImp implements CustomerOrderService {
     private static volatile CustomerOrderServiceImp instance;
 
+    /**
+     * Returns the singleton instance of CustomerOrderServiceImp.
+     *
+     * @return The singleton instance of CustomerOrderServiceImp.
+     */
     public static CustomerOrderServiceImp getInstance() {
         if (instance == null) {
             synchronized (CustomerOrderServiceImp.class) {
@@ -29,8 +35,14 @@ public class CustomerOrderServiceImp implements CustomerOrderService {
         return instance;
     }
 
+    /**
+     * Retrieves all orders in process that are assigned to a specific deliverer.
+     *
+     * @param deliverId The UUID of the deliverer.
+     * @return A list of CustomerOrder instances that are in process and assigned to the specified deliverer.
+     */
     @Override
-    public List<CustomerOrder> getOrdersInProcessByDeliverer(UUID deliverId) {
+    public List<CustomerOrder> getOrdersInProcessByDeliverer(@NonNull UUID deliverId) {
         return getAll().stream()
                 .filter(c -> Objects.equals(c.getDeliverID(), deliverId)
                         && (c.getOrderStatus().equals(OrderStatus.YOUR_ORDER_RECEIVED)
@@ -38,6 +50,11 @@ public class CustomerOrderServiceImp implements CustomerOrderService {
                 .toList();
     }
 
+    /**
+     * Retrieves all pending orders that are waiting for a deliverer.
+     *
+     * @return A list of CustomerOrder instances that are pending and waiting for a deliverer.
+     */
     @Override
     public List<CustomerOrder> getPendingOrdersForDeliverer() {
         return getAll().stream()
@@ -45,8 +62,14 @@ public class CustomerOrderServiceImp implements CustomerOrderService {
                 .toList();
     }
 
+    /**
+     * Retrieves a not confirmed order for a specific user.
+     *
+     * @param userID The UUID of the user.
+     * @return The CustomerOrder instance that is not confirmed for the specified user, or null if not found.
+     */
     @Override
-    public CustomerOrder getNotConfirmedOrder(UUID userID) {
+    public CustomerOrder getNotConfirmedOrder(@NonNull UUID userID) {
         List<CustomerOrder> customerOrders = getAll();
         return customerOrders.stream()
                 .filter(customerOrder -> customerOrder.getUserID().equals(userID) && customerOrder.getOrderStatus().equals(OrderStatus.NOT_CONFIRMED))
@@ -54,8 +77,15 @@ public class CustomerOrderServiceImp implements CustomerOrderService {
                 .orElse(null);
     }
 
+    /**
+     * Retrieves or creates a not confirmed order for a specific user and branch.
+     *
+     * @param userId   The UUID of the user.
+     * @param branchID The UUID of the branch.
+     * @return The existing or newly created CustomerOrder instance that is not confirmed for the specified user and branch.
+     */
     @Override
-    public CustomerOrder getOrCreate(UUID userId, UUID branchID) {
+    public CustomerOrder getOrCreate(@NonNull UUID userId, @NonNull UUID branchID) {
         return getAll().stream()
                 .filter(customerOrder -> customerOrder.getUserID().equals(userId)
                         && customerOrder.getBranchID().equals(branchID)
@@ -72,13 +102,13 @@ public class CustomerOrderServiceImp implements CustomerOrderService {
     }
 
     /**
-     * Fetches a list of all delivered orders archived in the system.
+     * Retrieves all archived orders for a specific user.
      *
-     * @param userID the UUID of the user to fetch archived orders for
-     * @return a list of {@link CustomerOrder} that are marked as delivered
+     * @param userID The UUID of the user.
+     * @return A list of CustomerOrder instances that are archived (delivered) for the specified user.
      */
     @Override
-    public List<CustomerOrder> getArchive(UUID userID) {
+    public List<CustomerOrder> getArchive(@NonNull UUID userID) {
         return getAll().stream()
                 .filter(c -> Objects.equals(c.getOrderStatus(), OrderStatus.DELIVERED)
                         && Objects.equals(c.getUserID(), userID))
@@ -94,7 +124,7 @@ public class CustomerOrderServiceImp implements CustomerOrderService {
      * @return a list of {@link CustomerOrder} currently in process for the specified user
      */
     @Override
-    public List<CustomerOrder> getOrdersInProcessByUser(UUID userId) {
+    public List<CustomerOrder> getOrdersInProcessByUser(@NonNull UUID userId) {
         return getAll().stream()
                 .filter(c -> Objects.equals(c.getOrderStatus(), OrderStatus.LOOKING_FOR_A_DELIVERER)
                         || Objects.equals(c.getOrderStatus(), OrderStatus.IN_TRANSIT)
@@ -110,7 +140,7 @@ public class CustomerOrderServiceImp implements CustomerOrderService {
      * @return true if the order was successfully added, otherwise false
      */
     @Override
-    public boolean add(CustomerOrder object) {
+    public boolean add(@NonNull CustomerOrder object) {
         return repository.add(object);
     }
 
@@ -121,7 +151,7 @@ public class CustomerOrderServiceImp implements CustomerOrderService {
      * @return true if the order was successfully removed, otherwise false
      */
     @Override
-    public boolean remove(UUID id) {
+    public boolean remove(@NonNull UUID id) {
         return repository.remove(id);
     }
 
@@ -132,7 +162,7 @@ public class CustomerOrderServiceImp implements CustomerOrderService {
      * @return false always, since the method is not implemented
      */
     @Override
-    public boolean update(CustomerOrder customerOrder) {
+    public boolean update(@NonNull CustomerOrder customerOrder) {
         List<CustomerOrder> customerOrders = getAll();
         Optional<CustomerOrder> customerOrderOptional = customerOrders.stream()
                 .filter(o -> o.getId().equals(customerOrder.getId()))
@@ -163,7 +193,7 @@ public class CustomerOrderServiceImp implements CustomerOrderService {
      * @return an empty list, since the method is not implemented
      */
     @Override
-    public List<CustomerOrder> search(String query) {
+    public List<CustomerOrder> search(@NonNull String query) {
         return List.of();
     }
 
@@ -174,7 +204,7 @@ public class CustomerOrderServiceImp implements CustomerOrderService {
      * @return the found {@link CustomerOrder}, or null if no order is found
      */
     @Override
-    public CustomerOrder getByID(UUID id) {
+    public CustomerOrder getByID(@NonNull UUID id) {
         return repository.findById(id);
     }
 

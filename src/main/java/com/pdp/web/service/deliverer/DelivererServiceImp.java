@@ -4,8 +4,10 @@ import com.pdp.utils.Validator;
 import com.pdp.web.model.deliverer.Deliverer;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -17,7 +19,7 @@ public class DelivererServiceImp implements DelivererService {
 
     public static DelivererServiceImp getInstance() {
         if (instance == null) {
-            synchronized (DelivererServiceImp.class){
+            synchronized (DelivererServiceImp.class) {
                 if (instance == null) {
                     instance = new DelivererServiceImp();
                 }
@@ -28,41 +30,59 @@ public class DelivererServiceImp implements DelivererService {
 
     /**
      * Adds a new deliverer to the repository.
+     *
      * @param deliverer the {@link Deliverer} to be added
      * @return true if the deliverer was successfully added, false otherwise
      */
     @Override
-    public boolean add(Deliverer deliverer) {
+    public boolean add(@NonNull Deliverer deliverer) {
         return repository.add(deliverer);
     }
 
     /**
      * Removes a deliverer from the repository based on their ID.
+     *
      * @param id the UUID of the deliverer to be removed
      * @return true if the deliverer was successfully removed, false otherwise
      */
     @Override
-    public boolean remove(UUID id) {
+    public boolean remove(@NonNull UUID id) {
         return repository.remove(id);
     }
 
     /**
      * Updates an existing deliverer's information in the repository. Currently not implemented.
+     *
      * @param deliverer the {@link Deliverer} to update
      * @return false, as the method is not currently implemented
      */
     @Override
-    public boolean update(Deliverer deliverer) {
+    public boolean update(@NonNull Deliverer deliverer) {
+        List<Deliverer> deliverers = getAll();
+        Optional<Deliverer> optional = deliverers.stream()
+                .filter(o -> o.getId().equals(deliverer.getId()))
+                .findFirst();
+        if (optional.isPresent()) {
+            updateDelivererData(optional.get(), deliverer);
+            repository.save(deliverers);
+            return true;
+        }
         return false;
+    }
+
+    private void updateDelivererData(Deliverer current, Deliverer updated) {
+        current.setFullname(updated.getFullname());
+        current.setPhoneNumber(updated.getPhoneNumber());
     }
 
     /**
      * Searches for deliverers whose display names match the specified query string.
+     *
      * @param query the search query string
      * @return a list of {@link Deliverer} that match the search criteria
      */
     @Override
-    public List<Deliverer> search(String query) {
+    public List<Deliverer> search(@NonNull String query) {
         return getAll().stream()
                 .filter(c -> Validator.isValid(c.getDisplayName(), query))
                 .toList();
@@ -70,16 +90,18 @@ public class DelivererServiceImp implements DelivererService {
 
     /**
      * Retrieves a deliverer by their UUID.
+     *
      * @param id the UUID of the deliverer to retrieve
      * @return the found {@link Deliverer}, or null if no deliverer is found
      */
     @Override
-    public Deliverer getByID(UUID id) {
+    public Deliverer getByID(@NonNull UUID id) {
         return repository.findById(id);
     }
 
     /**
      * Retrieves all deliverers from the repository.
+     *
      * @return a list of all {@link Deliverer}
      */
     @Override

@@ -3,10 +3,7 @@ package com.pdp.web.model.category;
 import com.google.gson.annotations.SerializedName;
 import com.pdp.web.model.BaseModel;
 import com.pdp.java.console.support.Displayable;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.ToString;
+import lombok.*;
 
 import java.util.Objects;
 import java.util.UUID;
@@ -22,6 +19,7 @@ import java.util.UUID;
  * @since 03/May/2024 13:00
  */
 @Getter
+@Setter
 @ToString(callSuper = true)
 @AllArgsConstructor
 public class Category extends BaseModel implements Displayable {
