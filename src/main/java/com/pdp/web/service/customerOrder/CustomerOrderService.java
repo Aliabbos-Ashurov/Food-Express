@@ -38,7 +38,7 @@ public interface CustomerOrderService extends BaseService<CustomerOrder, List<Cu
 
     CustomerOrder getNotConfirmedOrder(UUID userID);
 
-    List<CustomerOrder> getOrdersInProcessByDeliverer(UUID id);
+    List<CustomerOrder> getOrdersInProcessByDeliverer(UUID deliverId);
 
     List<CustomerOrder> getPendingOrdersForDeliverer();
 }

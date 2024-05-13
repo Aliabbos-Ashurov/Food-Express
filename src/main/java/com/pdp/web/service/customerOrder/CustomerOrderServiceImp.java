@@ -30,9 +30,10 @@ public class CustomerOrderServiceImp implements CustomerOrderService {
     }
 
     @Override
-    public List<CustomerOrder> getOrdersInProcessByDeliverer(UUID id) {
+    public List<CustomerOrder> getOrdersInProcessByDeliverer(UUID deliverId) {
         return getAll().stream()
-                .filter(c -> c.getUserID().equals(id) && c.getOrderStatus().equals(OrderStatus.YOUR_ORDER_RECEIVED))
+                .filter(c -> c.getDeliverID().equals(deliverId)
+                        && c.getOrderStatus().equals(OrderStatus.YOUR_ORDER_RECEIVED))
                 .toList();
     }
 
@@ -56,6 +57,7 @@ public class CustomerOrderServiceImp implements CustomerOrderService {
     public CustomerOrder getOrCreate(UUID userId, UUID branchID) {
         return getAll().stream()
                 .filter(customerOrder -> customerOrder.getUserID().equals(userId)
+                        && customerOrder.getBranchID().equals(branchID)
                         && customerOrder.getOrderStatus().equals(OrderStatus.NOT_CONFIRMED))
                 .findFirst().orElseGet(() -> {
                     CustomerOrder build = CustomerOrder.builder()
@@ -77,7 +79,8 @@ public class CustomerOrderServiceImp implements CustomerOrderService {
     @Override
     public List<CustomerOrder> getArchive(UUID userID) {
         return getAll().stream()
-                .filter(c -> Objects.equals(c.getOrderStatus(), OrderStatus.DELIVERED))
+                .filter(c -> Objects.equals(c.getOrderStatus(), OrderStatus.DELIVERED)
+                        && Objects.equals(c.getUserID(), userID))
                 .toList();
     }
 

@@ -8,6 +8,7 @@ import com.pdp.utils.MenuUtils;
 import com.pdp.web.enums.Language;
 import com.pdp.web.model.user.User;
 import com.pdp.web.service.login.LoginService;
+import com.pdp.web.service.user.UserService;
 
 import static com.pdp.java.console.Scan.*;
 
@@ -17,6 +18,7 @@ import static com.pdp.java.console.Scan.*;
  **/
 public class LoginController {
     private static final LoginService loginService = ThreadSafeBeansContainer.loginServiceThreadLocal.get();
+    private static final UserService userService = ThreadSafeBeansContainer.userServiceThreadLocal.get();
     private static Language language;
 
     private static Language getLanguage() {
@@ -41,7 +43,7 @@ public class LoginController {
     public static boolean userSignInSignUp() {
         language = getLanguage();
         while (true) {
-            MenuUtils.menu(MenuUtils.SIGN_IN_UP, Language.UZ);
+            MenuUtils.menu(MenuUtils.SIGN_IN_UP, language);
             switch (Scan.scanInt()) {
                 case 1 -> {
                     return signIn();
@@ -50,7 +52,7 @@ public class LoginController {
                     return signUp();
                 }
                 case 0 -> {
-                   getLanguage();
+                    language = getLanguage();
                 }
             }
         }
@@ -62,7 +64,10 @@ public class LoginController {
         String password = scanStr("Password");
         UserController.curUser = loginService.checkUser(new LoginDTO(username, password));
         boolean isSuccessful = UserController.curUser != null;
-        if (isSuccessful) language = UserController.curUser.getLanguage();
+        if (isSuccessful) {
+            UserController.curUser.setLanguage(language);
+            userService.update(UserController.curUser);
+        }
         NotificationHandler.notifyAction("User", "sign-in", isSuccessful);
         return isSuccessful;
     }
