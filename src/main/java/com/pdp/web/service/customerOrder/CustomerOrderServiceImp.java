@@ -32,7 +32,7 @@ public class CustomerOrderServiceImp implements CustomerOrderService {
     @Override
     public List<CustomerOrder> getOrdersInProcessByDeliverer(UUID deliverId) {
         return getAll().stream()
-                .filter(c -> c.getDeliverID().equals(deliverId)
+                .filter(c -> Objects.equals(c.getDeliverID(), deliverId)
                         && (c.getOrderStatus().equals(OrderStatus.YOUR_ORDER_RECEIVED)
                         || c.getOrderStatus().equals(OrderStatus.IN_TRANSIT)))
                 .toList();
