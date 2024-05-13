@@ -2,11 +2,13 @@ package com.pdp.web.service.customerOrder;
 
 import com.pdp.web.enums.OrderStatus;
 import com.pdp.web.model.customerOrder.CustomerOrder;
+import com.pdp.web.model.user.User;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -128,20 +130,26 @@ public class CustomerOrderServiceImp implements CustomerOrderService {
     @Override
     public boolean update(CustomerOrder customerOrder) {
         List<CustomerOrder> customerOrders = getAll();
-        customerOrders.stream()
+        Optional<CustomerOrder> customerOrderOptional = customerOrders.stream()
                 .filter(o -> o.getId().equals(customerOrder.getId()))
-                .forEach(o -> {
-                    o.setUserID(customerOrder.getUserID());
-                    o.setBranchID(customerOrder.getBranchID());
-                    o.setAddressID(customerOrder.getAddressID());
-                    o.setDeliverID(customerOrder.getDeliverID());
-                    o.setDescriptionID(customerOrder.getDescriptionID());
-                    o.setPaymentType(customerOrder.getPaymentType());
-                    o.setOrderPrice(customerOrder.getOrderPrice());
-                    o.setOrderStatus(customerOrder.getOrderStatus());
-                });
-        repository.save(customerOrders);
-        return true;
+                .findFirst();
+        if (customerOrderOptional.isPresent()) {
+            updateCustomerOrderData(customerOrderOptional.get(), customerOrder);
+            repository.save(customerOrders);
+            return true;
+        }
+        return false;
+    }
+
+    private void updateCustomerOrderData(CustomerOrder o, CustomerOrder newCustomerOrder) {
+        o.setUserID(newCustomerOrder.getUserID());
+        o.setBranchID(newCustomerOrder.getBranchID());
+        o.setAddressID(newCustomerOrder.getAddressID());
+        o.setDeliverID(newCustomerOrder.getDeliverID());
+        o.setDescriptionID(newCustomerOrder.getDescriptionID());
+        o.setPaymentType(newCustomerOrder.getPaymentType());
+        o.setOrderPrice(newCustomerOrder.getOrderPrice());
+        o.setOrderStatus(newCustomerOrder.getOrderStatus());
     }
 
     /**

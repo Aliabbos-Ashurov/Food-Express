@@ -7,6 +7,7 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -50,23 +51,28 @@ public class UserServiceImp implements UserService {
     @Override
     public boolean update(User user) {
         List<User> users = getAll();
-        return users.stream()
+        Optional<User> userOptional = users.stream()
                 .filter(o -> o.getId().equals(user.getId()))
                 .peek((o) -> {
-                    o.setRole(user.getRole());
-                    o.setPassword(user.getPassword());
-                    o.setEmail(user.getEmail());
-                    o.setLanguage(user.getLanguage());
-                    o.setPhoneNumber(user.getPhoneNumber());
-                    o.setFullname(user.getFullname());
-                    o.setEmailVerified(user.isEmailVerified());
-                    o.setNumberVerified(user.isNumberVerified());
-                    o.setUsername(user.getUsername());
-                    o.setProfilePictureUrl(user.getProfilePictureUrl());
+                    updateUserData(o, user);
                 })
-                .findFirst()
-                .isPresent();
+                .findFirst();
+        if (userOptional.isPresent()) repository.save(users);
+        return userOptional.isPresent();
     }
+    private void updateUserData(User existingUser, User newUser) {
+        existingUser.setRole(newUser.getRole());
+        existingUser.setPassword(newUser.getPassword());
+        existingUser.setEmail(newUser.getEmail());
+        existingUser.setLanguage(newUser.getLanguage());
+        existingUser.setPhoneNumber(newUser.getPhoneNumber());
+        existingUser.setFullname(newUser.getFullname());
+        existingUser.setEmailVerified(newUser.isEmailVerified());
+        existingUser.setNumberVerified(newUser.isNumberVerified());
+        existingUser.setUsername(newUser.getUsername());
+        existingUser.setProfilePictureUrl(newUser.getProfilePictureUrl());
+    }
+
 
     @Override
     public List<User> search(String query) {
