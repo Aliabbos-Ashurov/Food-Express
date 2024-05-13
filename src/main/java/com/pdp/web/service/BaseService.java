@@ -1,8 +1,10 @@
 package com.pdp.web.service;
 
 import com.pdp.web.model.BaseModel;
+import lombok.NonNull;
 
 import java.util.Collection;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -15,7 +17,7 @@ import java.util.UUID;
  * @author Aliabbos Ashurov
  * @since 06/May/2024 11:56
  */
-public interface BaseService<T extends BaseModel,R extends Collection<T>> {
+public interface BaseService<T extends BaseModel, R extends Collection<T>> {
 
     /**
      * Adds a new entity to the service.
@@ -23,7 +25,7 @@ public interface BaseService<T extends BaseModel,R extends Collection<T>> {
      * @param object the entity object to add
      * @return true if the entity is successfully added, false otherwise
      */
-    boolean add(T object);
+    boolean add(@NonNull T object);
 
     /**
      * Removes an entity from the service by its unique identifier.
@@ -31,7 +33,7 @@ public interface BaseService<T extends BaseModel,R extends Collection<T>> {
      * @param id the unique identifier of the entity to remove
      * @return true if the entity is successfully removed, false otherwise
      */
-    boolean remove(UUID id);
+    boolean remove(@NonNull UUID id);
 
     /**
      * Updates an existing entity within the service.
@@ -39,7 +41,7 @@ public interface BaseService<T extends BaseModel,R extends Collection<T>> {
      * @param object the entity object with updated information
      * @return true if the entity is successfully updated, false otherwise
      */
-    boolean update(T object);
+    boolean update(@NonNull T object);
 
     /**
      * Searches for entities that match the given query string.
@@ -47,7 +49,7 @@ public interface BaseService<T extends BaseModel,R extends Collection<T>> {
      * @param query the search query string
      * @return a collection of entities that match the search criteria
      */
-    R search(String query);
+    R search(@NonNull String query);
 
     /**
      * Retrieves a single entity by its unique identifier.
@@ -55,7 +57,7 @@ public interface BaseService<T extends BaseModel,R extends Collection<T>> {
      * @param id the unique identifier of the entity to retrieve
      * @return the entity with the specified ID or null if it does not exist
      */
-    T getByID(UUID id);
+    T getByID(@NonNull UUID id);
 
     /**
      * Gets all entities managed by the service.
