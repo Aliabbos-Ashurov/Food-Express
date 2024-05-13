@@ -5,6 +5,7 @@ import com.pdp.java.console.ListUtils;
 import com.pdp.java.console.NotificationHandler;
 import com.pdp.java.console.Scan;
 import com.pdp.utils.MenuUtils;
+import com.pdp.utils.source.MessageSourceUtils;
 import com.pdp.web.enums.OrderStatus;
 import com.pdp.web.model.address.Address;
 import com.pdp.web.model.branch.Branch;
@@ -35,16 +36,10 @@ public class DelivererController {
         while (true) {
             MenuUtils.menu(MenuUtils.DELIVERER_MENU, LoginController.getCurUserLanguage());
             switch (Scan.scanInt()) {
-                case 1:
-                    orderAcceptance();
-                    break;
-                case 2:
-                    activeOrder();
-                    break;
-                case 0:
-                    return;
-                default:
-                    printInvalidSelectionError();
+                case 1 -> orderAcceptance();
+                case 2 -> activeOrder();
+                case 0 -> LoginController.userSignInSignUp(false);
+                default -> printInvalidSelectionError();
             }
         }
     }
@@ -79,39 +74,39 @@ public class DelivererController {
     }
 
     private static void handleReceivedOrder(CustomerOrder customerOrder) {
-        while (true) {
-            MenuUtils.menu(MenuUtils.DELIVERER_GENERAL_MENU, LoginController.getCurUserLanguage());
-            switch (Scan.scanInt()) {
-                case 1:
-                    confirmOrderReceipt(customerOrder);
-                    break;
-                case 2:
-                    cancelDelivery(customerOrder);
-                    break;
-                case 0:
-                    return;
-                default:
-                    printInvalidSelectionError();
-            }
+
+        MenuUtils.menu(MenuUtils.DELIVERER_GENERAL_MENU, LoginController.getCurUserLanguage());
+        switch (Scan.scanInt()) {
+            case 1:
+                confirmOrderReceipt(customerOrder);
+                break;
+            case 2:
+                cancelDelivery(customerOrder);
+                break;
+            case 0:
+                return;
+            default:
+                printInvalidSelectionError();
         }
+
     }
 
     private static void handleInTransitOrder(CustomerOrder customerOrder) {
-        while (true) {
-            MenuUtils.menu(MenuUtils.DELIVERER_GENERAL_FOLLOWING, LoginController.getCurUserLanguage());
-            switch (Scan.scanInt()) {
-                case 1:
-                    confirmDelivery(customerOrder);
-                    break;
-                case 2:
-                    cancelDelivery(customerOrder);
-                    break;
-                case 0:
-                    return;
-                default:
-                    printInvalidSelectionError();
-            }
+
+        MenuUtils.menu(MenuUtils.DELIVERER_GENERAL_FOLLOWING, LoginController.getCurUserLanguage());
+        switch (Scan.scanInt()) {
+            case 1:
+                confirmDelivery(customerOrder);
+                break;
+            case 2:
+                cancelDelivery(customerOrder);
+                break;
+            case 0:
+                return;
+            default:
+                printInvalidSelectionError();
         }
+
     }
 
     private static void confirmDelivery(CustomerOrder customerOrder) {
@@ -162,11 +157,11 @@ public class DelivererController {
             Address addressById = addressService.getByID(customerOrder.getAddressID());
             String address = String.format("%s %s %d,%d", addressById.getCity(), addressById.getStreet(), addressById.getHouseNumber(), addressById.getApartmentNumber());
             System.out.printf("""
-                    Order Number - %d
+                    [%d] - Order Number
                     Address : %s
                     Brand : %s
-                    info.totalAmount:%s
-                    """, i++, address, brand.getDisplayName(), customerOrder.getOrderPrice());
+                    %s:%s
+                    """, i++, address, brand.getDisplayName(), MessageSourceUtils.getLocalizedMessage("info.totalAmount", UserController.curUser.getLanguage()), customerOrder.getOrderPrice());
         }
     }
 

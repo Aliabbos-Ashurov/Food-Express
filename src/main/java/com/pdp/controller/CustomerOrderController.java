@@ -86,11 +86,12 @@ public class CustomerOrderController {
             }
         }
     }
+
     private static void cart() {
         CustomerOrder notConfirmedOrder = customerOrderService.getNotConfirmedOrder(getCurrentUser().getId());
         if (Objects.isNull(notConfirmedOrder)) {
             NotificationHandler.checkData(Collections.EMPTY_LIST);
-            System.out.println(MessageSourceUtils.getLocalizedMessage("error.cartEmpty",getCurrentUser().getLanguage()));
+            System.out.println(MessageSourceUtils.getLocalizedMessage("error.cartEmpty", getCurrentUser().getLanguage()));
             return;
         }
         List<Order> orders = orderService.getOdersByCustomerID(notConfirmedOrder.getId());
@@ -101,6 +102,7 @@ public class CustomerOrderController {
             case 2 -> makeEmpty(notConfirmedOrder);
         }
     }
+
     private static void activateMyOrder(CustomerOrder customerOrder) {
         customerOrder.setOrderStatus(OrderStatus.LOOKING_FOR_A_DELIVERER);
         Address address = confirmAddress();
@@ -112,9 +114,11 @@ public class CustomerOrderController {
         customerOrderService.update(customerOrder);
         System.out.println(MessageSourceUtils.getLocalizedMessage("success.orderPlaced", getCurrentUser().getLanguage()));
     }
+
     private static BigDecimal priceOfOrder(CustomerOrder customerOrder) {
         return orderService.getOrderPrice(customerOrder.getId());
     }
+
     private static void makeEmpty(CustomerOrder customerOrder) {
         displayConfirmationMenu();
         int i = Scan.scanInt();
@@ -123,15 +127,17 @@ public class CustomerOrderController {
             List<Order> orders = orderService.getOdersByCustomerID(customerOrder.getId());
             orders.forEach(order -> orderService.remove(order.getId()));
             boolean removed = customerOrderService.remove(customerOrder.getId());
-            NotificationHandler.notifyAction("Cart","cleaned",removed);
+            NotificationHandler.notifyAction("Cart", "cleaned", removed);
         }
 
     }
+
     private static PaymentType confirmPaymentType() {
         List<PaymentType> paymentTypes = List.of(PaymentType.values());
         ListUtils.displayList(paymentTypes);
         return Utils.getElementByIndex(paymentTypes, Scan.scanInt());
     }
+
     private static Address confirmAddress() {
         String city = Scan.scanStr("Enter city");
         String street = Scan.scanStr("Enter street");
@@ -158,6 +164,7 @@ public class CustomerOrderController {
         boolean isTransportSuccesfull = transportService.add(transport);
         UserController.curUser = currentUser;
         NotificationHandler.notifyAction("Deliverer", "added", updated && isDelivererSuccesfull && isTransportSuccesfull);
+        LoginController.userSignInSignUp(false);
     }
 
     private static void BrandSelectionProcess() {
@@ -184,7 +191,7 @@ public class CustomerOrderController {
             Order order = new Order(food.getId(), orderPrice, quantity, customerOrder.getId());
             Order serviceOrCreate = orderService.getOrCreate(dto, order);
             if (Objects.isNull(serviceOrCreate)) return;
-            NotificationHandler.notifyAction("Order","added", true);
+            NotificationHandler.notifyAction("Order", "added", true);
             System.out.println(MessageSourceUtils.getLocalizedMessage("success.itemAddedToCart", getCurrentUser().getLanguage()));
         }
     }
@@ -272,6 +279,7 @@ public class CustomerOrderController {
                 System.out.println("Street: " + address.getStreet());
                 System.out.println("Order Status: " + customerOrder.getOrderStatus());
                 orderList.forEach(CustomerOrderController::displayOrderDetails);
+                System.out.println("Description: " + descriptionService.getByID(customerOrder.getDescriptionID()).getText());
                 System.out.println("Finally Price: 0");
                 System.out.println("------------------------------");
             }
@@ -311,8 +319,9 @@ public class CustomerOrderController {
     private static void displayDepartmentOrderMenu() {
         MenuUtils.menu(MenuUtils.MAKE_ORDER, getCurrentUser().getLanguage());
     }
+
     private static void displayCartMenu() {
-        MenuUtils.menu(MenuUtils.CART_OPERATION,getCurrentUser().getLanguage());
+        MenuUtils.menu(MenuUtils.CART_OPERATION, getCurrentUser().getLanguage());
     }
 
     private static void displayUserMenu() {
