@@ -4,6 +4,7 @@ import com.pdp.config.ThreadSafeBeansContainer;
 import com.pdp.config.imagesPath.BrandImagesPath;
 import com.pdp.controller.UserController;
 import com.pdp.utils.MenuUtils;
+import com.pdp.utils.source.MessageSourceUtils;
 import com.pdp.web.enums.Language;
 import com.pdp.web.model.branch.Branch;
 import com.pdp.web.model.branchLocation.BranchLocation;
@@ -53,7 +54,6 @@ public class Test {
         UserController.startApplication();
         //fillDefaultObjects();
     }
-
 
     private static void fillDefaultObjects() {
         ////-------------------------------------------
