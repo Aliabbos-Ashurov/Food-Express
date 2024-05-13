@@ -66,7 +66,7 @@ public class CustomerOrderController {
                 case 3 -> registerAsCourier();
                 case 0 -> {
                     UserController.curUser = null;
-                    LoginController.userSignInSignUp();
+                    LoginController.userSignInSignUp(false);
                 }
                 default -> printInvalidSelectionError();
             }

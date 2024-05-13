@@ -149,7 +149,6 @@ public class DelivererController {
                 CustomerOrder customerOrder = customerOrders.get(index);
                 customerOrder.setDeliverID(UserController.curUser.getId());
                 customerOrder.setOrderStatus(OrderStatus.YOUR_ORDER_RECEIVED);
-                System.out.println(customerOrder);
                 customerOrderService.update(customerOrder);
             }
         }

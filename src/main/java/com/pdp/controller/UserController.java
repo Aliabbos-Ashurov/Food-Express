@@ -12,7 +12,7 @@ public class UserController {
     public static User curUser;
 
     public static void startApplication() {
-        boolean signedIn = LoginController.userSignInSignUp();
+        boolean signedIn = LoginController.userSignInSignUp(true);
         if (signedIn) {
             handlePostLogin();
         } else {

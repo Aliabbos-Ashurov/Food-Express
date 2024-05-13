@@ -40,8 +40,8 @@ public class LoginController {
         }
     }
 
-    public static boolean userSignInSignUp() {
-        language = getLanguage();
+    public static boolean userSignInSignUp(boolean b) {
+        if (b) language = getLanguage();
         while (true) {
             MenuUtils.menu(MenuUtils.SIGN_IN_UP, language);
             switch (Scan.scanInt()) {
