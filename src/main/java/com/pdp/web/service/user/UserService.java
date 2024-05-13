@@ -7,9 +7,15 @@ import com.pdp.web.service.BaseService;
 import java.util.List;
 
 /**
- * Interface for services relating to user operations.
- * This extends BaseService to provide common CRUD operations specific to User entities.
+ * Interface for services related to managing user entities.
+ * This service provides basic CRUD operations for user entities.
+ *
+ * @see User
+ * @see UserRepository
  */
 public interface UserService extends BaseService<User, List<User>> {
+    /**
+     * The singleton instance of the UserRepository.
+     */
     UserRepository repository = UserRepository.getInstance();
 }

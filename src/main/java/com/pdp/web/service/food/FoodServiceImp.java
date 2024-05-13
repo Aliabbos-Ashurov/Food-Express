@@ -4,13 +4,18 @@ import com.pdp.utils.Validator;
 import com.pdp.web.model.food.Food;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
  * A singleton service class for managing food items.
  * Implements thread-safe lazy initialization with double-checked locking.
+ *
+ * @author Nishonov Doniyor
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class FoodServiceImp implements FoodService {
@@ -34,7 +39,7 @@ public class FoodServiceImp implements FoodService {
      * @return true if the food item was successfully added, false otherwise
      */
     @Override
-    public boolean add(Food food) {
+    public boolean add(@NonNull Food food) {
         return repository.add(food);
     }
 
@@ -45,7 +50,7 @@ public class FoodServiceImp implements FoodService {
      * @return true if the food item was successfully removed, false otherwise
      */
     @Override
-    public boolean remove(UUID id) {
+    public boolean remove(@NonNull UUID id) {
         return repository.remove(id);
     }
 
@@ -56,8 +61,25 @@ public class FoodServiceImp implements FoodService {
      * @return false, indicating the operation is not supported yet
      */
     @Override
-    public boolean update(Food food) {
+    public boolean update(@NonNull Food food) {
+        List<Food> foods = getAll();
+        Optional<Food> first = foods.stream()
+                .filter(f -> Objects.equals(f.getId(), food.getId()))
+                .findFirst();
+        if (first.isPresent()) {
+            updateFoodData(first.get(), food);
+            repository.save(foods);
+            return true;
+        }
         return false;
+    }
+
+    private void updateFoodData(Food currentFood, Food updated) {
+        currentFood.setName(updated.getName());
+        currentFood.setPrice(updated.getPrice());
+        currentFood.setCategoryID(updated.getCategoryID());
+        currentFood.setImageUrl(updated.getImageUrl());
+        currentFood.setDescriptionID(updated.getDescriptionID());
     }
 
     /**
@@ -67,7 +89,7 @@ public class FoodServiceImp implements FoodService {
      * @return a list of {@link Food} objects that match the query
      */
     @Override
-    public List<Food> search(String query) {
+    public List<Food> search(@NonNull String query) {
         return getAll().stream()
                 .filter(f -> Validator.isValid(f.getDisplayName(), query))
                 .toList();
@@ -80,7 +102,7 @@ public class FoodServiceImp implements FoodService {
      * @return the {@link Food} object, or null if no food item is found
      */
     @Override
-    public Food getByID(UUID id) {
+    public Food getByID(@NonNull UUID id) {
         return repository.findById(id);
     }
 

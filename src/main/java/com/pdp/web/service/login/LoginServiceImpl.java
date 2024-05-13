@@ -15,6 +15,8 @@ import java.util.List;
  * This class follows the Singleton design pattern to ensure a single instance throughout the application.
  *
  * @author Aliabbos Ashurov
+ * @see LoginService
+ * @see UserService
  * @since 09/May/2024  15:22
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -22,6 +24,11 @@ public class LoginServiceImpl implements LoginService {
     private static final UserService userService = ThreadSafeBeansContainer.userServiceThreadLocal.get();
     private static volatile LoginServiceImpl instance;
 
+    /**
+     * Retrieves the singleton instance of LoginServiceImpl.
+     *
+     * @return The singleton instance of LoginServiceImpl.
+     */
     public static LoginServiceImpl getInstance() {
         if (instance == null) {
             synchronized (LoginServiceImpl.class) {

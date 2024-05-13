@@ -3,9 +3,11 @@ package com.pdp.web.service.foodBrandMapping;
 import com.pdp.web.model.foodBrandMapping.FoodBrandMapping;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -16,6 +18,11 @@ import java.util.UUID;
 public class FoodBrandMappingServiceImp implements FoodBrandMappingService {
     private static volatile FoodBrandMappingServiceImp instance;
 
+    /**
+     * Returns the singleton instance of FoodBrandMappingServiceImp.
+     *
+     * @return the singleton instance
+     */
     public static FoodBrandMappingServiceImp getInstance() {
         if (instance == null) {
             synchronized (FoodBrandMappingServiceImp.class) {
@@ -28,7 +35,7 @@ public class FoodBrandMappingServiceImp implements FoodBrandMappingService {
     }
 
     @Override
-    public boolean isFoodFromBrand(UUID foodID, UUID brandID) {
+    public boolean isFoodFromBrand(@NonNull UUID foodID, @NonNull UUID brandID) {
         List<FoodBrandMapping> foodBrandMappings = getAll();
         return foodBrandMappings.stream()
                 .anyMatch(foodBrandMapping -> foodBrandMapping.getBrandID().equals(brandID) && foodBrandMapping.getFoodID().equals(foodID));
@@ -41,7 +48,7 @@ public class FoodBrandMappingServiceImp implements FoodBrandMappingService {
      * @return a list of {@link FoodBrandMapping} associated with the specified brand
      */
     @Override
-    public List<FoodBrandMapping> getFoodsByBrand(UUID brandId) {
+    public List<FoodBrandMapping> getFoodsByBrand(@NonNull UUID brandId) {
         return getAll().stream()
                 .filter(f -> Objects.equals(f.getBrandID(), brandId))
                 .toList();
@@ -50,13 +57,14 @@ public class FoodBrandMappingServiceImp implements FoodBrandMappingService {
     /**
      * Retrieves all food brand mappings associated with a specific category name.
      *
+     * @param brandID      the UUID of the brand.
      * @param categoryName the name of the category to filter mappings
      * @return a list of {@link FoodBrandMapping} within the specified category
      */
     @Override
-    public List<FoodBrandMapping> getBrandFoodsByCategoryName(UUID brandID, String categoryName) {
+    public List<FoodBrandMapping> getBrandFoodsByCategoryName(@NonNull UUID brandID, @NonNull String categoryName) {
         return getAll().stream()
-                .filter(o -> Objects.equals(o.getCategoryName(),categoryName) && Objects.equals(o.getBrandID(),brandID))
+                .filter(o -> Objects.equals(o.getCategoryName(), categoryName) && Objects.equals(o.getBrandID(), brandID))
                 .toList();
     }
 
@@ -67,7 +75,7 @@ public class FoodBrandMappingServiceImp implements FoodBrandMappingService {
      * @return true if the mapping was successfully added, false otherwise
      */
     @Override
-    public boolean add(FoodBrandMapping foodBrandMapping) {
+    public boolean add(@NonNull FoodBrandMapping foodBrandMapping) {
         return repository.add(foodBrandMapping);
     }
 
@@ -78,7 +86,7 @@ public class FoodBrandMappingServiceImp implements FoodBrandMappingService {
      * @return true if the mapping was successfully removed, false otherwise
      */
     @Override
-    public boolean remove(UUID id) {
+    public boolean remove(@NonNull UUID id) {
         return repository.remove(id);
     }
 
@@ -89,8 +97,22 @@ public class FoodBrandMappingServiceImp implements FoodBrandMappingService {
      * @return false, indicating the operation is not supported yet
      */
     @Override
-    public boolean update(FoodBrandMapping foodBrandMapping) {
+    public boolean update(@NonNull FoodBrandMapping foodBrandMapping) {
+        List<FoodBrandMapping> foodBrandMappings = getAll();
+        Optional<FoodBrandMapping> first = foodBrandMappings.stream()
+                .filter(f -> Objects.equals(f.getId(), foodBrandMapping.getId()))
+                .findFirst();
+        if (first.isPresent()) {
+            updateFoodBrandMappingData(first.get(), foodBrandMapping);
+            repository.save(foodBrandMappings);
+        }
         return false;
+    }
+
+    private void updateFoodBrandMappingData(FoodBrandMapping foodBrandMapping, FoodBrandMapping updated) {
+        foodBrandMapping.setCategoryName(updated.getCategoryName());
+        foodBrandMapping.setBrandID(updated.getBrandID());
+        foodBrandMapping.setFoodID(updated.getFoodID());
     }
 
     /**
@@ -100,7 +122,7 @@ public class FoodBrandMappingServiceImp implements FoodBrandMappingService {
      * @return an empty list, as the method is not implemented
      */
     @Override
-    public List<FoodBrandMapping> search(String query) {
+    public List<FoodBrandMapping> search(@NonNull String query) {
         return List.of();
     }
 
@@ -111,7 +133,7 @@ public class FoodBrandMappingServiceImp implements FoodBrandMappingService {
      * @return the {@link FoodBrandMapping}, or null if no mapping is found
      */
     @Override
-    public FoodBrandMapping getByID(UUID id) {
+    public FoodBrandMapping getByID(@NonNull UUID id) {
         return repository.findById(id);
     }
 

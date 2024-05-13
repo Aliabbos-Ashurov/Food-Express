@@ -20,6 +20,11 @@ import java.util.stream.Collectors;
 public class UserServiceImp implements UserService {
     private static volatile UserServiceImp instance;
 
+    /**
+     * Retrieves the singleton instance of UserServiceImp.
+     *
+     * @return The singleton instance of UserServiceImp.
+     */
     public static UserServiceImp getInstance() {
         if (instance == null) {
             synchronized (UserServiceImp.class) {
@@ -43,11 +48,24 @@ public class UserServiceImp implements UserService {
         return repository.add(user);
     }
 
+    /**
+     * Removes a user from the repository using its UUID.
+     *
+     * @param id The UUID of the user to be removed.
+     * @return true if the user was successfully removed, false otherwise.
+     */
+
     @Override
     public boolean remove(UUID id) {
         return repository.remove(id);
     }
 
+    /**
+     * Updates an existing user in the repository.
+     *
+     * @param user The User object with updated information.
+     * @return true if the user was successfully updated, false otherwise.
+     */
     @Override
     public boolean update(User user) {
         List<User> users = getAll();
@@ -60,6 +78,7 @@ public class UserServiceImp implements UserService {
         if (userOptional.isPresent()) repository.save(users);
         return userOptional.isPresent();
     }
+
     private void updateUserData(User existingUser, User newUser) {
         existingUser.setRole(newUser.getRole());
         existingUser.setPassword(newUser.getPassword());
@@ -73,7 +92,12 @@ public class UserServiceImp implements UserService {
         existingUser.setProfilePictureUrl(newUser.getProfilePictureUrl());
     }
 
-
+    /**
+     * Searches for users that match a given query string.
+     *
+     * @param query The query string to match against user usernames.
+     * @return A list of User objects that match the query.
+     */
     @Override
     public List<User> search(String query) {
         List<User> users = getAll();
@@ -82,11 +106,22 @@ public class UserServiceImp implements UserService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Retrieves a user by its UUID.
+     *
+     * @param id The UUID of the user to retrieve.
+     * @return The User object, or null if no user is found.
+     */
     @Override
     public User getByID(UUID id) {
         return repository.findById(id);
     }
 
+    /**
+     * Retrieves all users from the repository.
+     *
+     * @return A list of all User objects.
+     */
     @Override
     public List<User> getAll() {
         return repository.getAll();

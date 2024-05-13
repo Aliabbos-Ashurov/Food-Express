@@ -17,11 +17,22 @@ import lombok.NoArgsConstructor;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
  * Singleton service class for managing orders.
  * Implements thread-safe lazy initialization with double-checked locking.
+ *
+ * @author Nishonov Doniyor
+ * @see Order
+ * @see CustomerOrder
+ * @see Branch
+ * @see Food
+ * @see BranchService
+ * @see CustomerOrderService
+ * @see FoodService
+ * @see FoodBrandMappingService
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class OrderServiceImp implements OrderService {
@@ -31,6 +42,11 @@ public class OrderServiceImp implements OrderService {
     FoodService foodService = ThreadSafeBeansContainer.foodServiceThreadLocal.get();
     private static volatile OrderServiceImp instance;
 
+    /**
+     * Retrieves the singleton instance of OrderServiceImp.
+     *
+     * @return The singleton instance of OrderServiceImp.
+     */
     public static OrderServiceImp getInstance() {
         if (instance == null) {
             synchronized (OrderServiceImp.class) {
@@ -42,6 +58,12 @@ public class OrderServiceImp implements OrderService {
         return instance;
     }
 
+    /**
+     * Retrieves orders associated with a specific customer order identified by its UUID.
+     *
+     * @param customerOrderID The UUID of the customer order.
+     * @return A list of orders associated with the customer order.
+     */
     @Override
     public List<Order> getOdersByCustomerID(UUID customerOrderID) {
         List<Order> orderList = getAll();
@@ -50,13 +72,20 @@ public class OrderServiceImp implements OrderService {
                 .toList();
     }
 
+    /**
+     * Retrieves an existing order identified by its UUID, or creates a new order based on the provided CustomOrderDTO.
+     *
+     * @param dto   The CustomOrderDTO containing information about the custom order.
+     * @param order The existing order, if available.
+     * @return The retrieved or newly created Order object.
+     */
     @Override
     public Order getOrCreate(CustomOrderDTO dto, Order order) {
         CustomerOrder exists = findExistingOrder(dto);
         if (Objects.nonNull(exists)) {
             boolean foodFromCurrentBrand = isFoodFromCurrentBrand(order, exists.getBranchID());
             if (foodFromCurrentBrand) {
-                Order orderWithSameFood = findOrderWithSameFood(order,exists);
+                Order orderWithSameFood = findOrderWithSameFood(order, exists);
                 if (Objects.nonNull(orderWithSameFood)) return updateOrderQuantityAndPrice(orderWithSameFood, order);
                 else return createNewOrder(order, exists);
 
@@ -94,10 +123,10 @@ public class OrderServiceImp implements OrderService {
         return foodBrandMappingService.isFoodFromBrand(order.getFoodID(), branch.getBrandID());
     }
 
-    private Order findOrderWithSameFood(Order order,CustomerOrder customerOrder) {
+    private Order findOrderWithSameFood(Order order, CustomerOrder customerOrder) {
         return getAll().stream()
                 .filter(existingOrder -> existingOrder.getFoodID().equals(order.getFoodID())
-                && existingOrder.getCustomerOrderID().equals(customerOrder.getId()))
+                        && existingOrder.getCustomerOrderID().equals(customerOrder.getId()))
                 .findFirst()
                 .orElse(null);
     }
@@ -168,16 +197,22 @@ public class OrderServiceImp implements OrderService {
     @Override
     public boolean update(Order order) {
         List<Order> orders = getAll();
-        orders.stream()
+        Optional<Order> first = orders.stream()
                 .filter(o -> o.getId().equals(order.getId()))
-                .forEach((o) -> {
-                    o.setFoodID(order.getFoodID());
-                    o.setFoodPrice(order.getFoodPrice());
-                    o.setFoodQuantity(order.getFoodQuantity());
-                    o.setCustomerOrderID(order.getCustomerOrderID());
-                });
-        repository.save(orders);
-        return true;
+                .findFirst();
+        if (first.isPresent()) {
+            updateOrderData(first.get(), order);
+            repository.save(orders);
+            return true;
+        }
+        return false;
+    }
+
+    private void updateOrderData(Order order, Order updated) {
+        order.setFoodID(order.getFoodID());
+        order.setFoodPrice(order.getFoodPrice());
+        order.setFoodQuantity(order.getFoodQuantity());
+        order.setCustomerOrderID(order.getCustomerOrderID());
     }
 
     /**

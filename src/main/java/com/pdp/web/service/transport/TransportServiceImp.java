@@ -11,11 +11,18 @@ import java.util.UUID;
 /**
  * Singleton service class for managing transport entities.
  * Implements thread-safe lazy initialization with double-checked locking.
+ *
+ * @see Transport
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class TransportServiceImp implements TransportService {
     private static volatile TransportServiceImp instance;
 
+    /**
+     * Retrieves the singleton instance of TransportServiceImp.
+     *
+     * @return The singleton instance of TransportServiceImp.
+     */
     public static TransportServiceImp getInstance() {
         if (instance == null) {
             synchronized (TransportServiceImp.class) {

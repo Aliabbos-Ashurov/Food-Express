@@ -4,6 +4,7 @@ import com.pdp.web.model.BaseModel;
 import com.pdp.java.console.support.Displayable;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 
 /**
@@ -19,6 +20,7 @@ import lombok.ToString;
 @Getter
 @ToString(callSuper = true)
 @AllArgsConstructor
+@Setter
 public class Description extends BaseModel implements Displayable {
     private String name;
     private String text;

@@ -3,20 +3,34 @@ package com.pdp.web.service.discount;
 import com.pdp.web.model.discount.Discount;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
  * Singleton service implementation for managing discounts.
+ * <p>
+ * This service provides functionality to manage discounts within the system.
+ * It follows the Singleton pattern to ensure a single instance is used throughout the application.
+ * </p>
+ *
+ * @author Nishonov Doniyor
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class DiscountServiceImp implements DiscountService {
     private static volatile DiscountServiceImp instance;
 
+    /**
+     * Returns the singleton instance of DiscountServiceImp.
+     *
+     * @return the singleton instance
+     */
     public static DiscountServiceImp getInstance() {
         if (instance == null) {
-            synchronized (DiscountServiceImp.class){
+            synchronized (DiscountServiceImp.class) {
                 if (instance == null) {
                     instance = new DiscountServiceImp();
                 }
@@ -32,7 +46,7 @@ public class DiscountServiceImp implements DiscountService {
      * @return true if the discount was successfully added, false otherwise
      */
     @Override
-    public boolean add(Discount discount) {
+    public boolean add(@NonNull Discount discount) {
         return repository.add(discount);
     }
 
@@ -43,7 +57,7 @@ public class DiscountServiceImp implements DiscountService {
      * @return true if the discount was successfully removed, false otherwise
      */
     @Override
-    public boolean remove(UUID id) {
+    public boolean remove(@NonNull UUID id) {
         return repository.remove(id);
     }
 
@@ -54,8 +68,21 @@ public class DiscountServiceImp implements DiscountService {
      * @return false, as the method is not implemented
      */
     @Override
-    public boolean update(Discount discount) {
+    public boolean update(@NonNull Discount discount) {
+        List<Discount> discounts = getAll();
+        Optional<Discount> first = discounts.stream().filter(d -> Objects.equals(d.getId(), discount.getId())).findFirst();
+        if (first.isPresent()) {
+            updateDiscountData(first.get(), discount);
+            repository.save(discounts);
+            return true;
+        }
         return false;
+    }
+
+    private void updateDiscountData(Discount currentDiscount, Discount updated) {
+        currentDiscount.setDiscountPersentage(updated.isDiscountPersentage());
+        currentDiscount.setFoodID(updated.getFoodID());
+        currentDiscount.setDescriptionID(updated.getDescriptionID());
     }
 
     /**
@@ -65,7 +92,7 @@ public class DiscountServiceImp implements DiscountService {
      * @return an empty list, as the method is not implemented
      */
     @Override
-    public List<Discount> search(String query) {
+    public List<Discount> search(@NonNull String query) {
         return List.of();
     }
 
@@ -76,7 +103,7 @@ public class DiscountServiceImp implements DiscountService {
      * @return the found {@link Discount}, or null if no discount is found
      */
     @Override
-    public Discount getByID(UUID id) {
+    public Discount getByID(@NonNull UUID id) {
         return repository.findById(id);
     }
 
