@@ -56,7 +56,7 @@ public class OrderServiceImp implements OrderService {
         if (Objects.nonNull(exists)) {
             boolean foodFromCurrentBrand = isFoodFromCurrentBrand(order, exists.getBranchID());
             if (foodFromCurrentBrand) {
-                Order orderWithSameFood = findOrderWithSameFood(order);
+                Order orderWithSameFood = findOrderWithSameFood(order,exists);
                 if (Objects.nonNull(orderWithSameFood)) return updateOrderQuantityAndPrice(orderWithSameFood, order);
                 else return createNewOrder(order, exists);
 
@@ -94,9 +94,10 @@ public class OrderServiceImp implements OrderService {
         return foodBrandMappingService.isFoodFromBrand(order.getFoodID(), branch.getBrandID());
     }
 
-    private Order findOrderWithSameFood(Order order) {
+    private Order findOrderWithSameFood(Order order,CustomerOrder customerOrder) {
         return getAll().stream()
-                .filter(existingOrder -> existingOrder.getFoodID().equals(order.getFoodID()))
+                .filter(existingOrder -> existingOrder.getFoodID().equals(order.getFoodID())
+                && existingOrder.getCustomerOrderID().equals(customerOrder.getId()))
                 .findFirst()
                 .orElse(null);
     }
