@@ -52,15 +52,16 @@ public class DelivererController {
     private static void activeOrder() {
         List<CustomerOrder> customerOrders = customerOrderService.getOrdersInProcessByDeliverer(UserController.curUser.getId());
         NotificationHandler.checkData(customerOrders);
-        if (!ListUtils.checkDataForNotNull(customerOrders)) return;
-        displayOrders(customerOrders);
-        int index = Scan.scanInt() - 1;
-        if (index < 0 || index >= customerOrders.size()) {
-            printInvalidSelectionError();
-            return;
+        if (ListUtils.checkDataForNotNull(customerOrders)) {
+            displayOrders(customerOrders);
+            int index = Scan.scanInt() - 1;
+            if (index < 0 || index >= customerOrders.size()) {
+                printInvalidSelectionError();
+                return;
+            }
+            CustomerOrder customerOrder = customerOrders.get(index);
+            handleOrderStatus(customerOrder);
         }
-        CustomerOrder customerOrder = customerOrders.get(index);
-        handleOrderStatus(customerOrder);
     }
 
     private static void handleOrderStatus(CustomerOrder customerOrder) {
@@ -132,19 +133,25 @@ public class DelivererController {
     }
 
     private static void orderAcceptance() {
-        List<CustomerOrder> customerOrders = customerOrderService.getPendingOrdersForDeliverer();
-        NotificationHandler.checkData(customerOrders);
-        if (ListUtils.checkDataForNotNull(customerOrders)) {
-            displayOrders(customerOrders);
-            int index = Scan.scanInt() - 1;
-            if (index < 0 || index >= customerOrders.size()) {
-                printInvalidSelectionError();
-                return;
+        List<CustomerOrder> customerOrdersByDeliverer = customerOrderService.getOrdersInProcessByDeliverer(UserController.curUser.getId());
+        if (ListUtils.checkDataForNotNull(customerOrdersByDeliverer)) {
+            NotificationHandler.notifyAction("You have an active order", "", false);
+        } else {
+            List<CustomerOrder> customerOrders = customerOrderService.getPendingOrdersForDeliverer();
+            NotificationHandler.checkData(customerOrders);
+            if (ListUtils.checkDataForNotNull(customerOrders)) {
+                displayOrders(customerOrders);
+                int index = Scan.scanInt() - 1;
+                if (index < 0 || index >= customerOrders.size()) {
+                    printInvalidSelectionError();
+                    return;
+                }
+                CustomerOrder customerOrder = customerOrders.get(index);
+                customerOrder.setDeliverID(UserController.curUser.getId());
+                customerOrder.setOrderStatus(OrderStatus.YOUR_ORDER_RECEIVED);
+                System.out.println(customerOrder);
+                customerOrderService.update(customerOrder);
             }
-            CustomerOrder customerOrder = customerOrders.get(index);
-            customerOrder.setDeliverID(UserController.curUser.getId());
-            customerOrder.setOrderStatus(OrderStatus.YOUR_ORDER_RECEIVED);
-            customerOrderService.update(customerOrder);
         }
     }
 
