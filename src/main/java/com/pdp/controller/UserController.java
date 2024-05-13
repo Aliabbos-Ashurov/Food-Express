@@ -23,8 +23,21 @@ public class UserController {
     public static void handlePostLogin() {
         if (curUser.getRole() == Role.USER) {
             CustomerOrderController.start();
-        } else if (curUser.getRole() == Role.DELIVERER) {
+        }
+        if (curUser.getRole() == Role.DELIVERER) {
             DelivererController.deliverer();
         }
+    }
+    public static void makeUserDataNull() {
+        curUser.setLanguage(null);
+        curUser.setPassword(null);
+        curUser.setUsername(null);
+        curUser.setRole(null);
+        curUser.setFullname(null);
+        curUser.setPhoneNumber(null);
+        curUser.setEmail(null);
+        curUser.setNumberVerified(false);
+        curUser.setEmailVerified(false);
+        curUser.setProfilePictureUrl(null);
     }
 }
