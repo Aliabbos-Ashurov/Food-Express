@@ -31,6 +31,8 @@ public class CustomerOrder extends BaseModel {
     private UUID branchID;
     @SerializedName("address_id")
     private UUID addressID;
+    @SerializedName("customer_order_geo_point_id")
+    private UUID customerOrderGeoPointID;
     @SerializedName("order_status")
     @Builder.Default
     private OrderStatus orderStatus = OrderStatus.NOT_CONFIRMED;

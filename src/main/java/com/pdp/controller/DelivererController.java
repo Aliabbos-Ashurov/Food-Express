@@ -4,7 +4,7 @@ import com.pdp.config.ThreadSafeBeansContainer;
 import com.pdp.java.console.ListUtils;
 import com.pdp.java.console.NotificationHandler;
 import com.pdp.java.console.Scan;
-import com.pdp.utils.MenuUtils;
+import com.pdp.utils.front.MenuUtils;
 import com.pdp.utils.source.MessageSourceUtils;
 import com.pdp.web.enums.OrderStatus;
 import com.pdp.web.model.address.Address;
