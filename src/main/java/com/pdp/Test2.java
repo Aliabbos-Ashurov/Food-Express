@@ -1,14 +1,7 @@
 package com.pdp;
 
 import com.pdp.config.ThreadSafeBeansContainer;
-import com.pdp.config.imagesPath.BrandImagesPath;
 import com.pdp.controller.UserController;
-import com.pdp.utils.MenuUtils;
-import com.pdp.utils.source.MessageSourceUtils;
-import com.pdp.web.enums.Language;
-import com.pdp.web.model.branch.Branch;
-import com.pdp.web.model.branchLocation.BranchLocation;
-import com.pdp.web.model.brand.Brand;
 import com.pdp.web.model.category.Category;
 import com.pdp.web.model.description.Description;
 import com.pdp.web.model.food.Food;
@@ -28,14 +21,13 @@ import com.pdp.web.service.transport.TransportService;
 import com.pdp.web.service.user.UserService;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 /**
  * @author Aliabbos Ashurov
  * @since: 30/April/2024  21:09
  **/
-public class Test {
+public class Test2 {
     private static final CustomerOrderService customerOrderService = ThreadSafeBeansContainer.customerOrderServiceThreadLocal.get();
     private static final OrderService orderService = ThreadSafeBeansContainer.orderServiceThreadLocal.get();
     private static final AddressService addressService = ThreadSafeBeansContainer.addressServiceThreadLocal.get();
