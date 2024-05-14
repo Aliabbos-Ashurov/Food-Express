@@ -1,1 +1,114 @@
-[]
+[
+  {
+    "category_name": "BURGER",
+    "food_id": "9ebfe0b6-37cf-4a5e-9637-8261eb253811",
+    "brand_id": "f60fc7f6-930b-4d00-ad64-2526e1459bce",
+    "id": "fec83d49-e08f-43be-bb50-cf89859e2778",
+    "created_at": "14/05/2024 10:24:11",
+    "is_deleted": false
+  },
+  {
+    "category_name": "BURGER",
+    "food_id": "afc34b21-fdbd-44d9-8368-2968cfbfbc17",
+    "brand_id": "f60fc7f6-930b-4d00-ad64-2526e1459bce",
+    "id": "98a9f869-f152-4639-b95d-29058971b7f3",
+    "created_at": "14/05/2024 10:26:26",
+    "is_deleted": false
+  },
+  {
+    "category_name": "BURGER",
+    "food_id": "d830e08f-5e05-4552-bebb-2cfb2a5505c5",
+    "brand_id": "f60fc7f6-930b-4d00-ad64-2526e1459bce",
+    "id": "ee44fe50-58b1-4ad9-95e7-042863857790",
+    "created_at": "14/05/2024 10:29:50",
+    "is_deleted": false
+  },
+  {
+    "category_name": "BURGER",
+    "food_id": "140916ee-f5e0-478f-9990-0516e9a04605",
+    "brand_id": "f60fc7f6-930b-4d00-ad64-2526e1459bce",
+    "id": "ec61b62e-8fda-4ea6-9c6c-8ecd4ec2f7f4",
+    "created_at": "14/05/2024 10:31:24",
+    "is_deleted": false
+  },
+  {
+    "category_name": "BURGER",
+    "food_id": "10fb63c5-d376-4eca-ac9f-239ddc5f059a",
+    "brand_id": "f60fc7f6-930b-4d00-ad64-2526e1459bce",
+    "id": "ba92b30d-3b9b-4361-ad97-de76a148a459",
+    "created_at": "14/05/2024 10:32:35",
+    "is_deleted": false
+  },
+  {
+    "category_name": "BURGER",
+    "food_id": "a387eb03-69ce-423d-ae7f-49134527acc8",
+    "brand_id": "f60fc7f6-930b-4d00-ad64-2526e1459bce",
+    "id": "f988fd50-6ff3-4ba1-9112-7fade852421c",
+    "created_at": "14/05/2024 10:34:21",
+    "is_deleted": false
+  },
+  {
+    "category_name": "SOUS",
+    "food_id": "92413980-f2b6-462c-8c27-d5119fbd709e",
+    "brand_id": "f60fc7f6-930b-4d00-ad64-2526e1459bce",
+    "id": "835c7dcd-e262-4b1c-be46-6440ca5d5f26",
+    "created_at": "14/05/2024 10:36:45",
+    "is_deleted": false
+  },
+  {
+    "category_name": "SOUS",
+    "food_id": "7dbffe69-b92d-4052-909a-6103f2d5061f",
+    "brand_id": "f60fc7f6-930b-4d00-ad64-2526e1459bce",
+    "id": "ea2c4515-fb7c-4488-8595-c0934470af3a",
+    "created_at": "14/05/2024 10:37:27",
+    "is_deleted": false
+  },
+  {
+    "category_name": "SOUS",
+    "food_id": "62f7845f-325f-40c8-a52a-d5811bbc395d",
+    "brand_id": "f60fc7f6-930b-4d00-ad64-2526e1459bce",
+    "id": "5559dd2a-0a86-4c8a-b0d3-15309657a677",
+    "created_at": "14/05/2024 10:38:03",
+    "is_deleted": false
+  },
+  {
+    "category_name": "SOUS",
+    "food_id": "f3676139-1699-41fc-90e2-885b3132fbb4",
+    "brand_id": "f60fc7f6-930b-4d00-ad64-2526e1459bce",
+    "id": "b1193ab1-2698-4f35-a0f2-7477ef8c7990",
+    "created_at": "14/05/2024 10:38:45",
+    "is_deleted": false
+  },
+  {
+    "category_name": "LANCHBOKS",
+    "food_id": "f85889c1-14c2-402b-8a60-df7f6eeda62a",
+    "brand_id": "f60fc7f6-930b-4d00-ad64-2526e1459bce",
+    "id": "d6b0afc4-ec2b-4e34-a696-40723904f097",
+    "created_at": "14/05/2024 10:42:10",
+    "is_deleted": false
+  },
+  {
+    "category_name": "LANCHBOKS",
+    "food_id": "3ab9b3ad-0000-421b-9234-38d19b7b2de6",
+    "brand_id": "f60fc7f6-930b-4d00-ad64-2526e1459bce",
+    "id": "e9279f00-6395-4072-a1cd-e3e511c10764",
+    "created_at": "14/05/2024 10:42:59",
+    "is_deleted": false
+  },
+  {
+    "category_name": "BASKET",
+    "food_id": "9922dc44-64c3-464c-8eb0-86d2694fe7c8",
+    "brand_id": "f60fc7f6-930b-4d00-ad64-2526e1459bce",
+    "id": "3a595c1d-f513-4796-a4b5-3971e08ddbc4",
+    "created_at": "14/05/2024 10:45:09",
+    "is_deleted": false
+  },
+  {
+    "category_name": "BASKET",
+    "food_id": "74eb185f-b0b2-437c-acb8-b51e01f2394d",
+    "brand_id": "f60fc7f6-930b-4d00-ad64-2526e1459bce",
+    "id": "97027a8d-5ec8-4a23-94ac-049dea935a70",
+    "created_at": "14/05/2024 10:46:37",
+    "is_deleted": false
+  }
+]

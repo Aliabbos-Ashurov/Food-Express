@@ -1,1 +1,34 @@
-[]
+[
+  {
+    "name": "LANCHBOKS",
+    "brand_id": "f60fc7f6-930b-4d00-ad64-2526e1459bce",
+    "image_url": "AgACAgIAAxkBAAMkZkLrtX9URIDPmXtH3yFG95l__30AAlXWMRsfPBlKkry0FNlp6B8BAAMCAAN5AAM1BA",
+    "id": "5f9d4f12-b56e-4058-afdc-b80b77fae849",
+    "created_at": "14/05/2024 10:42:10",
+    "is_deleted": false
+  },
+  {
+    "name": "SOUS",
+    "brand_id": "f60fc7f6-930b-4d00-ad64-2526e1459bce",
+    "image_url": "AgACAgIAAxkBAAMjZkLrKUmhZ-YcMDB2grf7FOMP0eUAAlTWMRsfPBlK6PrVYIhgCYYBAAMCAAN4AAM1BA",
+    "id": "f3213e9b-6403-4eb5-8fb5-98667797844b",
+    "created_at": "14/05/2024 10:36:45",
+    "is_deleted": false
+  },
+  {
+    "name": "BASKET",
+    "brand_id": "f60fc7f6-930b-4d00-ad64-2526e1459bce",
+    "image_url": "AgACAgIAAxkBAAMlZkLsaM6plKYNmaxLEG7JJlHQkuMAAljWMRsfPBlK7pqpv98GDU4BAAMCAAN4AAM1BA",
+    "id": "18216ae1-23ea-4783-baab-26dc9fe274d1",
+    "created_at": "14/05/2024 10:45:09",
+    "is_deleted": false
+  },
+  {
+    "name": "BURGER",
+    "brand_id": "f60fc7f6-930b-4d00-ad64-2526e1459bce",
+    "image_url": "AgACAgIAAxkBAAMiZkLrCqvqDgU_gOiawPANtfOE57YAAlPWMRsfPBlKLEp63uIpgVwBAAMCAAN5AAM1BA",
+    "id": "4625e307-408f-4595-b918-56cc7204cc8f",
+    "created_at": "14/05/2024 10:24:11",
+    "is_deleted": false
+  }
+]

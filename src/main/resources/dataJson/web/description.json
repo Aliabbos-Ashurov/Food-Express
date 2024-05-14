@@ -1,1 +1,100 @@
-[]
+[
+  {
+    "name": "INFO",
+    "text": "Xantalli sous, ketchup, original panirovkada tovuq go‘shti, piyoz, chedder pishlog‘i, bodring va pomidor tilimchalari, salat bargi, jo‘xori talqoni sepilgan bulochka",
+    "id": "10eac1ee-6d94-4e51-82b4-cc0551051450",
+    "created_at": "14/05/2024 10:24:11",
+    "is_deleted": false
+  },
+  {
+    "name": "INFO",
+    "text": "Premial KFC burgerining betakror ta\u0027mini yaratish uchun har jihatdan puxta o‘ylab tayyorlangan noyob retsept. Qaymoqli Briosh bulkachasi, ikki hissali Chedder pishlog‘i, marinadlangan bodring, karsillama salat va original panirovkadagi afsonaviy lahm tovuq go‘shti — bundan a\u0027losini topolmaysiz!",
+    "id": "f1d17df9-f2f2-4828-8d3e-9d9c5802b8c4",
+    "created_at": "14/05/2024 10:26:26",
+    "is_deleted": false
+  },
+  {
+    "name": "INFO",
+    "text": "Premial KFC burgerining betakror ta\u0027mini yaratish uchun har jihatdan puxta o‘ylab tayyorlangan noyob retsept. Qaymoqli Briosh bulkachasi, ikki hissali Chedder pishlog‘i, marinadlangan bodring, karsillama salat va original panirovkadagi afsonaviy lahm tovuq go‘shti — bundan a\u0027losini topolmaysiz!",
+    "id": "30aa5924-db19-438b-b1b8-d18be603144e",
+    "created_at": "14/05/2024 10:29:50",
+    "is_deleted": false
+  },
+  {
+    "name": "INFO",
+    "text": "Sarxil tovuq go‘shti, marinadlangan bodring va ishtahaochar sous",
+    "id": "6287d5f8-8af6-47cc-b952-614d63266fbf",
+    "created_at": "14/05/2024 10:31:24",
+    "is_deleted": false
+  },
+  {
+    "name": "INFO",
+    "text": "Original Big Sanders burger – nihoyatda katta va ishtahaochar! U ko‘p pishloq, barra sabzavotlar va sous, og‘izda eriydigan bulkacha va Polkovnik Sandersning maxfiy retsepti bo‘yicha 11 ta giyoh va ziravorlarning ideal uyg‘unligida sara tovuq go‘shtidan tayyorlangan yumshoqqina va xushbo‘y Stripslardan iborat.",
+    "id": "91a7f9ad-0c75-43e9-a1db-5346c20832ef",
+    "created_at": "14/05/2024 10:32:35",
+    "is_deleted": false
+  },
+  {
+    "name": "INFO",
+    "text": "Jo‘xori talqoni sepilgan bulochka, original panirovkada sarxil strips, piyoz, Chedder pishlog‘i, bodring, xantalli sous va ketchup.",
+    "id": "ceab6211-bc5a-4105-b531-c46bf3242aeb",
+    "created_at": "14/05/2024 10:34:21",
+    "is_deleted": false
+  },
+  {
+    "name": "INFO",
+    "text": "Tomatli ketchup",
+    "id": "b2ce0c98-dfac-40ed-994e-d4bbc63b0bcc",
+    "created_at": "14/05/2024 10:36:45",
+    "is_deleted": false
+  },
+  {
+    "name": "INFO",
+    "text": "Pishloqli, original sous",
+    "id": "8a9d4e5a-9630-4d7a-b102-a6c70a4851ee",
+    "created_at": "14/05/2024 10:37:27",
+    "is_deleted": false
+  },
+  {
+    "name": "INFO",
+    "text": "Chili nordon-shirin sousi",
+    "id": "11ba54da-4ac2-4ae5-a849-fcfd0f6ca748",
+    "created_at": "14/05/2024 10:38:03",
+    "is_deleted": false
+  },
+  {
+    "name": "INFO",
+    "text": "Sarimsoqli sous",
+    "id": "1543b48d-f4a0-4811-9f55-5f2f8787597c",
+    "created_at": "14/05/2024 10:38:45",
+    "is_deleted": false
+  },
+  {
+    "name": "INFO",
+    "text": "Longer, small fries, drink 300 ml of choice, ketchup, nuggets 2 pcs.",
+    "id": "4b69835d-fd2a-4518-8cc1-64d6ff386707",
+    "created_at": "14/05/2024 10:42:10",
+    "is_deleted": false
+  },
+  {
+    "name": "INFO",
+    "text": "Cheeseburger, small fries, drink 300 ml of your choice, ketchup, bites 60g",
+    "id": "b257581f-8b65-49a1-8a69-d1bf158fd9bb",
+    "created_at": "14/05/2024 10:42:59",
+    "is_deleted": false
+  },
+  {
+    "name": "INFO",
+    "text": "1 ta oyoq, 2 ta achchiq kanot, 2 ta strips, 4 ta bayts",
+    "id": "043b07ed-3378-4b01-8934-22c0d9fdb4c0",
+    "created_at": "14/05/2024 10:45:09",
+    "is_deleted": false
+  },
+  {
+    "name": "INFO",
+    "text": "Achchiq panirovkadagi 26 ta tovuq qanotchalari",
+    "id": "690f2359-5fcf-4494-a24f-78eeadec53d5",
+    "created_at": "14/05/2024 10:46:37",
+    "is_deleted": false
+  }
+]
