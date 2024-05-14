@@ -11,5 +11,5 @@ import lombok.Getter;
 public enum CourierRegistrationState implements State {
     ENTER_FULLNAME,
     ENTER_PHONE_NUMBER,
-    ENTER_TRANSPORT_REGISTRATION_NUMBER;
+    ENTER_TRANSPORT_REGISTRATION_NUMBER
 }

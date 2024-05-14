@@ -12,5 +12,5 @@ public enum UserViewState implements State {
     VIEW_BRANDS,
     VIEW_CATEGORIES,
     VIEW_FOODS,
-    COUNT;
+    COUNT
 }

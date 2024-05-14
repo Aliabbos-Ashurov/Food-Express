@@ -11,5 +11,5 @@ import lombok.Getter;
 public enum UserMenuOptionState implements State {
     PLACE_ORDER,
     VIEW_MY_ORDERS,
-    REGISTER_AS_COURIER;
+    REGISTER_AS_COURIER
 }

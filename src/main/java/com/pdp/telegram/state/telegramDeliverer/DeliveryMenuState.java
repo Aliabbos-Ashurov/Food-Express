@@ -10,5 +10,5 @@ import lombok.Getter;
 @Getter
 public enum DeliveryMenuState implements State {
     VIEW_ASSIGNED_ORDERS,
-    VIEW_ACTIVE_ORDERS;
+    VIEW_ACTIVE_ORDERS
 }

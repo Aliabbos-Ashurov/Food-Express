@@ -10,5 +10,5 @@ import lombok.Getter;
 @Getter
 public enum ConfirmationState implements State {
     ACCEPT_ORDER_IN_CART,
-    ACCEPT_CLEAR_CART;
+    ACCEPT_CLEAR_CART
 }

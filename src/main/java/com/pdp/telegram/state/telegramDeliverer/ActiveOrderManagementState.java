@@ -11,5 +11,5 @@ import lombok.Getter;
 public enum ActiveOrderManagementState implements State {
     CONFIRM_ORDER_PICKUP,
     CONFIRM_ORDER_DELIVERY,
-    DELIVERY_FAILED;
+    DELIVERY_FAILED
 }
