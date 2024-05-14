@@ -1,4 +1,4 @@
-package com.pdp.utils;
+package com.pdp.utils.front;
 
 import com.pdp.utils.source.MessageSourceUtils;
 import com.pdp.web.enums.Language;

@@ -1,5 +1,7 @@
 package com.pdp.config.jsonFilePath;
 
+import lombok.Getter;
+
 /**
  * Defines the paths to various JSON resource files within the 'db' directory.
  * This class contains static constants that represent the file names and
@@ -19,6 +21,13 @@ package com.pdp.config.jsonFilePath;
  * @since 04/May/2024 14:56
  */
 public interface JsonFilePath extends DirectoryPath {
+    // TELEGRAM
+    String PATH_TELEGRAM_DELIVERER = DIRECTORY_TELEGRAM + "telegramDeliverer.json";
+    String PATH_TELEGRAM_TRANSPORT = DIRECTORY_TELEGRAM + "telegramTransport.json";
+    String PATH_TELEGRAM_USER = DIRECTORY_TELEGRAM + "telegramUser.json";
+    String PATH_TELEGRAM_CUSTOMER_ORDER_GEO_POINT = DIRECTORY_TELEGRAM + "customerOrderGeoPoint.json";
+
+    // WEB
     String PATH_ADDRESS = DIRECTORY + "address.json";
     String PATH_BANNED = DIRECTORY + "banned.json";
     String PATH_BRANCH = DIRECTORY + "branch.json";

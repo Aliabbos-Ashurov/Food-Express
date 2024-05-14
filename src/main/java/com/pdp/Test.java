@@ -1,18 +1,7 @@
 package com.pdp;
 
 import com.pdp.config.ThreadSafeBeansContainer;
-import com.pdp.config.imagesPath.BrandImagesPath;
 import com.pdp.controller.UserController;
-import com.pdp.utils.MenuUtils;
-import com.pdp.utils.source.MessageSourceUtils;
-import com.pdp.web.enums.Language;
-import com.pdp.web.model.branch.Branch;
-import com.pdp.web.model.branchLocation.BranchLocation;
-import com.pdp.web.model.brand.Brand;
-import com.pdp.web.model.category.Category;
-import com.pdp.web.model.description.Description;
-import com.pdp.web.model.food.Food;
-import com.pdp.web.model.foodBrandMapping.FoodBrandMapping;
 import com.pdp.web.service.address.AddressService;
 import com.pdp.web.service.branch.BranchService;
 import com.pdp.web.service.branchLocation.BranchLocationService;
@@ -26,10 +15,6 @@ import com.pdp.web.service.foodBrandMapping.FoodBrandMappingService;
 import com.pdp.web.service.order.OrderService;
 import com.pdp.web.service.transport.TransportService;
 import com.pdp.web.service.user.UserService;
-
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.util.UUID;
 
 /**
  * @author Aliabbos Ashurov
@@ -59,28 +44,30 @@ public class Test {
         ////-------------------------------------------
         ////-------------------------------------------
         ////-------------------------------------------
-        String KFC = "f60fc7f6-930b-4d00-ad64-2526e1459bce";
-        String BON = "75cb24b7-8404-4cae-b8cc-bb14307185a1";
-        String EVOS = "8cecd430-ec65-427d-9fc7-c6e2b7ebd13c";
-        String OQTEPA = "01188cf2-3ccf-4692-9e01-7859e65fc46d";
+       /* UUID KFC = UUID.fromString("f60fc7f6-930b-4d00-ad64-2526e1459bce");
+        UUID BON = UUID.fromString("75cb24b7-8404-4cae-b8cc-bb14307185a1");
+        UUID EVOS = UUID.fromString("8cecd430-ec65-427d-9fc7-c6e2b7ebd13c");
+        UUID OQTEPA = UUID.fromString("01188cf2-3ccf-4692-9e01-7859e65fc46d");
 
 
+        Category category = new Category("BASKET", KFC, "AgACAgIAAxkBAAMlZkLsaM6plKYNmaxLEG7JJlHQkuMAAljWMRsfPBlK7pqpv98GDU4BAAMCAAN4AAM1BA");
 
-        Description description = new Description("Ma'lumot","Pishloqli, original sous");
-        Category category = new Category("SOUS",UUID.fromString(KFC),"AgACAgIAAxkBAAIEOWZA46LJZU3A5Drfx68TYNvLWISTAAKD2jEb4IoBSiFPwmTpm5TFAQADAgADeAADNQQ");
+
+        Description description = new Description("INFO", "Achchiq panirovkadagi 26 ta tovuq qanotchalari");
         Food food = Food.builder()
-                .name("Pishloqli, original sous")
-                .price(new BigDecimal("4000"))
+                .name("Basket L – 26 achchiq qanot")
+                .price(new BigDecimal("130000"))
                 .descriptionID(description.getId())
                 .categoryID(category.getId())
+                .imageUrl("AgACAgIAAxkBAAMzZkLuI2F5pL4B_Z_wmrKCNQ1EaEsAAmPWMRsfPBlKQBH9qx9GOGkBAAMCAAN4AAM1BA")
                 .build();
 
 
-        FoodBrandMapping foodBrandMapping = new FoodBrandMapping(category.getName(),food.getId(),UUID.fromString(KFC));
+        FoodBrandMapping foodBrandMapping = new FoodBrandMapping(category.getName(), food.getId(), KFC);
 
         foodService.add(food);
         descriptionService.add(description);
         categoryService.add(category);
-        foodBrandMappingService.add(foodBrandMapping);
+        foodBrandMappingService.add(foodBrandMapping);*/
     }
 }
