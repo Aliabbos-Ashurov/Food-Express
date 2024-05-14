@@ -1,6 +1,62 @@
 [
   {
     "name": "INFO",
+    "text": "Chicken Breakfast Bon!",
+    "id": "d3c865e5-b6e3-4eda-977e-07d59dd96465",
+    "created_at": "14/05/2024 10:27:57",
+    "is_deleted": false
+  },
+  {
+    "name": "INFO",
+    "text": "Breakfast with sausage Bon!",
+    "id": "017371f1-2ba6-4a65-b277-bc93b1ac18ed",
+    "created_at": "14/05/2024 10:32:12",
+    "is_deleted": false
+  },
+  {
+    "name": "INFO",
+    "text": "Americano double",
+    "id": "3737ace9-e155-4697-8181-90c8e6338f03",
+    "created_at": "14/05/2024 10:35:51",
+    "is_deleted": false
+  },
+  {
+    "name": "INFO",
+    "text": "Cappuccino",
+    "id": "43c3bbfa-cfad-4fe7-a144-41c1482f2953",
+    "created_at": "14/05/2024 10:37:10",
+    "is_deleted": false
+  },
+  {
+    "name": "INFO",
+    "text": "Amerika klassikasi pepperoni, maxsus tomat sousi Mozzarella va Akbel pishloqi.",
+    "id": "4929dbe2-b641-4fc3-b6d2-08b9ee79a56a",
+    "created_at": "14/05/2024 10:40:53",
+    "is_deleted": false
+  },
+  {
+    "name": "INFO",
+    "text": "Yumshoq tovuq, maxsus tomat sousi, kurka go\u0027shti, qo\u0027ziqorin, zaytun, pishloq va oregano",
+    "id": "95d4c345-9d10-416d-84cc-3edcfa956cd8",
+    "created_at": "14/05/2024 10:43:13",
+    "is_deleted": false
+  },
+  {
+    "name": "INFO",
+    "text": "Qarsildoq aysberg salati, cherry pomidorlari, parmezan pishloqi va yumshoq tovuq filesi",
+    "id": "3ae7a274-8b11-44a8-97c8-07501f07cb4b",
+    "created_at": "14/05/2024 10:45:41",
+    "is_deleted": false
+  },
+  {
+    "name": "INFO",
+    "text": "Dudlangan kolbasa, kurka, qazi, pishloq, mayonez",
+    "id": "b2e254e7-1cc8-4e69-81ee-e210b9a86c96",
+    "created_at": "14/05/2024 10:46:42",
+    "is_deleted": false
+  },
+  {
+    "name": "INFO",
     "text": "Xantalli sous, ketchup, original panirovkada tovuq go‘shti, piyoz, chedder pishlog‘i, bodring va pomidor tilimchalari, salat bargi, jo‘xori talqoni sepilgan bulochka",
     "id": "10eac1ee-6d94-4e51-82b4-cc0551051450",
     "created_at": "14/05/2024 10:24:11",

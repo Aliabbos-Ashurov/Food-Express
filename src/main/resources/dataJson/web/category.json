@@ -1,5 +1,37 @@
 [
   {
+    "name": "PIZZA",
+    "brand_id": "01188cf2-3ccf-4692-9e01-7859e65fc46d",
+    "image_url": "AgACAgIAAxkBAAM6ZkLwLjjr5STwtF7WiNG1F736ekoAAnfWMRsfPBlKcpcJX5JBZU4BAAMCAAN5AAM1BA",
+    "id": "143edf48-76bf-4b7b-b82e-85ca6d0a6ae6",
+    "created_at": "14/05/2024 10:40:53",
+    "is_deleted": false
+  },
+  {
+    "name": "BREAKFAST",
+    "brand_id": "75cb24b7-8404-4cae-b8cc-bb14307185a1",
+    "image_url": "AgACAgIAAxkBAAM0ZkLuy1C3O_7QaxX8m3ON8SRMqYQAAmTWMRsfPBlKJi8g3_HzvLEBAAMCAAN4AAM1BA",
+    "id": "babad496-70a7-4305-ba34-7930735e2900",
+    "created_at": "14/05/2024 10:27:57",
+    "is_deleted": false
+  },
+  {
+    "name": "SALAT",
+    "brand_id": "01188cf2-3ccf-4692-9e01-7859e65fc46d",
+    "image_url": "AgACAgIAAxkBAAM9ZkLwcEF5Auvtno0YNSfFotg8NssAAnrWMRsfPBlK6qNlJeImPBEBAAMCAAN4AAM1BA",
+    "id": "938edf0f-5202-4550-893e-e2962db529f3",
+    "created_at": "14/05/2024 10:45:41",
+    "is_deleted": false
+  },
+  {
+    "name": "COFFEE",
+    "brand_id": "75cb24b7-8404-4cae-b8cc-bb14307185a1",
+    "image_url": "AgACAgIAAxkBAAM3ZkLvPm10jLeIDfc7GkrsbpzF2xMAAmnWMRsfPBlKMFlJcKFYJtsBAAMCAAN4AAM1BA",
+    "id": "a7c6660f-f0aa-4874-80ef-6c8f5edfbd1f",
+    "created_at": "14/05/2024 10:35:51",
+    "is_deleted": false
+  },
+  {
     "name": "LANCHBOKS",
     "brand_id": "f60fc7f6-930b-4d00-ad64-2526e1459bce",
     "image_url": "AgACAgIAAxkBAAMkZkLrtX9URIDPmXtH3yFG95l__30AAlXWMRsfPBlKkry0FNlp6B8BAAMCAAN5AAM1BA",
