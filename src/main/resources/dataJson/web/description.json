@@ -152,5 +152,33 @@
     "id": "690f2359-5fcf-4494-a24f-78eeadec53d5",
     "created_at": "14/05/2024 10:46:37",
     "is_deleted": false
+  },
+  {
+    "name": "PROCESS",
+    "text": "Yetkazish: 0 soʻmdan boshlab, Yetkazish vaqti: 30-40 min",
+    "id": "bd59ac2d-c920-471f-8120-6270a3b03485",
+    "created_at": "14/05/2024 17:41:25",
+    "is_deleted": false
+  },
+  {
+    "name": "PROCESS",
+    "text": "Yetkazish: 0 soʻmdan boshlab, Yetkazish vaqti: 35-40 min",
+    "id": "a2b6c8b9-b4da-4a93-a5ed-84bd0354cee9",
+    "created_at": "14/05/2024 17:42:13",
+    "is_deleted": false
+  },
+  {
+    "name": "PROCESS",
+    "text": "Yetkazish: 0 soʻmdan boshlab, Yetkazish vaqti: 35-40 min",
+    "id": "d1539053-b908-4bf2-8196-a6f24242e862",
+    "created_at": "14/05/2024 17:42:31",
+    "is_deleted": false
+  },
+  {
+    "name": "PROCESS",
+    "text": "Yetkazish: 0 soʻmdan boshlab, Yetkazish vaqti: 30-45 min",
+    "id": "e1af712c-a9a7-43c3-8737-8fe4ad4972d8",
+    "created_at": "14/05/2024 17:43:30",
+    "is_deleted": false
   }
 ]
