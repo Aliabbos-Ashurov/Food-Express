@@ -15,14 +15,22 @@ import java.util.Objects;
 import java.util.UUID;
 
 /**
+ * Repository class for managing Telegram users.
+ * Handles data storage and retrieval.
+ *
  * @author Doniyor Nishonov
- * Date: 14/May/2024  14:43
- **/
+ * @since 14th May 2024, 14:43
+ */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class TelegramUserRepository implements BaseRepository<TelegramUser, List<TelegramUser>> {
     private static volatile TelegramUserRepository instance;
     private static JsonSerializer<TelegramUser> jsonSerializer;
 
+    /**
+     * Returns the singleton instance of the repository.
+     *
+     * @return The singleton instance of the repository.
+     */
     public static TelegramUserRepository getInstance() {
         if (instance == null) {
             synchronized (TelegramUserRepository.class) {
@@ -35,6 +43,12 @@ public class TelegramUserRepository implements BaseRepository<TelegramUser, List
         return instance;
     }
 
+    /**
+     * Adds a Telegram user to the repository.
+     *
+     * @param object The Telegram user to add.
+     * @return True if the addition was successful, false otherwise.
+     */
     @Override
     public boolean add(@NonNull TelegramUser object) {
         List<TelegramUser> load = load();
@@ -43,6 +57,12 @@ public class TelegramUserRepository implements BaseRepository<TelegramUser, List
         return true;
     }
 
+    /**
+     * Removes a Telegram user from the repository.
+     *
+     * @param id The ID of the Telegram user to remove.
+     * @return True if the removal was successful, false otherwise.
+     */
     @Override
     public boolean remove(@NonNull UUID id) {
         List<TelegramUser> load = load();
@@ -51,6 +71,12 @@ public class TelegramUserRepository implements BaseRepository<TelegramUser, List
         return b;
     }
 
+    /**
+     * Finds a Telegram user by its ID.
+     *
+     * @param id The ID of the Telegram user to find.
+     * @return The Telegram user with the specified ID, or null if not found.
+     */
     @Override
     public TelegramUser findById(@NonNull UUID id) {
         return load().stream()
@@ -59,17 +85,34 @@ public class TelegramUserRepository implements BaseRepository<TelegramUser, List
                 .orElse(null);
     }
 
+    /**
+     * Retrieves all Telegram users from the repository.
+     *
+     * @return A list of all Telegram users.
+     */
     @Override
     public List<TelegramUser> getAll() {
         return load();
     }
 
+    /**
+     * Loads Telegram users from storage.
+     *
+     * @return A list of loaded Telegram users.
+     * @throws Exception If there's an error during deserialization.
+     */
     @SneakyThrows
     @Override
     public List<TelegramUser> load() {
         return jsonSerializer.read(TelegramUser.class);
     }
 
+    /**
+     * Saves Telegram users to storage.
+     *
+     * @param telegramUsers The list of Telegram users to save.
+     * @throws Exception If there's an error during serialization.
+     */
     @SneakyThrows
     @Override
     public void save(@NonNull List<TelegramUser> telegramUsers) {

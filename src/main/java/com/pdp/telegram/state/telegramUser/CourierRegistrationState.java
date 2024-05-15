@@ -4,9 +4,12 @@ import com.pdp.telegram.state.State;
 import lombok.Getter;
 
 /**
+ * Enum representing the different states for courier registration by Telegram users.
+ * These states define the steps involved in registering as a courier.
+ *
  * @author Aliabbos Ashurov
- * @since 14/May/2024  13:40
- **/
+ * @since 14th May 2024, 13:40
+ */
 @Getter
 public enum CourierRegistrationState implements State {
     ENTER_FULLNAME,
