@@ -1,7 +1,11 @@
 package com.pdp.telegram.processor.callback.user;
 
+import com.pdp.config.TelegramBotConfiguration;
+import com.pdp.config.ThreadSafeBeansContainer;
 import com.pdp.telegram.processor.Processor;
+import com.pdp.telegram.service.telegramUser.TelegramUserService;
 import com.pdp.telegram.state.telegramUser.OrderPlacementState;
+import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.CallbackQuery;
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.Update;
@@ -12,6 +16,9 @@ import com.pengrad.telegrambot.model.User;
  * Date: 14/May/2024  19:52
  **/
 public class OrderPlacementCallbackProcessor implements Processor<OrderPlacementState> {
+    private final TelegramBot bot = TelegramBotConfiguration.get();
+    private final TelegramUserService userService = ThreadSafeBeansContainer.telegramUserServiceThreadLocal.get();
+
     @Override
     public void process(Update update, OrderPlacementState state) {
         CallbackQuery callbackQuery = update.callbackQuery();

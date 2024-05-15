@@ -83,9 +83,9 @@ public class InlineKeyboardMarkupFactory {
         InlineKeyboardButton plus = new InlineKeyboardButton(" ➕ ");
         plus.callbackData("+" + orderID);
         InlineKeyboardButton price = new InlineKeyboardButton(String.format("$%.2f", order.getFoodPrice()));
-        price.callbackData("ACCEPT:" + orderID);
+        price.callbackData("ACCEPT" + orderID);
         InlineKeyboardButton foodQuantity = new InlineKeyboardButton(String.valueOf(order.getFoodQuantity()));
-        foodQuantity.callbackData("NOTHING:" + orderID);
+        foodQuantity.callbackData("NOTHING" + orderID);
 
         return new InlineKeyboardMarkup(new InlineKeyboardButton[][]{
                 {minus, foodQuantity, plus},
