@@ -10,7 +10,6 @@ import com.pdp.utils.factory.SendMessageFactory;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.Update;
-import com.pengrad.telegrambot.model.User;
 
 /**
  * @author Doniyor Nishonov
