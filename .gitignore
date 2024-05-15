@@ -42,3 +42,4 @@ build/
 /target/
 /src/main/java/com/pdp/frontend/Test.java
 /src/main/resources/settings/
+/src/main/resources/settings/settings.properties
