@@ -26,7 +26,19 @@ public class ReplyKeyboardMarkupFactory {
     private static final CategoryService categoryService = ThreadSafeBeansContainer.categoryServiceThreadLocal.get();
 
     public static ReplyKeyboardMarkup selectLangButtons() {
-        return makeReplyKeyboardButtonsByStringsList(List.of("UZ 🇺🇿", "EN 🇺🇸"), true);
+        return makeReplyKeyboardButtonsByStringsList(List.of("UZ \uD83C\uDDFA\uD83C\uDDFF", "EN \uD83C\uDDFA\uD83C\uDDF8"), true);
+    }
+
+    public static ReplyKeyboardMarkup confirmLocationButton() {
+        return new ReplyKeyboardMarkup(new KeyboardButton("Location \uD83D\uDCCC").requestLocation(true))
+                .resizeKeyboard(true)
+                .oneTimeKeyboard(true);
+    }
+
+    public static ReplyKeyboardMarkup confirmContactButton() {
+        return new ReplyKeyboardMarkup(new KeyboardButton("Contact \uD83D\uDCDE").requestContact(true))
+                .resizeKeyboard(true)
+                .oneTimeKeyboard(true);
     }
 
     public static ReplyKeyboardMarkup registrationButtons(Language language) {
@@ -48,6 +60,9 @@ public class ReplyKeyboardMarkupFactory {
         String logOut = MessageSourceUtils.getLocalizedMessage("button.log.out", language);
         return makeReplyKeyboardButtonsByStringsList(List.of(assigned, activeOrder, logOut), true);
     }
+    public static ReplyKeyboardMarkup myOrderButtons(Language language) {
+        return null;
+    }
 
     public static ReplyKeyboardMarkup orderPlacementButtons(Language language) {
         String brand = MessageSourceUtils.getLocalizedMessage("button.select.brand", language);
@@ -58,7 +73,7 @@ public class ReplyKeyboardMarkupFactory {
     public static ReplyKeyboardMarkup confirmationButtons(Language language) {
         String yes = MessageSourceUtils.getLocalizedMessage("button.yes", language);
         String no = MessageSourceUtils.getLocalizedMessage("button.no", language);
-        return makeReplyKeyboardButtonsByStringsList(List.of(yes,no),true);
+        return makeReplyKeyboardButtonsByStringsList(List.of(yes, no), true);
     }
 
     public static ReplyKeyboardMarkup viewBrandsButtons(Language language) {

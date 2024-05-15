@@ -3,6 +3,7 @@ package com.pdp.utils.factory;
 import com.pdp.config.ThreadSafeBeansContainer;
 import com.pdp.java.console.support.Displayable;
 import com.pdp.web.model.BaseModel;
+import com.pdp.web.model.customerOrder.CustomerOrder;
 import com.pdp.web.model.food.Food;
 import com.pdp.web.model.foodBrandMapping.FoodBrandMapping;
 import com.pdp.web.model.order.Order;
@@ -27,7 +28,11 @@ public class InlineKeyboardMarkupFactory {
     private static final FoodBrandMappingService foodBrandMappingService = ThreadSafeBeansContainer.foodBrandMappingServiceThreadLocal.get();
     private static final FoodService foodService = ThreadSafeBeansContainer.foodServiceThreadLocal.get();
     private static final OrderService orderService = ThreadSafeBeansContainer.orderServiceThreadLocal.get();
-    private static final CustomerOrderService customerOrderService = ThreadSafeBeansContainer.customerOrderServiceThreadLocal.get();
+    public static InlineKeyboardMarkup checkMarkButton(CustomerOrder customerOrder) {
+        InlineKeyboardButton inlineKeyboardButton = new InlineKeyboardButton("✅");
+        inlineKeyboardButton.callbackData(String.valueOf(customerOrder.getId()));
+        return new InlineKeyboardMarkup(inlineKeyboardButton);
+    }
 
     public static InlineKeyboardMarkup viewFoods(UUID brandID, String categoryName) {
         List<FoodBrandMapping> foodBrandMappings = foodBrandMappingService.getBrandFoodsByCategoryName(brandID, categoryName);
@@ -35,12 +40,6 @@ public class InlineKeyboardMarkupFactory {
                 .map(foodBrandMapping -> foodService.getByID(foodBrandMapping.getFoodID()))
                 .toList();
         return makeInlineKeyboardButtons(foods);
-    }
-
-    private static InlineKeyboardButton createInlineButton(String text, UUID orderID, String dataPrefix) {
-        InlineKeyboardButton button = new InlineKeyboardButton(text);
-        button.callbackData(dataPrefix + orderID.toString());
-        return button;
     }
 
     private static BigDecimal calculateNewPrice(int quantity, BigDecimal totalPrice) {
@@ -69,6 +68,12 @@ public class InlineKeyboardMarkupFactory {
                 .map(row -> row.toArray(new InlineKeyboardButton[0]))
                 .toArray(InlineKeyboardButton[][]::new);
         return new InlineKeyboardMarkup(keyboardArray);
+    }
+
+    private static InlineKeyboardButton createInlineButton(String text, UUID orderID, String dataPrefix) {
+        InlineKeyboardButton button = new InlineKeyboardButton(text);
+        button.callbackData(dataPrefix + orderID.toString());
+        return button;
     }
 
     public static InlineKeyboardMarkup foodCounter2(UUID orderID) {

@@ -1,11 +1,29 @@
 package com.pdp.utils.factory;
 
+import com.pdp.config.ThreadSafeBeansContainer;
+import com.pdp.telegram.model.customerOrderGeoPoint.CustomerOrderGeoPoint;
+import com.pdp.telegram.service.customerOrderGeoPiont.CustomerOrderGeoPointService;
 import com.pdp.utils.source.MessageSourceUtils;
+import com.pdp.utils.source.StatusSourceUtils;
 import com.pdp.web.enums.Language;
+import com.pdp.web.model.branch.Branch;
+import com.pdp.web.model.branchLocation.BranchLocation;
+import com.pdp.web.model.brand.Brand;
+import com.pdp.web.model.customerOrder.CustomerOrder;
+import com.pdp.web.model.food.Food;
+import com.pdp.web.model.order.Order;
+import com.pdp.web.service.branch.BranchService;
+import com.pdp.web.service.branchLocation.BranchLocationService;
+import com.pdp.web.service.brand.BrandService;
+import com.pdp.web.service.customerOrder.CustomerOrderService;
+import com.pdp.web.service.food.FoodService;
+import com.pdp.web.service.order.OrderService;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 import com.pengrad.telegrambot.model.request.Keyboard;
 import com.pengrad.telegrambot.request.SendMessage;
+import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -13,6 +31,19 @@ import java.util.UUID;
  * @since 14/May/2024  12:29
  **/
 public class SendMessageFactory {
+    private static final CustomerOrderService customerOrderService = ThreadSafeBeansContainer.customerOrderServiceThreadLocal.get();
+    private static final BranchService branchService = ThreadSafeBeansContainer.branchServiceThreadLocal.get();
+    private static final BrandService brandService = ThreadSafeBeansContainer.brandServiceThreadLocal.get();
+    private static final BranchLocationService branchLocationService = ThreadSafeBeansContainer.branchLocationServiceThreadLocal.get();
+    private static final CustomerOrderGeoPointService geoPointService = ThreadSafeBeansContainer.geoPointServiceThreadLocal.get();
+    private static final OrderService orderService = ThreadSafeBeansContainer.orderServiceThreadLocal.get();
+    private static final FoodService foodService = ThreadSafeBeansContainer.foodServiceThreadLocal.get();
+
+    private static SendMessage createMessage(Object chatID, String messageText, Keyboard keyboardMarkup) {
+        SendMessage message = new SendMessage(chatID, messageText);
+        return message.replyMarkup(keyboardMarkup);
+    }
+
     public static SendMessage sendMessageSelectLanguageMenu(Object chatID) {
         String message = MessageSourceUtils.getLocalizedMessage("alert.language", Language.EN);
         return createMessage(chatID, message, ReplyKeyboardMarkupFactory.selectLangButtons());
@@ -63,9 +94,101 @@ public class SendMessageFactory {
 
     }
 
-    private static SendMessage createMessage(Object chatID, String messageText, Keyboard keyboardMarkup) {
-        SendMessage message = new SendMessage(chatID, messageText);
-        return message.replyMarkup(keyboardMarkup);
+    public static SendMessage sendMessageLocation(Object chatID, Language language) {
+        String message = MessageSourceUtils.getLocalizedMessage("alert.location", language);
+        return createMessage(chatID, message, ReplyKeyboardMarkupFactory.confirmLocationButton());
     }
 
+    public static SendMessage sendMessageContact(Object chatID, Language language) {
+        String message = MessageSourceUtils.getLocalizedMessage("alert.contact", language);
+        return createMessage(chatID, message, ReplyKeyboardMarkupFactory.confirmContactButton());
+    }
+
+    public static List<SendMessage> sendMessagesOrdersInProcessForDeliverer(Object chatID, UUID delivererID, Language language) {
+        List<CustomerOrder> processByDeliverer = customerOrderService.getOrdersInProcessByDeliverer(delivererID);
+        return processByDeliverer.stream()
+                .map(customerOrder -> {
+                    String format = customerOrderFormatForDeliverer(customerOrder, language);
+                    return new SendMessage(chatID, format);
+                }).toList();
+    }
+
+    public static List<SendMessage> sendMessagesOrdersInProcessForUser(Object chatID, UUID userID, Language language) {
+        List<CustomerOrder> processByDeliverer = customerOrderService.getOrdersInProcessByUser(userID);
+        return processByDeliverer.stream()
+                .map(customerOrder -> {
+                    String format = customerOrderFormatForDeliverer(customerOrder, language);
+                    return new SendMessage(chatID, format);
+                }).toList();
+    }
+
+    public static List<SendMessage> sendMessagesOrdersToDeliverer(Object chatID, Language language) {
+        List<CustomerOrder> pendingOrdersForDeliverer = customerOrderService.getPendingOrdersForDeliverer();
+        return pendingOrdersForDeliverer.stream().map((customerOrder -> {
+            String format = customerOrderFormatForDeliverer(customerOrder, language);
+            return new SendMessage(chatID, format);
+        })).toList();
+    }
+
+    public static List<SendMessage> sendMessagesUserArchive(Object chatID, UUID userID, Language language) {
+        List<CustomerOrder> archiveOrders = customerOrderService.getArchive(userID);
+        return archiveOrders.stream().map(customerOrder -> {
+            List<Order> orders = orderService.getOdersByCustomerID(customerOrder.getId());
+            String format = customerOrderFormatForUser(orders, customerOrder, language);
+            return createMessage(chatID, format, InlineKeyboardMarkupFactory.checkMarkButton(customerOrder));
+        }).toList();
+    }
+
+    private static String customerOrderFormatForDeliverer(CustomerOrder customerOrder, Language language) {
+        Branch branch = getBranch(customerOrder);
+        Brand brand = getBrand(branch);
+        BranchLocation branchLocation = getBranchLocation(branch);
+        CustomerOrderGeoPoint orderGeoPoint = getGeoPoint(customerOrder);
+        String status = StatusSourceUtils.getLocalizedStatus(customerOrder.getOrderStatus(), language);
+        return String.format(
+                "Brand: %s\nFrom location: %s\nTo location: %s\nPrice: %s\nPayment Type: %s\nStatus: %s",
+                brand.getName(),
+                branchLocation.getLatidue() + " - " + branchLocation.getLongtidue(),
+                orderGeoPoint.getLattidue() + " - " + orderGeoPoint.getLongtidue(),
+                customerOrder.getOrderPrice(),
+                customerOrder.getPaymentType(),
+                status
+        );
+    }
+
+    private static String customerOrderFormatForUser(List<Order> orders, CustomerOrder customerOrder, Language language) {
+        Branch branch = getBranch(customerOrder);
+        Brand brand = getBrand(branch);
+        CustomerOrderGeoPoint orderGeoPoint = getGeoPoint(customerOrder);
+        String status = StatusSourceUtils.getLocalizedStatus(customerOrder.getOrderStatus(), language);
+        StringBuilder formatBuilder = new StringBuilder();
+        formatBuilder.append(String.format("Brand: %s\n", brand.getName()));
+        formatBuilder.append(String.format("To location: %s\n", orderGeoPoint.getLattidue() + " - " + orderGeoPoint.getLongtidue()));
+        formatBuilder.append(String.format("Price: %s\n", customerOrder.getOrderPrice()));
+        formatBuilder.append(String.format("Payment Type: %s\n", customerOrder.getPaymentType()));
+        formatBuilder.append(String.format("Status: %s\n", status));
+
+        for (int i = 0; i < orders.size(); i++) {
+            Food food = foodService.getByID(orders.get(i).getFoodID());
+            Order order = orders.get(i);
+            formatBuilder.append(String.format((i + 1) + " - %s: %d x $%.2f\n", food.getName(), order.getFoodQuantity(), order.getFoodPrice()));
+        }
+        return formatBuilder.toString();
+    }
+
+    private static Branch getBranch(CustomerOrder customerOrder) {
+        return branchService.getByID(customerOrder.getBranchID());
+    }
+
+    private static Brand getBrand(Branch branch) {
+        return brandService.getByID(branch.getBrandID());
+    }
+
+    private static BranchLocation getBranchLocation(Branch branch) {
+        return branchLocationService.getByID(branch.getLocationID());
+    }
+
+    private static CustomerOrderGeoPoint getGeoPoint(CustomerOrder customerOrder) {
+        return geoPointService.getByID(customerOrder.getCustomerOrderGeoPointID());
+    }
 }
