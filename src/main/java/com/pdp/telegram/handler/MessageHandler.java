@@ -9,7 +9,7 @@ import com.pdp.telegram.state.State;
 import com.pdp.telegram.state.telegramDeliverer.ActiveOrderManagementState;
 import com.pdp.telegram.state.telegramDeliverer.DeliveryMenuState;
 import com.pdp.telegram.state.telegramUser.*;
-import com.pdp.web.service.user.UserService;
+import com.pdp.utils.factory.SendMessageFactory;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.Update;
@@ -32,7 +32,9 @@ public class MessageHandler implements Handler {
         registerTelegramUser(user, chatId);
         TelegramUser telegramUser = telegramUserService.findByChatID(chatId);
         State state = telegramUser.getState();
-        if (state instanceof DefaultState defaultState) {
+        if (state == null) {
+            startRegister(telegramUser);
+        } else if (state instanceof DefaultState defaultState) {
             ThreadSafeBeansContainer.defaultMessageProcessor.get().process(update, defaultState);
         } else if (state instanceof UserMenuOptionState userMenuOptionState) {
             ThreadSafeBeansContainer.userMenuOptionMessageProcessor.get().process(update, userMenuOptionState);
@@ -55,11 +57,16 @@ public class MessageHandler implements Handler {
         }
     }
 
+    private void startRegister(TelegramUser telegramUser) {
+        telegramUser.setState(DefaultState.SELECT_LANGUAGE);
+        telegramUserService.update(telegramUser);
+        bot.execute(SendMessageFactory.sendMessageSelectLanguageMenu(telegramUser.getChatID()));
+    }
+
     private void registerTelegramUser(User user, Long chatId) {
         TelegramUser telegramUser = TelegramUser.builder()
                 .firstName(user.firstName())
                 .username(user.username())
-                .state(DefaultState.SELECT_LANGUAGE)
                 .chatID(chatId)
                 .build();
         telegramUserService.add(telegramUser);
