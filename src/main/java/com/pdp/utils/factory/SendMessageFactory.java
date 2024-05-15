@@ -1,12 +1,7 @@
 package com.pdp.utils.factory;
 
-import com.pdp.config.ThreadSafeBeansContainer;
 import com.pdp.utils.source.MessageSourceUtils;
 import com.pdp.web.enums.Language;
-import com.pdp.web.model.brand.Brand;
-import com.pdp.web.model.description.Description;
-import com.pdp.web.service.brand.BrandService;
-import com.pdp.web.service.description.DescriptionService;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 import com.pengrad.telegrambot.model.request.Keyboard;
 import com.pengrad.telegrambot.request.SendMessage;
