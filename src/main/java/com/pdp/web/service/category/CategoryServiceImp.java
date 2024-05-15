@@ -50,6 +50,15 @@ public class CategoryServiceImp implements CategoryService {
                 .collect(Collectors.toSet());
     }
 
+    @Override
+    public Category getCategoryByBrandID(@NonNull UUID brandID, @NonNull String categoryName) {
+        Set<Category> categories = getAll();
+        return categories.stream()
+                .filter(category -> category.getBrandId().equals(brandID) && category.getName().equals(categoryName))
+                .findFirst()
+                .orElse(null);
+    }
+
     /**
      * Adds a new category to the repository.
      *

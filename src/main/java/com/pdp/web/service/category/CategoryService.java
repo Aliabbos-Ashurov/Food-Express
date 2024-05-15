@@ -3,6 +3,7 @@ package com.pdp.web.service.category;
 import com.pdp.web.model.category.Category;
 import com.pdp.web.repository.category.CategoryRepository;
 import com.pdp.web.service.BaseService;
+import lombok.NonNull;
 
 import java.util.Set;
 import java.util.UUID;
@@ -30,4 +31,6 @@ public interface CategoryService extends BaseService<Category, Set<Category>> {
      * @return A set of {@link Category} instances associated with the given brand.
      */
     Set<Category> getBrandCategories(UUID brandID);
+
+    Category getCategoryByBrandID(@NonNull UUID brandID, @NonNull String categoryName);
 }
