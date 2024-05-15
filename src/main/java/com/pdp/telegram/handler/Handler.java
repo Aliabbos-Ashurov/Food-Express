@@ -9,6 +9,7 @@ import com.pengrad.telegrambot.model.Update;
  * @author Doniyor Nishonov
  * @since 14th May 2024, 15:59
  */
+@FunctionalInterface
 public interface Handler {
     /**
      * Handles the incoming Telegram update.
