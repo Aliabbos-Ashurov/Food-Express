@@ -2,7 +2,10 @@ package com.pdp.utils.factory;
 
 import com.pdp.config.ThreadSafeBeansContainer;
 import com.pdp.telegram.model.customerOrderGeoPoint.CustomerOrderGeoPoint;
+import com.pdp.telegram.model.telegramUser.TelegramUser;
 import com.pdp.telegram.service.customerOrderGeoPiont.CustomerOrderGeoPointService;
+import com.pdp.telegram.service.telegramUser.TelegramUserService;
+import com.pdp.telegram.state.telegramDeliverer.DeliveryMenuState;
 import com.pdp.utils.source.MessageSourceUtils;
 import com.pdp.utils.source.StatusSourceUtils;
 import com.pdp.web.enums.Language;
@@ -20,8 +23,8 @@ import com.pdp.web.service.food.FoodService;
 import com.pdp.web.service.order.OrderService;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 import com.pengrad.telegrambot.model.request.Keyboard;
+import com.pengrad.telegrambot.model.request.ReplyKeyboardMarkup;
 import com.pengrad.telegrambot.request.SendMessage;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.UUID;
@@ -38,10 +41,36 @@ public class SendMessageFactory {
     private static final CustomerOrderGeoPointService geoPointService = ThreadSafeBeansContainer.geoPointServiceThreadLocal.get();
     private static final OrderService orderService = ThreadSafeBeansContainer.orderServiceThreadLocal.get();
     private static final FoodService foodService = ThreadSafeBeansContainer.foodServiceThreadLocal.get();
+    private static final TelegramUserService telegramUserService = ThreadSafeBeansContainer.telegramUserServiceThreadLocal.get();
 
     private static SendMessage createMessage(Object chatID, String messageText, Keyboard keyboardMarkup) {
         SendMessage message = new SendMessage(chatID, messageText);
         return message.replyMarkup(keyboardMarkup);
+    }
+
+    private static SendMessage sendMessageCartIsEmpty(Object chatID, Language language) {
+        String message = MessageSourceUtils.getLocalizedMessage("info.emptyCartMessage", language);
+        return createMessage(chatID, message, ReplyKeyboardMarkupFactory.backButton(language));
+    }
+
+    private static SendMessage sendMessageNotArchiveOrders(Object chatID, Language language) {
+        String message = MessageSourceUtils.getLocalizedMessage("alert.not.archive", language);
+        return createMessage(chatID, message, ReplyKeyboardMarkupFactory.backButton(language));
+    }
+
+    private static SendMessage sendMessageCartCleared(Object chatID, Language language) {
+        String message = MessageSourceUtils.getLocalizedMessage("alert.cart.cleaned", language);
+        return createMessage(chatID, message, ReplyKeyboardMarkupFactory.orderManagementButtons(language));
+    }
+
+    private static SendMessage sendMessageOrderManagementMenu(Object chatID, Language language) {
+        String message = MessageSourceUtils.getLocalizedMessage("alert.choose", language);
+        return createMessage(chatID, message, ReplyKeyboardMarkupFactory.orderManagementButtons(language));
+    }
+
+    private static SendMessage sendMessageNotActiveOrders(Object chatID, Language language) {
+        String message = MessageSourceUtils.getLocalizedMessage("alert.not.active", language);
+        return createMessage(chatID, message, ReplyKeyboardMarkupFactory.backButton(language));
     }
 
     public static SendMessage sendMessageSelectLanguageMenu(Object chatID) {
@@ -50,7 +79,7 @@ public class SendMessageFactory {
     }
 
     public static SendMessage sendMessageWithUserMenu(Object chatID, Language language) {
-        String message = MessageSourceUtils.getLocalizedMessage("alert.choose", language);
+        String message = MessageSourceUtils.getLocalizedMessage("alert.choose.section", language);
         return createMessage(chatID, message, ReplyKeyboardMarkupFactory.userButtons(language));
     }
 
@@ -60,19 +89,24 @@ public class SendMessageFactory {
     }
 
     public static SendMessage sendMessageDeliverMenu(Object chatID, Language language) {
-        String message = MessageSourceUtils.getLocalizedMessage("alert.choose", language);
+        String message = MessageSourceUtils.getLocalizedMessage("alert.select.section", language);
         return createMessage(chatID, message, ReplyKeyboardMarkupFactory.deliverButtons(language));
     }
 
     public static SendMessage sendMessageOrderPlacementMenu(Object chatID, Language language) {
-        String message = MessageSourceUtils.getLocalizedMessage("alert.choose", language);
+        String message = MessageSourceUtils.getLocalizedMessage("alert.select.section", language);
         return createMessage(chatID, message, ReplyKeyboardMarkupFactory.orderPlacementButtons(language));
 
     }
 
     public static SendMessage sendMessageBrandCategoriesMenu(Object chatID, UUID brandID, Language language) {
-        String message = MessageSourceUtils.getLocalizedMessage("alert.choose", language);
+        String message = MessageSourceUtils.getLocalizedMessage("alert.user.menu", language);
         return createMessage(chatID, message, ReplyKeyboardMarkupFactory.viewBrandCategoriesButtons(brandID, language));
+    }
+
+    public static SendMessage sendMessageMyOderMenu(Object chatID, Language language) {
+        String message = MessageSourceUtils.getLocalizedMessage("alert.choose", language);
+        return createMessage(chatID, message, ReplyKeyboardMarkupFactory.myOrderButtons(language));
     }
 
     public static SendMessage sendMessageUpdateOrder(Object chatID, UUID orderID, Language language) {
@@ -89,7 +123,7 @@ public class SendMessageFactory {
     }
 
     public static SendMessage sendMessageConfirmation(Object chatID, Language language) {
-        String alert = MessageSourceUtils.getLocalizedMessage("alert.choose", language);
+        String alert = MessageSourceUtils.getLocalizedMessage("alert.accept", language);
         return createMessage(chatID, alert, ReplyKeyboardMarkupFactory.confirmationButtons(language));
 
     }
@@ -137,6 +171,14 @@ public class SendMessageFactory {
             String format = customerOrderFormatForUser(orders, customerOrder, language);
             return createMessage(chatID, format, InlineKeyboardMarkupFactory.checkMarkButton(customerOrder));
         }).toList();
+    }
+
+    public static List<SendMessage> sendMessageNewOrderToDeliverer(CustomerOrder customerOrder, Language language) {
+        String format = customerOrderFormatForDeliverer(customerOrder, language);
+        List<TelegramUser> telegramUserByState = telegramUserService.getTelegramUserByState(DeliveryMenuState.VIEW_ASSIGNED_ORDERS);
+        return telegramUserByState.stream()
+                .map(telegramUser -> createMessage(telegramUser.getChatID(), format, InlineKeyboardMarkupFactory.checkMarkButton(customerOrder)))
+                .toList();
     }
 
     private static String customerOrderFormatForDeliverer(CustomerOrder customerOrder, Language language) {

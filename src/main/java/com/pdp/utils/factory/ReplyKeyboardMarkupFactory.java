@@ -41,6 +41,13 @@ public class ReplyKeyboardMarkupFactory {
                 .oneTimeKeyboard(true);
     }
 
+    public static ReplyKeyboardMarkup backButton(Language language) {
+        String backMessage = getBackMessage(language);
+        return new ReplyKeyboardMarkup(new KeyboardButton(backMessage))
+                .resizeKeyboard(true)
+                .oneTimeKeyboard(true);
+    }
+
     public static ReplyKeyboardMarkup registrationButtons(Language language) {
         String singIn = MessageSourceUtils.getLocalizedMessage("button.signIn", language);
         String singUp = MessageSourceUtils.getLocalizedMessage("button.signUp", language);
@@ -60,8 +67,17 @@ public class ReplyKeyboardMarkupFactory {
         String logOut = MessageSourceUtils.getLocalizedMessage("button.log.out", language);
         return makeReplyKeyboardButtonsByStringsList(List.of(assigned, activeOrder, logOut), true);
     }
+
     public static ReplyKeyboardMarkup myOrderButtons(Language language) {
-        return null;
+        String active = MessageSourceUtils.getLocalizedMessage("button.user.order.active", language);
+        String archive = MessageSourceUtils.getLocalizedMessage("button.user.order.archive", language);
+        return makeReplyKeyboardButtonsByStringsList(List.of(active, archive), false, getBackMessage(language));
+    }
+
+    public static ReplyKeyboardMarkup orderManagementButtons(Language language) {
+        String makeOrder = MessageSourceUtils.getLocalizedMessage("alert.make.order", language);
+        String clearCart = MessageSourceUtils.getLocalizedMessage("alert.clear.cart", language);
+        return makeReplyKeyboardButtonsByStringsList(List.of(makeOrder, clearCart), false, getBackMessage(language));
     }
 
     public static ReplyKeyboardMarkup orderPlacementButtons(Language language) {
@@ -78,7 +94,8 @@ public class ReplyKeyboardMarkupFactory {
 
     public static ReplyKeyboardMarkup viewBrandsButtons(Language language) {
         String backMessage = getBackMessage(language);
-        return makeReplyKeyboardButtons(brandService.getAll(), false, backMessage);
+        String cartMessage = getCartMessage(language);
+        return makeReplyKeyboardButtons(brandService.getAll(), false, backMessage, cartMessage);
     }
 
     public static ReplyKeyboardMarkup viewBrandCategoriesButtons(UUID brandID, Language language) {
