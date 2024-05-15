@@ -2,6 +2,7 @@ package com.pdp.telegram.service.telegramUser;
 
 import com.pdp.telegram.model.telegramUser.TelegramUser;
 import com.pdp.telegram.repository.telegramUser.TelegramUserRepository;
+import com.pdp.telegram.state.State;
 import com.pdp.web.enums.Language;
 import com.pdp.web.service.BaseService;
 import lombok.NonNull;
@@ -12,14 +13,12 @@ import java.util.List;
  * This interface defines the service layer for managing Telegram users.
  * It extends the BaseService interface.
  *
- * @param <TelegramUser> The type representing a Telegram user.
- * @param <List<TelegramUser>> The type representing a list of Telegram users.
- *
  * @author Doniyor Nishonov
  * @since 14th May 2024, 15:16
  */
 public interface TelegramUserService extends BaseService<TelegramUser, List<TelegramUser>> {
     TelegramUserRepository repository = TelegramUserRepository.getInstance();
+
     /**
      * Finds the language associated with a given chat ID.
      *
@@ -27,6 +26,7 @@ public interface TelegramUserService extends BaseService<TelegramUser, List<Tele
      * @return The language associated with the chat ID.
      */
     Language findLanguageByChatID(@NonNull Long chatID);
+
     /**
      * Finds a Telegram user by their chat ID.
      *
@@ -34,4 +34,6 @@ public interface TelegramUserService extends BaseService<TelegramUser, List<Tele
      * @return The Telegram user corresponding to the chat ID.
      */
     TelegramUser findByChatID(@NonNull Long chatID);
+
+    List<TelegramUser> getTelegramUserByState(@NonNull State state);
 }

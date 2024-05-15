@@ -1,6 +1,7 @@
 package com.pdp.telegram.service.telegramUser;
 
 import com.pdp.telegram.model.telegramUser.TelegramUser;
+import com.pdp.telegram.state.State;
 import com.pdp.utils.Validator;
 import com.pdp.web.enums.Language;
 import lombok.AccessLevel;
@@ -36,6 +37,14 @@ public class TelegramUserServiceImp implements TelegramUserService {
             }
         }
         return instance;
+    }
+
+    @Override
+    public List<TelegramUser> getTelegramUserByState(@NonNull State state) {
+        List<TelegramUser> telegramUsers = getAll();
+        return telegramUsers.stream()
+                .filter(telegramUser -> telegramUser.getState().equals(state))
+                .toList();
     }
 
     /**
