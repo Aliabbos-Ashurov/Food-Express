@@ -32,6 +32,14 @@ public class TelegramUserServiceImp implements TelegramUserService {
     }
 
     @Override
+    public TelegramUser findByChatID(@NonNull Long chatID) {
+        return getAll().stream()
+                .filter(t -> Objects.equals(t.getChatID(), chatID))
+                .findFirst()
+                .orElse(null);
+    }
+
+    @Override
     public Language findLanguageByChatID(@NonNull Long chatID) {
         return getAll().stream()
                 .filter(t -> Objects.equals(t.getChatID(), chatID))

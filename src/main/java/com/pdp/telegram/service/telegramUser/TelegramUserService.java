@@ -16,4 +16,6 @@ public interface TelegramUserService extends BaseService<TelegramUser, List<Tele
     TelegramUserRepository repository = TelegramUserRepository.getInstance();
 
     Language findLanguageByChatID(@NonNull Long chatID);
+
+    TelegramUser findByChatID(@NonNull Long chatID);
 }

@@ -31,9 +31,11 @@ public class TelegramUser extends BaseModel implements Displayable {
     private String username;
     @SerializedName("phone_number")
     private String phoneNumber;
-    private Role role;
+    @Builder.Default
+    private Role role = Role.USER;
     private State state;
-    private Language language;
+    @Builder.Default
+    private Language language = Language.EN;
 
     /**
      * Retrieves the display name of the Telegram user.
