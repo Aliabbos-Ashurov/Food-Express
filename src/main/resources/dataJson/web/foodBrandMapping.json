@@ -1,6 +1,6 @@
 [
   {
-    "category_name": "INFO",
+    "category_name": "BREAKFAST",
     "food_id": "c70aacff-b376-4a65-8c0a-13d2c131755f",
     "brand_id": "75cb24b7-8404-4cae-b8cc-bb14307185a1",
     "id": "dc5b41b1-7e46-4d6c-8884-e5e39f5f549c",
@@ -8,7 +8,7 @@
     "is_deleted": false
   },
   {
-    "category_name": "INFO",
+    "category_name": "BREAKFAST",
     "food_id": "4ec8ac6e-2b5b-4567-bc46-046e107f2808",
     "brand_id": "75cb24b7-8404-4cae-b8cc-bb14307185a1",
     "id": "1e20152a-aa30-4ffc-879e-298be85f8e22",
@@ -16,7 +16,7 @@
     "is_deleted": false
   },
   {
-    "category_name": "INFO",
+    "category_name": "COFFEE",
     "food_id": "06cae1ad-6697-4d1b-a21b-6885df9a7da1",
     "brand_id": "75cb24b7-8404-4cae-b8cc-bb14307185a1",
     "id": "fc5b9a7d-be89-4432-9bae-4baaac5eab51",
@@ -24,7 +24,7 @@
     "is_deleted": false
   },
   {
-    "category_name": "INFO",
+    "category_name": "COFFEE",
     "food_id": "9eb37e05-7f9d-4734-aec7-a86a99d37505",
     "brand_id": "75cb24b7-8404-4cae-b8cc-bb14307185a1",
     "id": "97a13450-5c2e-49d3-bc7d-91035782107e",
@@ -32,7 +32,7 @@
     "is_deleted": false
   },
   {
-    "category_name": "INFO",
+    "category_name": "PIZZA",
     "food_id": "6c5c75f2-c4bd-4a1e-8131-86ec77dc72ba",
     "brand_id": "01188cf2-3ccf-4692-9e01-7859e65fc46d",
     "id": "b54eaf91-1764-4a2e-897a-e296d16850d2",
@@ -40,7 +40,7 @@
     "is_deleted": false
   },
   {
-    "category_name": "INFO",
+    "category_name": "PIZZA",
     "food_id": "d225bfd9-a2ec-4d5b-9aed-637ff7a4b71e",
     "brand_id": "01188cf2-3ccf-4692-9e01-7859e65fc46d",
     "id": "10a8132f-0578-4359-8db3-bff27a48b3d7",
@@ -48,7 +48,7 @@
     "is_deleted": false
   },
   {
-    "category_name": "INFO",
+    "category_name": "SALAD",
     "food_id": "8ef5ab79-f5d7-4b45-b319-8917b085d49f",
     "brand_id": "01188cf2-3ccf-4692-9e01-7859e65fc46d",
     "id": "88fe5fd1-5df4-4f8f-8cc3-9878d9adacd9",
@@ -56,7 +56,7 @@
     "is_deleted": false
   },
   {
-    "category_name": "INFO",
+    "category_name": "SALAD",
     "food_id": "0fa74e67-ee45-4709-bdf3-49686e4e2a32",
     "brand_id": "01188cf2-3ccf-4692-9e01-7859e65fc46d",
     "id": "2d6ea8ca-177b-4b9a-b9ec-b88c69369a6b",
