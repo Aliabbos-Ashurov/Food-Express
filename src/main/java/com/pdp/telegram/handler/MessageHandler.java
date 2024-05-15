@@ -15,6 +15,8 @@ import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.model.User;
 
+import java.util.Objects;
+
 
 /**
  * @author Doniyor Nishonov
@@ -29,8 +31,8 @@ public class MessageHandler implements Handler {
         Message message = update.message();
         User user = message.from();
         Long chatId = user.id();
-        registerTelegramUser(user, chatId);
         TelegramUser telegramUser = telegramUserService.findByChatID(chatId);
+        if (Objects.isNull(telegramUser)) telegramUser = registerTelegramUser(user, chatId);
         State state = telegramUser.getState();
         if (state == null) {
             startRegister(telegramUser);
@@ -63,12 +65,13 @@ public class MessageHandler implements Handler {
         bot.execute(SendMessageFactory.sendMessageSelectLanguageMenu(telegramUser.getChatID()));
     }
 
-    private void registerTelegramUser(User user, Long chatId) {
+    private TelegramUser registerTelegramUser(User user, Long chatId) {
         TelegramUser telegramUser = TelegramUser.builder()
                 .firstName(user.firstName())
                 .username(user.username())
                 .chatID(chatId)
                 .build();
         telegramUserService.add(telegramUser);
+        return telegramUser;
     }
 }

@@ -99,8 +99,8 @@ public class ThreadSafeBeansContainer {
     public static final ThreadLocal<BranchLocationService> branchLocationServiceThreadLocal = ThreadLocal.withInitial(BranchLocationServiceImp::getInstance);
     public static final ThreadLocal<LoginService> loginServiceThreadLocal = ThreadLocal.withInitial(LoginServiceImpl::getInstance);
     //Handler
-    public static final ThreadLocal<Handler> messageHandlerThreadLocal = ThreadLocal.withInitial(MessageHandler::new);
-    public static final ThreadLocal<Handler> callbackHandlerThreadLocal = ThreadLocal.withInitial(CallbackHandler::new);
+    public static final ThreadLocal<MessageHandler> messageHandlerThreadLocal = ThreadLocal.withInitial(MessageHandler::new);
+    public static final ThreadLocal<CallbackHandler> callbackHandlerThreadLocal = ThreadLocal.withInitial(CallbackHandler::new);
     //Telegram Service
     public static final ThreadLocal<CustomerOrderGeoPointService> geoPointServiceThreadLocal = ThreadLocal.withInitial(CustomerOrderGeoPointServiceImp::getInstance);
     public static final ThreadLocal<TelegramDelivererService> telegramDelivererServiceThreadLocal = ThreadLocal.withInitial(TelegramDelivererServiceImp::getInstance);

@@ -114,6 +114,7 @@ public class TelegramUserServiceImp implements TelegramUserService {
                 .findFirst();
         if (first.isPresent()) {
             updateTelegramUserData(first.get(), telegramUser);
+            repository.save(telegramUsers);
             return true;
         }
         return false;

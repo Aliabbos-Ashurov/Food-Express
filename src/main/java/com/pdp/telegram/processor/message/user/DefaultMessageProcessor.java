@@ -18,18 +18,18 @@ import com.pengrad.telegrambot.model.Update;
  **/
 public class DefaultMessageProcessor implements Processor<DefaultState> {
     private final TelegramBot bot = TelegramBotConfiguration.get();
-    private final TelegramUserService userService = ThreadSafeBeansContainer.telegramUserServiceThreadLocal.get();
+    private final TelegramUserService telegramUserService = ThreadSafeBeansContainer.telegramUserServiceThreadLocal.get();
 
     @Override
     public void process(Update update, DefaultState state) {
         Message message = update.message();
         Long chatID = message.from().id();
-        TelegramUser telegramUser = userService.findByChatID(chatID);
+        TelegramUser telegramUser = telegramUserService.findByChatID(chatID);
         if (state.equals(DefaultState.SELECT_LANGUAGE)) {
             String text = message.text();
             if (text.startsWith("UZ")) telegramUser.setLanguage(Language.UZ);
             telegramUser.setState(DefaultState.BASE_USER_MENU);
-            userService.update(telegramUser);
+            telegramUserService.update(telegramUser);
             bot.execute(SendMessageFactory.sendMessageWithUserMenu(chatID, telegramUser.getLanguage()));
         } else if (state.equals(DefaultState.BASE_USER_MENU)) {
 
