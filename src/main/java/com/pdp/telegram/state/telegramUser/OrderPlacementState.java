@@ -12,7 +12,6 @@ import lombok.Getter;
  */
 @Getter
 public enum OrderPlacementState implements State {
-    DEFAULT_ORDER_PLACEMENT,
     SELECT_BRAND,
     VIEW_CART
 }

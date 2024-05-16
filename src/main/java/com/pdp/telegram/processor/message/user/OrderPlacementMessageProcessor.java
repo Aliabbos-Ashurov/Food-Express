@@ -41,28 +41,11 @@ public class OrderPlacementMessageProcessor implements Processor<OrderPlacementS
         TelegramUser telegramUser = telegramUserService.findByChatID(chatID);
         String text = message.text();
         switch (state) {
-            case DEFAULT_ORDER_PLACEMENT -> handleDefaultOrderPlacement(text, chatID, telegramUser);
             case SELECT_BRAND -> handleSelectBrand(text, chatID, telegramUser);
             case VIEW_CART -> handleViewCart(text, chatID, telegramUser);
         }
     }
 
-    private void handleDefaultOrderPlacement(String text, Long chatID, TelegramUser telegramUser) {
-        if (checkLocalizedMessage(text, "button.select.brand", chatID)) {
-            telegramUser.setState(SELECT_BRAND);
-            telegramUserService.update(telegramUser);
-            bot.execute(SendMessageFactory.sendMessageWithBrandsMenu(chatID, getTelegramUserLanguage(chatID)));
-        } else if (checkLocalizedMessage(text, "button.view.cart", chatID)) {
-            telegramUser.setState(VIEW_CART);
-            telegramUserService.update(telegramUser);
-            bot.execute(SendMessageFactory.sendMessageOrderManagementMenu(chatID, getTelegramUserLanguage(chatID)));
-            bot.execute(SendMessageFactory.sendMessageUserOrderNotConfirmed(chatID, telegramUser.getId(), getTelegramUserLanguage(chatID)));
-        } else if (checkLocalizedMessage(text, "button.back", chatID)) {
-            telegramUser.setState(DefaultState.BASE_USER_MENU);
-            telegramUserService.update(telegramUser);
-            bot.execute(SendMessageFactory.sendMessageWithUserMenu(chatID, getTelegramUserLanguage(chatID)));
-        }
-    }
 
     private void handleSelectBrand(String text, Long chatID, TelegramUser telegramUser) {
         if (checkLocalizedMessage(text, "button.back", chatID)) handleBackToMain(chatID);
@@ -90,9 +73,9 @@ public class OrderPlacementMessageProcessor implements Processor<OrderPlacementS
 
     private void handleBackToMain(Long chatID) {
         TelegramUser telegramUser = getTelegramUser(chatID);
-        telegramUser.setState(DEFAULT_ORDER_PLACEMENT);
+        telegramUser.setState(DefaultState.BASE_USER_MENU);
         telegramUserService.update(telegramUser);
-        bot.execute(SendMessageFactory.sendMessageOrderPlacementMenu(chatID, getTelegramUserLanguage(chatID)));
+        bot.execute(SendMessageFactory.sendMessageWithUserMenu(chatID, getTelegramUserLanguage(chatID)));
     }
 
     private TelegramUser getTelegramUser(Long chatID) {
