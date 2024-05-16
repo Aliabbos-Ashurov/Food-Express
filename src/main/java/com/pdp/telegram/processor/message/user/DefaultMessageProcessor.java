@@ -50,7 +50,7 @@ public class DefaultMessageProcessor implements Processor<DefaultState> {
             telegramUser.setLanguage(selectedLanguage);
             telegramUser.setState(DefaultState.BASE_USER_MENU);
             telegramUserService.update(telegramUser);
-            bot.execute(SendMessageFactory.sendMessageWPrithUserMenu(chatID, getLanguage(telegramUser)));
+            bot.execute(SendMessageFactory.sendMessageWithUserMenu(chatID, getLanguage(telegramUser)));
         } else {
             bot.execute(SendMessageFactory.sendMessageSelectLanguageMenu(chatID));
         }
