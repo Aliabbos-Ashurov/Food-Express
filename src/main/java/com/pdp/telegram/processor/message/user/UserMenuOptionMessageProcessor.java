@@ -11,12 +11,12 @@ import com.pdp.telegram.state.DefaultState;
 import com.pdp.telegram.state.State;
 import com.pdp.telegram.state.telegramUser.CourierRegistrationState;
 import com.pdp.telegram.state.telegramUser.MyOrderState;
+import com.pdp.telegram.state.telegramUser.OrderPlacementState;
 import com.pdp.telegram.state.telegramUser.UserMenuOptionState;
 import com.pdp.utils.factory.ReplyKeyboardMarkupFactory;
 import com.pdp.utils.factory.SendMessageFactory;
 import com.pdp.utils.source.MessageSourceUtils;
 import com.pdp.web.enums.Language;
-import com.pdp.web.enums.role.Role;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.Update;
@@ -44,27 +44,39 @@ public class UserMenuOptionMessageProcessor implements Processor<UserMenuOptionS
         String text = message.text();
         User user = message.from();
         Long chatID = user.id();
-        if (state.equals(UserMenuOptionState.PLACE_ORDER)) {
-        } else if (state.equals(UserMenuOptionState.VIEW_MY_ORDERS)) {
-            if (checkLocalizedMessage("button.user.order.active", text, chatID))
-                handleViewActiveOrders(chatID);
-            else if (checkLocalizedMessage("button.user.order.archive", text, chatID))
-                handleViewArchivedOrders(chatID);
-            else if (checkLocalizedMessage("button.back", text, chatID))
-                handleBackToMainMenu(chatID);
-            else invalidSelectionSender(chatID);
-        } else if (state.equals(UserMenuOptionState.REGISTER_AS_COURIER)) {
-            if (fullNameMatcher(text)) {
-                buildDeliverer(chatID, text);
-                bot.execute(SendMessageFactory.sendMessageContact(chatID, getTelegramUserLanguage(chatID)));
-            } else {
-                fullNameNotMatchedSender(chatID);
+        switch (state) {
+            case PLACE_ORDER -> {
+                if (checkLocalizedMessage("button.cart", text, chatID)) {
+                    updateTelegramUserState(chatID, OrderPlacementState.VIEW_CART);
+                    bot.execute(SendMessageFactory.sendMessageOrderManagementMenu(chatID, getTelegramUserLanguage(chatID)));
+                } else if (checkLocalizedMessage("button.select.brand", text, chatID)) {
+                    updateTelegramUserState(chatID, OrderPlacementState.SELECT_BRAND);
+                    bot.execute(SendMessageFactory.sendMessageWithBrandsMenu(chatID, getTelegramUserLanguage(chatID)));
+                } else if (checkLocalizedMessage("button.back", text, chatID)) {
+                    updateTelegramUserState(chatID,UserMenuOptionState.PLACE_ORDER);
+                    bot.execute(SendMessageFactory.sendMessageWithUserMenu(chatID,getTelegramUserLanguage(chatID)));
+                } else invalidSelectionSender(chatID);
+            }
+            case VIEW_MY_ORDERS -> {
+                if (checkLocalizedMessage("button.user.order.active", text, chatID))
+                    handleViewActiveOrders(chatID);
+                else if (checkLocalizedMessage("button.user.order.archive", text, chatID))
+                    handleViewArchivedOrders(chatID);
+                else if (checkLocalizedMessage("button.back", text, chatID))
+                    handleBackToMainMenu(chatID);
+                else invalidSelectionSender(chatID);
+            }
+            case REGISTER_AS_COURIER -> {
+                if (fullNameMatcher(text)) {
+                    buildDeliverer(chatID, text);
+                    bot.execute(SendMessageFactory.sendMessageContact(chatID, getTelegramUserLanguage(chatID)));
+                } else fullNameNotMatchedSender(chatID);
             }
         }
     }
 
     private static boolean fullNameMatcher(String message) {
-        Pattern pattern = Pattern.compile("^[a-zA-Z]{8,}$");
+        Pattern pattern = Pattern.compile("^[a-zA-Z]{5,}$");
         return pattern.matcher(message).matches();
     }
 

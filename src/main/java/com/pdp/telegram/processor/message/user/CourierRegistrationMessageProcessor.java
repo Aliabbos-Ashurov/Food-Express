@@ -41,13 +41,12 @@ public class CourierRegistrationMessageProcessor implements Processor<CourierReg
         Message message = update.message();
         User user = message.from();
         Long chatID = user.id();
-        if (state.equals(ENTER_PHONE_NUMBER)) {
-            handleEnterPhoneNumber(chatID, message.contact());
-        } else if (state.equals(ENTER_TRANSPORT_NAME)) {
-            handleEnterTransportName(chatID, message.text());
-        } else if (state.equals(ENTER_TRANSPORT_REGISTRATION_NUMBER)) {
-            handleEnterTransportRegistrationNumber(chatID, message.text());
+        switch (state) {
+            case ENTER_PHONE_NUMBER -> handleEnterPhoneNumber(chatID, message.contact());
+            case ENTER_TRANSPORT_NAME -> handleEnterTransportName(chatID, message.text());
+            case ENTER_TRANSPORT_REGISTRATION_NUMBER -> handleEnterTransportRegistrationNumber(chatID, message.text());
         }
+        System.out.println(message.contact());
     }
 
     private void handleEnterPhoneNumber(Long chatID, Contact contact) {
