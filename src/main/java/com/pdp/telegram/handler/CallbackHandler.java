@@ -41,6 +41,8 @@ public class CallbackHandler implements Handler {
             ThreadSafeBeansContainer.courierRegistrationCallbackProcessor.get().process(update, courierRegistrationState);
         } else if (state instanceof ConfirmationState confirmationState) {
             ThreadSafeBeansContainer.confirmationCallbackProcessor.get().process(update, confirmationState);
+        } else if (state instanceof OrderManagementState orderManagementState) {
+            ThreadSafeBeansContainer.orderManagementCallbackProcessor.get().process(update, orderManagementState);
         } else if (state instanceof DeliveryMenuState deliveryMenuState) {
             ThreadSafeBeansContainer.deliveryMenuCallbackProcessor.get().process(update, deliveryMenuState);
         } else if (state instanceof ActiveOrderManagementState activateOrder) {

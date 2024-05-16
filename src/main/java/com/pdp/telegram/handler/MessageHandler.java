@@ -52,6 +52,8 @@ public class MessageHandler implements Handler {
             ThreadSafeBeansContainer.courierRegistrationMessageProcessor.get().process(update, courierRegistrationState);
         } else if (state instanceof ConfirmationState confirmationState) {
             ThreadSafeBeansContainer.confirmationMessageProcessor.get().process(update, confirmationState);
+        } else if (state instanceof OrderManagementState orderManagementState) {
+            ThreadSafeBeansContainer.orderManagementMessageProcessor.get().process(update, orderManagementState);
         } else if (state instanceof DeliveryMenuState deliveryMenuState) {
             ThreadSafeBeansContainer.deliveryMenuMessageProcessor.get().process(update, deliveryMenuState);
         } else if (state instanceof ActiveOrderManagementState activateOrder) {
