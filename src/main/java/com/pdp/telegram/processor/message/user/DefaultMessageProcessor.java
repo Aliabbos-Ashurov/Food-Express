@@ -58,7 +58,7 @@ public class DefaultMessageProcessor implements Processor<DefaultState> {
 
     private void processUserMenuSelection(String text, Long chatID, TelegramUser telegramUser) {
         if (checkLocalizedMessage(text, "button.placeOrder", telegramUser)) {
-            telegramUser.setState(OrderPlacementState.DEFAULT_ORDER_PLACEMENT);
+            telegramUser.setState(UserMenuOptionState.PLACE_ORDER);
             telegramUserService.update(telegramUser);
             bot.execute(SendMessageFactory.sendMessageOrderPlacementMenu(chatID, getLanguage(telegramUser)));
         } else if (checkLocalizedMessage(text, "button.myOrders", telegramUser)) {
