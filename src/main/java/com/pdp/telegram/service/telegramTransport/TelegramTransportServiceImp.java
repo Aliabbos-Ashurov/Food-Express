@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -18,6 +19,7 @@ import java.util.UUID;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class TelegramTransportServiceImp implements TelegramTransportService {
     private static volatile TelegramTransportServiceImp instance;
+
     /**
      * Returns the singleton instance of the service.
      *
@@ -33,6 +35,16 @@ public class TelegramTransportServiceImp implements TelegramTransportService {
         }
         return instance;
     }
+
+    @Override
+    public TelegramTransport getTransportByDeliverID(UUID telegramDeliverID) {
+        List<TelegramTransport> telegramTransports = getAll();
+        return telegramTransports.stream()
+                .filter(telegramTransport -> telegramTransport.getTelegramDelivererID().equals(telegramDeliverID))
+                .findFirst()
+                .orElse(null);
+    }
+
     /**
      * Adds a Telegram transport.
      *
@@ -41,8 +53,14 @@ public class TelegramTransportServiceImp implements TelegramTransportService {
      */
     @Override
     public boolean add(@NonNull TelegramTransport telegramTransport) {
-        return repository.add(telegramTransport);
+        List<TelegramTransport> telegramTransports = getAll();
+        boolean anyMatch = telegramTransports.stream()
+                .anyMatch(transport -> transport.getRegisteredNumber().equals(telegramTransport.getRegisteredNumber()));
+        if (!anyMatch)
+            repository.add(telegramTransport);
+        return !anyMatch;
     }
+
     /**
      * Removes a Telegram transport by its ID.
      *
@@ -53,16 +71,33 @@ public class TelegramTransportServiceImp implements TelegramTransportService {
     public boolean remove(@NonNull UUID id) {
         return repository.remove(id);
     }
+
     /**
      * Updates a Telegram transport.
      *
-     * @param object The Telegram transport to update.
+     * @param telegramTransport The Telegram transport to update.
      * @return Always returns false as update functionality is not implemented.
      */
     @Override
-    public boolean update(@NonNull TelegramTransport object) {
+    public boolean update(@NonNull TelegramTransport telegramTransport) {
+        List<TelegramTransport> telegramTransports = getAll();
+        Optional<TelegramTransport> optional = telegramTransports.stream()
+                .filter(o -> o.getId().equals(telegramTransport.getId()))
+                .findFirst();
+        if (optional.isPresent()) {
+            updateTransportData(optional.get(), telegramTransport);
+            repository.save(telegramTransports);
+            return true;
+        }
         return false;
     }
+
+    private void updateTransportData(@NonNull TelegramTransport current, TelegramTransport updated) {
+        current.setName(updated.getName());
+        current.setTelegramDelivererID(updated.getTelegramDelivererID());
+        current.setRegisteredNumber(updated.getRegisteredNumber());
+    }
+
     /**
      * Searches for Telegram transports based on a query string.
      *
@@ -75,6 +110,7 @@ public class TelegramTransportServiceImp implements TelegramTransportService {
                 .filter(t -> Validator.isValid(t.getDisplayName(), query))
                 .toList();
     }
+
     /**
      * Retrieves a Telegram transport by its ID.
      *
@@ -85,6 +121,7 @@ public class TelegramTransportServiceImp implements TelegramTransportService {
     public TelegramTransport getByID(@NonNull UUID id) {
         return repository.findById(id);
     }
+
     /**
      * Retrieves all Telegram transports.
      *
