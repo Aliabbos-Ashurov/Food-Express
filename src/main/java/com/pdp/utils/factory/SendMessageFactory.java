@@ -79,7 +79,7 @@ public class SendMessageFactory {
     }
 
     public static SendMessage sendMessageWithUserMenu(Object chatID, Language language) {
-        String message = MessageSourceUtils.getLocalizedMessage("alert.choose.section", language);
+        String message = MessageSourceUtils.getLocalizedMessage("alert.select.section", language);
         return createMessage(chatID, message, ReplyKeyboardMarkupFactory.userButtons(language));
     }
 
