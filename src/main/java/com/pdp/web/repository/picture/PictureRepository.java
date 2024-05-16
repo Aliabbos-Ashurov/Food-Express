@@ -1,9 +1,9 @@
 package com.pdp.web.repository.picture;
 
+import com.pdp.utils.serializer.JsonSerializer;
 import com.pdp.web.model.picture.Picture;
 import com.pdp.web.repository.BaseRepository;
 import com.pdp.config.jsonFilePath.JsonFilePath;
-import com.pdp.json.serializer.JsonSerializer;
 import lombok.NonNull;
 import lombok.SneakyThrows;
 
@@ -15,14 +15,14 @@ import java.util.UUID;
 /**
  * A repository class for managing the storage and retrieval of {@link Picture} entities using JSON serialization.
  * This class provides CRUD operations to interact with Picture data stored in a JSON file.
- *
+ * <p>
  * Each method ensures the synchronization of the in-memory picture list with the underlying JSON file to
  * maintain consistency between all operations and the stored data.
  *
  * @author Aliabbos Ashurov
  * @since 04/May/2024 16:59
  */
-public class PictureRepository implements BaseRepository<Picture,List<Picture>> {
+public class PictureRepository implements BaseRepository<Picture, List<Picture>> {
     private static JsonSerializer<Picture> jsonSerializer;
     private static volatile PictureRepository instance;
 
@@ -44,6 +44,7 @@ public class PictureRepository implements BaseRepository<Picture,List<Picture>> 
         }
         return instance;
     }
+
     /**
      * Adds a {@link Picture} to the repository and saves the updated list to the JSON file.
      *

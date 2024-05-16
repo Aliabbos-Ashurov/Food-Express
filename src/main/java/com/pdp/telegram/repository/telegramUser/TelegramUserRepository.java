@@ -1,8 +1,7 @@
 package com.pdp.telegram.repository.telegramUser;
 
-import com.pdp.config.jsonFilePath.JsonFilePath;
-import com.pdp.json.serializer.JsonSerializer;
 import com.pdp.telegram.model.telegramUser.TelegramUser;
+import com.pdp.utils.serializer.JsonSerializer;
 import com.pdp.web.repository.BaseRepository;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;

@@ -1,7 +1,8 @@
 package com.pdp.telegram.repository.customerOrderGeoPoint;
 
-import com.pdp.json.serializer.JsonSerializer;
+
 import com.pdp.telegram.model.customerOrderGeoPoint.CustomerOrderGeoPoint;
+import com.pdp.utils.serializer.JsonSerializer;
 import com.pdp.web.repository.BaseRepository;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;

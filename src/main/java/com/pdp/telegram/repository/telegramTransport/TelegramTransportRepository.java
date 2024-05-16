@@ -1,7 +1,7 @@
 package com.pdp.telegram.repository.telegramTransport;
 
-import com.pdp.json.serializer.JsonSerializer;
 import com.pdp.telegram.model.telegramTransport.TelegramTransport;
+import com.pdp.utils.serializer.JsonSerializer;
 import com.pdp.web.repository.BaseRepository;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;

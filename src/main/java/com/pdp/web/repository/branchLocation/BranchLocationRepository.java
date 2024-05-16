@@ -1,9 +1,9 @@
 package com.pdp.web.repository.branchLocation;
 
+import com.pdp.utils.serializer.JsonSerializer;
 import com.pdp.web.model.branchLocation.BranchLocation;
 import com.pdp.web.repository.BaseRepository;
 import com.pdp.config.jsonFilePath.JsonFilePath;
-import com.pdp.json.serializer.JsonSerializer;
 import lombok.NonNull;
 import lombok.SneakyThrows;
 

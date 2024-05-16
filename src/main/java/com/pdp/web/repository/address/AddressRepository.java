@@ -1,8 +1,8 @@
 package com.pdp.web.repository.address;
 
+import com.pdp.utils.serializer.JsonSerializer;
 import com.pdp.web.model.address.Address;
 import com.pdp.web.repository.BaseRepository;
-import com.pdp.json.serializer.JsonSerializer;
 import lombok.NonNull;
 import lombok.SneakyThrows;
 
