@@ -34,30 +34,32 @@ public class MessageHandler implements Handler {
         TelegramUser telegramUser = telegramUserService.findByChatID(chatId);
         if (Objects.isNull(telegramUser)) telegramUser = registerTelegramUser(user, chatId);
         State state = telegramUser.getState();
-        if (state == null) {
-            startRegister(telegramUser);
-        } else if (state instanceof DefaultState defaultState) {
-            ThreadSafeBeansContainer.defaultMessageProcessor.get().process(update, defaultState);
-        } else if (state instanceof UserMenuOptionState userMenuOptionState) {
-            ThreadSafeBeansContainer.userMenuOptionMessageProcessor.get().process(update, userMenuOptionState);
-        } else if (state instanceof OrderPlacementState orderPlacementState) {
-            ThreadSafeBeansContainer.orderPlacementMessageProcessor.get().process(update, orderPlacementState);
-        } else if (state instanceof UserViewState userViewState) {
-            ThreadSafeBeansContainer.userViewMessageProcessor.get().process(update, userViewState);
-        } else if (state instanceof ConfirmOrderState confirmOrderState) {
-            ThreadSafeBeansContainer.confirmOrderMessageProcessor.get().process(update, confirmOrderState);
-        } else if (state instanceof MyOrderState myOrderState) {
-            ThreadSafeBeansContainer.myOrderMessageProcessor.get().process(update, myOrderState);
-        } else if (state instanceof CourierRegistrationState courierRegistrationState) {
-            ThreadSafeBeansContainer.courierRegistrationMessageProcessor.get().process(update, courierRegistrationState);
-        } else if (state instanceof ConfirmationState confirmationState) {
-            ThreadSafeBeansContainer.confirmationMessageProcessor.get().process(update, confirmationState);
-        } else if (state instanceof OrderManagementState orderManagementState) {
-            ThreadSafeBeansContainer.orderManagementMessageProcessor.get().process(update, orderManagementState);
-        } else if (state instanceof DeliveryMenuState deliveryMenuState) {
-            ThreadSafeBeansContainer.deliveryMenuMessageProcessor.get().process(update, deliveryMenuState);
-        } else if (state instanceof ActiveOrderManagementState activateOrder) {
-            ThreadSafeBeansContainer.activateOrderMessageProcessor.get().process(update, activateOrder);
+        switch (state) {
+            case null -> startRegister(telegramUser);
+            case DefaultState defaultState ->
+                    ThreadSafeBeansContainer.defaultMessageProcessor.get().process(update, defaultState);
+            case UserMenuOptionState userMenuOptionState ->
+                    ThreadSafeBeansContainer.userMenuOptionMessageProcessor.get().process(update, userMenuOptionState);
+            case OrderPlacementState orderPlacementState ->
+                    ThreadSafeBeansContainer.orderPlacementMessageProcessor.get().process(update, orderPlacementState);
+            case UserViewState userViewState ->
+                    ThreadSafeBeansContainer.userViewMessageProcessor.get().process(update, userViewState);
+            case ConfirmOrderState confirmOrderState ->
+                    ThreadSafeBeansContainer.confirmOrderMessageProcessor.get().process(update, confirmOrderState);
+            case MyOrderState myOrderState ->
+                    ThreadSafeBeansContainer.myOrderMessageProcessor.get().process(update, myOrderState);
+            case CourierRegistrationState courierRegistrationState ->
+                    ThreadSafeBeansContainer.courierRegistrationMessageProcessor.get().process(update, courierRegistrationState);
+            case ConfirmationState confirmationState ->
+                    ThreadSafeBeansContainer.confirmationMessageProcessor.get().process(update, confirmationState);
+            case OrderManagementState orderManagementState ->
+                    ThreadSafeBeansContainer.orderManagementMessageProcessor.get().process(update, orderManagementState);
+            case DeliveryMenuState deliveryMenuState ->
+                    ThreadSafeBeansContainer.deliveryMenuMessageProcessor.get().process(update, deliveryMenuState);
+            case ActiveOrderManagementState activateOrder ->
+                    ThreadSafeBeansContainer.activateOrderMessageProcessor.get().process(update, activateOrder);
+            default -> {
+            }
         }
     }
 

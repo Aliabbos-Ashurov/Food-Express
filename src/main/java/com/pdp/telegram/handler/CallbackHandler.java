@@ -27,26 +27,29 @@ public class CallbackHandler implements Handler {
         Long chatID = callbackQuery.message().chat().id();
         TelegramUser curUser = telegramUserService.findByChatID(chatID);
         State state = curUser.getState();
-        if (state instanceof UserMenuOptionState userMenuOptionState) {
-            ThreadSafeBeansContainer.userMenuOptionCallbackProcessor.get().process(update, userMenuOptionState);
-        } else if (state instanceof OrderPlacementState orderPlacementState) {
-            ThreadSafeBeansContainer.orderPlacementCallbackProcessor.get().process(update, orderPlacementState);
-        } else if (state instanceof UserViewState userViewState) {
-            ThreadSafeBeansContainer.userViewCallbackProcessor.get().process(update, userViewState);
-        } else if (state instanceof ConfirmOrderState confirmOrderState) {
-            ThreadSafeBeansContainer.confirmOrderCallbackProcessor.get().process(update, confirmOrderState);
-        } else if (state instanceof MyOrderState myOrderState) {
-            ThreadSafeBeansContainer.myOrderCallbackProcessor.get().process(update, myOrderState);
-        } else if (state instanceof CourierRegistrationState courierRegistrationState) {
-            ThreadSafeBeansContainer.courierRegistrationCallbackProcessor.get().process(update, courierRegistrationState);
-        } else if (state instanceof ConfirmationState confirmationState) {
-            ThreadSafeBeansContainer.confirmationCallbackProcessor.get().process(update, confirmationState);
-        } else if (state instanceof OrderManagementState orderManagementState) {
-            ThreadSafeBeansContainer.orderManagementCallbackProcessor.get().process(update, orderManagementState);
-        } else if (state instanceof DeliveryMenuState deliveryMenuState) {
-            ThreadSafeBeansContainer.deliveryMenuCallbackProcessor.get().process(update, deliveryMenuState);
-        } else if (state instanceof ActiveOrderManagementState activateOrder) {
-            ThreadSafeBeansContainer.activateOrderCallbackProcessor.get().process(update, activateOrder);
+        switch (state) {
+            case UserMenuOptionState userMenuOptionState ->
+                    ThreadSafeBeansContainer.userMenuOptionCallbackProcessor.get().process(update, userMenuOptionState);
+            case OrderPlacementState orderPlacementState ->
+                    ThreadSafeBeansContainer.orderPlacementCallbackProcessor.get().process(update, orderPlacementState);
+            case UserViewState userViewState ->
+                    ThreadSafeBeansContainer.userViewCallbackProcessor.get().process(update, userViewState);
+            case ConfirmOrderState confirmOrderState ->
+                    ThreadSafeBeansContainer.confirmOrderCallbackProcessor.get().process(update, confirmOrderState);
+            case MyOrderState myOrderState ->
+                    ThreadSafeBeansContainer.myOrderCallbackProcessor.get().process(update, myOrderState);
+            case CourierRegistrationState courierRegistrationState ->
+                    ThreadSafeBeansContainer.courierRegistrationCallbackProcessor.get().process(update, courierRegistrationState);
+            case ConfirmationState confirmationState ->
+                    ThreadSafeBeansContainer.confirmationCallbackProcessor.get().process(update, confirmationState);
+            case OrderManagementState orderManagementState ->
+                    ThreadSafeBeansContainer.orderManagementCallbackProcessor.get().process(update, orderManagementState);
+            case DeliveryMenuState deliveryMenuState ->
+                    ThreadSafeBeansContainer.deliveryMenuCallbackProcessor.get().process(update, deliveryMenuState);
+            case ActiveOrderManagementState activateOrder ->
+                    ThreadSafeBeansContainer.activateOrderCallbackProcessor.get().process(update, activateOrder);
+            case null, default -> {
+            }
         }
     }
 }
