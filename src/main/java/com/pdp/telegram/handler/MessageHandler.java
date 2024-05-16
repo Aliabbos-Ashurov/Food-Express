@@ -2,6 +2,7 @@ package com.pdp.telegram.handler;
 
 import com.pdp.config.TelegramBotConfiguration;
 import com.pdp.config.ThreadSafeBeansContainer;
+import com.pdp.telegram.model.telegramDeliverer.TelegramDeliverer;
 import com.pdp.telegram.model.telegramUser.TelegramUser;
 import com.pdp.telegram.service.telegramUser.TelegramUserService;
 import com.pdp.telegram.state.DefaultState;
@@ -10,6 +11,7 @@ import com.pdp.telegram.state.telegramDeliverer.ActiveOrderManagementState;
 import com.pdp.telegram.state.telegramDeliverer.DeliveryMenuState;
 import com.pdp.telegram.state.telegramUser.*;
 import com.pdp.utils.factory.SendMessageFactory;
+import com.pdp.web.enums.role.Role;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.Update;
@@ -33,6 +35,7 @@ public class MessageHandler implements Handler {
         Long chatId = user.id();
         TelegramUser telegramUser = telegramUserService.findByChatID(chatId);
         if (Objects.isNull(telegramUser)) telegramUser = registerTelegramUser(user, chatId);
+        if (message.text().equals("/start")) startMessage(telegramUser);
         State state = telegramUser.getState();
         switch (state) {
             case null -> startRegister(telegramUser);
@@ -61,6 +64,26 @@ public class MessageHandler implements Handler {
             default -> {
             }
         }
+    }
+
+    private void startMessage(TelegramUser telegramUser) {
+        if (telegramUser.getRole() == Role.USER && Objects.nonNull(telegramUser.getState())) {
+            setAndExecuteUserMenu(telegramUser);
+        } else if (telegramUser.getRole() == Role.DELIVERER && Objects.nonNull(telegramUser.getState())) {
+            setAndExecuteDelivererMenu(telegramUser);
+        }
+    }
+
+    private void setAndExecuteUserMenu(TelegramUser telegramUser) {
+        telegramUser.setState(DefaultState.BASE_USER_MENU);
+        telegramUserService.update(telegramUser);
+        bot.execute(SendMessageFactory.sendMessageWithUserMenu(telegramUser.getChatID(), telegramUser.getLanguage()));
+    }
+
+    private void setAndExecuteDelivererMenu(TelegramUser telegramUser) {
+        telegramUser.setState(DefaultState.BASE_DELIVERER_MENU);
+        telegramUserService.update(telegramUser);
+        bot.execute(SendMessageFactory.sendMessageDeliverMenu(telegramUser.getChatID(), telegramUser.getLanguage()));
     }
 
     private void startRegister(TelegramUser telegramUser) {

@@ -37,6 +37,15 @@ public class TelegramDelivererServiceImp implements TelegramDelivererService {
         return instance;
     }
 
+    @Override
+    public TelegramDeliverer getDeliverByTelegramId(@NonNull UUID telegramUserID) {
+        List<TelegramDeliverer> telegramDeliverers = getAll();
+        return telegramDeliverers.stream()
+                .filter(telegramDeliverer -> telegramDeliverer.getTelegramUserID().equals(telegramUserID))
+                .findFirst()
+                .orElse(null);
+    }
+
     /**
      * Adds a Telegram deliverer if not already existing.
      *
