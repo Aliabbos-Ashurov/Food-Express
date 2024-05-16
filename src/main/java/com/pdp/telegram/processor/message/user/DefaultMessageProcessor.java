@@ -6,6 +6,7 @@ import com.pdp.telegram.model.telegramUser.TelegramUser;
 import com.pdp.telegram.processor.Processor;
 import com.pdp.telegram.service.telegramUser.TelegramUserService;
 import com.pdp.telegram.state.DefaultState;
+import com.pdp.telegram.state.State;
 import com.pdp.telegram.state.telegramDeliverer.DeliveryMenuState;
 import com.pdp.telegram.state.telegramUser.CourierRegistrationState;
 import com.pdp.telegram.state.telegramUser.OrderPlacementState;
@@ -58,18 +59,20 @@ public class DefaultMessageProcessor implements Processor<DefaultState> {
 
     private void processUserMenuSelection(String text, Long chatID, TelegramUser telegramUser) {
         if (checkLocalizedMessage(text, "button.placeOrder", telegramUser)) {
-            telegramUser.setState(UserMenuOptionState.PLACE_ORDER);
-            telegramUserService.update(telegramUser);
+            updateTelegramUserState(telegramUser, UserMenuOptionState.PLACE_ORDER);
             bot.execute(SendMessageFactory.sendMessageOrderPlacementMenu(chatID, getLanguage(telegramUser)));
         } else if (checkLocalizedMessage(text, "button.myOrders", telegramUser)) {
-            telegramUser.setState(UserMenuOptionState.VIEW_MY_ORDERS);
-            telegramUserService.update(telegramUser);
+            updateTelegramUserState(telegramUser, UserMenuOptionState.VIEW_MY_ORDERS);
             bot.execute(SendMessageFactory.sendMessageMyOderMenu(chatID, getLanguage(telegramUser)));
         } else if (checkLocalizedMessage(text, "button.registerCourier", telegramUser)) {
-            telegramUser.setState(UserMenuOptionState.REGISTER_AS_COURIER);
-            telegramUserService.update(telegramUser);
+            updateTelegramUserState(telegramUser, UserMenuOptionState.REGISTER_AS_COURIER);
             bot.execute(SendMessageFactory.sendMessageEnterFullname(chatID, getLanguage(telegramUser)));
         }
+    }
+
+    private void updateTelegramUserState(TelegramUser telegramUser, State state) {
+        telegramUser.setState(state);
+        telegramUserService.update(telegramUser);
     }
 
     private void processDelivererMenuSelection(String text, Long chatID, TelegramUser telegramUser) {

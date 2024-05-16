@@ -8,6 +8,7 @@ import com.pdp.telegram.service.telegramUser.TelegramUserService;
 import com.pdp.telegram.state.DefaultState;
 import com.pdp.telegram.state.telegramUser.ConfirmOrderState;
 import com.pdp.telegram.state.telegramUser.OrderPlacementState;
+import com.pdp.telegram.state.telegramUser.UserMenuOptionState;
 import com.pdp.telegram.state.telegramUser.UserViewState;
 import com.pdp.utils.factory.SendMessageFactory;
 import com.pdp.utils.source.MessageSourceUtils;
@@ -73,9 +74,9 @@ public class OrderPlacementMessageProcessor implements Processor<OrderPlacementS
 
     private void handleBackToMain(Long chatID) {
         TelegramUser telegramUser = getTelegramUser(chatID);
-        telegramUser.setState(DefaultState.BASE_USER_MENU);
+        telegramUser.setState(UserMenuOptionState.PLACE_ORDER);
         telegramUserService.update(telegramUser);
-        bot.execute(SendMessageFactory.sendMessageWithUserMenu(chatID, getTelegramUserLanguage(chatID)));
+        bot.execute(SendMessageFactory.sendMessageOrderPlacementMenu(chatID, getTelegramUserLanguage(chatID)));
     }
 
     private TelegramUser getTelegramUser(Long chatID) {

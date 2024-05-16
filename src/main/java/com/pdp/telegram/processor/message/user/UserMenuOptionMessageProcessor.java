@@ -53,7 +53,7 @@ public class UserMenuOptionMessageProcessor implements Processor<UserMenuOptionS
                     updateTelegramUserState(chatID, OrderPlacementState.SELECT_BRAND);
                     bot.execute(SendMessageFactory.sendMessageWithBrandsMenu(chatID, getTelegramUserLanguage(chatID)));
                 } else if (checkLocalizedMessage("button.back", text, chatID)) {
-                    updateTelegramUserState(chatID,UserMenuOptionState.PLACE_ORDER);
+                    updateTelegramUserState(chatID,DefaultState.BASE_USER_MENU);
                     bot.execute(SendMessageFactory.sendMessageWithUserMenu(chatID,getTelegramUserLanguage(chatID)));
                 } else invalidSelectionSender(chatID);
             }
