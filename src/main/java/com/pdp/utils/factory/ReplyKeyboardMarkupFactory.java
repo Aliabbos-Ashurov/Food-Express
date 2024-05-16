@@ -22,7 +22,6 @@ import java.util.stream.IntStream;
  **/
 public class ReplyKeyboardMarkupFactory {
     private static final BrandService brandService = ThreadSafeBeansContainer.brandServiceThreadLocal.get();
-    private static final FoodBrandMappingService foodBrandMappingService = ThreadSafeBeansContainer.foodBrandMappingServiceThreadLocal.get();
     private static final CategoryService categoryService = ThreadSafeBeansContainer.categoryServiceThreadLocal.get();
 
     public static ReplyKeyboardMarkup selectLangButtons() {

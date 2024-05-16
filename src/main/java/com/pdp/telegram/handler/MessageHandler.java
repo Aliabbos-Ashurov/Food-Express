@@ -37,11 +37,6 @@ public class MessageHandler implements Handler {
         if (Objects.isNull(telegramUser)) telegramUser = registerTelegramUser(user, chatId);
         if (message.text().equals("/start")) startMessage(telegramUser);
         State state = telegramUser.getState();
-
-        System.out.println(message.contact());
-        System.out.println(message.text());
-        System.out.println(telegramUser.getState());
-
         switch (state) {
             case null -> startRegister(telegramUser);
             case DefaultState defaultState ->
