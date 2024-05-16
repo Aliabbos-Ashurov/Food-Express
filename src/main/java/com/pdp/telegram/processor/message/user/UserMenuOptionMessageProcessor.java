@@ -9,10 +9,7 @@ import com.pdp.telegram.service.telegramDeliverer.TelegramDelivererService;
 import com.pdp.telegram.service.telegramUser.TelegramUserService;
 import com.pdp.telegram.state.DefaultState;
 import com.pdp.telegram.state.State;
-import com.pdp.telegram.state.telegramUser.CourierRegistrationState;
-import com.pdp.telegram.state.telegramUser.MyOrderState;
-import com.pdp.telegram.state.telegramUser.OrderPlacementState;
-import com.pdp.telegram.state.telegramUser.UserMenuOptionState;
+import com.pdp.telegram.state.telegramUser.*;
 import com.pdp.utils.factory.ReplyKeyboardMarkupFactory;
 import com.pdp.utils.factory.SendMessageFactory;
 import com.pdp.utils.source.MessageSourceUtils;
@@ -73,7 +70,7 @@ public class UserMenuOptionMessageProcessor implements Processor<UserMenuOptionS
             updateTelegramUserState(chatID, OrderPlacementState.VIEW_CART);
             bot.execute(SendMessageFactory.sendMessageOrderManagementMenu(chatID, getTelegramUserLanguage(chatID)));
         } else if (checkLocalizedMessage("button.select.brand", text, chatID)) {
-            updateTelegramUserState(chatID, OrderPlacementState.SELECT_BRAND);
+            updateTelegramUserState(chatID, UserViewState.VIEW_BRANDS);
             bot.execute(SendMessageFactory.sendMessageWithBrandsMenu(chatID, getTelegramUserLanguage(chatID)));
         } else if (checkLocalizedMessage("button.back", text, chatID)) {
             updateTelegramUserState(chatID, UserMenuOptionState.PLACE_ORDER);

@@ -41,25 +41,8 @@ public class OrderPlacementMessageProcessor implements Processor<OrderPlacementS
         Long chatID = user.id();
         TelegramUser telegramUser = telegramUserService.findByChatID(chatID);
         String text = message.text();
-        switch (state) {
-            case SELECT_BRAND -> handleSelectBrand(text, chatID, telegramUser);
-            case VIEW_CART -> handleViewCart(text, chatID, telegramUser);
-        }
-    }
-
-
-    private void handleSelectBrand(String text, Long chatID, TelegramUser telegramUser) {
-        if (checkLocalizedMessage(text, "button.back", chatID)) handleBackToMain(chatID);
-        else {
-            Brand brand = brandService.getBrandByName(text);
-            if (Objects.isNull(brand)) {
-                invalidSelectionSender(chatID);
-                return;
-            }
-            telegramUser.setState(UserViewState.VIEW_BRANDS);
-            telegramUserService.update(telegramUser);
-            bot.execute(SendMessageFactory.sendMessageBrandCategoriesMenu(chatID, brand.getId(), getTelegramUserLanguage(chatID)));
-        }
+        if (Objects.requireNonNull(state) == VIEW_CART)
+            handleViewCart(text, chatID, telegramUser);
     }
 
     private void handleViewCart(String text, Long chatID, TelegramUser telegramUser) {
