@@ -7,6 +7,7 @@ import com.pdp.telegram.processor.Processor;
 import com.pdp.telegram.service.telegramUser.TelegramUserService;
 import com.pdp.telegram.state.telegramUser.MyOrderState;
 import com.pdp.telegram.state.telegramUser.UserMenuOptionState;
+import com.pdp.utils.factory.SendMessageFactory;
 import com.pdp.utils.source.MessageSourceUtils;
 import com.pdp.web.enums.Language;
 import com.pengrad.telegrambot.TelegramBot;
@@ -32,6 +33,7 @@ public class MyOrderMessageProcessor implements Processor<MyOrderState> {
         String text = message.text();
         Long chatID = user.id();
         if (state.equals(MyOrderState.VIEW_ACTIVE_ORDERS) || state.equals(MyOrderState.VIEW_ARCHIVED_ORDERS)) {
+            System.out.println(text);
             if (checkLocalizedMessage("button.back", text, chatID)) back(chatID);
             else invalidSelectionSender(chatID);
         }
@@ -44,7 +46,9 @@ public class MyOrderMessageProcessor implements Processor<MyOrderState> {
     private void back(Long chatID) {
         TelegramUser telegramUser = getTelegramUser(chatID);
         telegramUser.setState(UserMenuOptionState.VIEW_MY_ORDERS);
+        Language telegramUserLanguage = getTelegramUserLanguage(chatID);
         telegramUserService.update(telegramUser);
+        bot.execute(SendMessageFactory.sendMessageMyOderMenu(chatID, telegramUserLanguage));
     }
 
     private boolean checkLocalizedMessage(String key, String message, Long chatID) {
