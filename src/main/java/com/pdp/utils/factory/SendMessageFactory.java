@@ -23,7 +23,6 @@ import com.pdp.web.service.food.FoodService;
 import com.pdp.web.service.order.OrderService;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 import com.pengrad.telegrambot.model.request.Keyboard;
-import com.pengrad.telegrambot.model.request.ReplyKeyboardMarkup;
 import com.pengrad.telegrambot.request.SendMessage;
 
 import java.util.List;
@@ -136,6 +135,11 @@ public class SendMessageFactory {
     public static SendMessage sendMessageContact(Object chatID, Language language) {
         String message = MessageSourceUtils.getLocalizedMessage("alert.contact", language);
         return createMessage(chatID, message, ReplyKeyboardMarkupFactory.confirmContactButton());
+    }
+
+    public static SendMessage sendMessageEnterFullname(Object chatID, Language language) {
+        String message = MessageSourceUtils.getLocalizedMessage("alert.fullname", language);
+        return new SendMessage(chatID, message);
     }
 
     public static List<SendMessage> sendMessagesOrdersInProcessForDeliverer(Object chatID, UUID delivererID, Language language) {
