@@ -56,7 +56,7 @@ public class OrderPlacementMessageProcessor implements Processor<OrderPlacementS
                 invalidSelectionSender(chatID);
                 return;
             }
-            telegramUser.setState(UserViewState.VIEW_CATEGORIES);
+            telegramUser.setState(UserViewState.VIEW_BRANDS);
             telegramUserService.update(telegramUser);
             bot.execute(SendMessageFactory.sendMessageBrandCategoriesMenu(chatID, brand.getId(), getTelegramUserLanguage(chatID)));
         }

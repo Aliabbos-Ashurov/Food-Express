@@ -35,7 +35,6 @@ public class ConfirmOrderMessageProcessor implements Processor<ConfirmOrderState
         User user = message.from();
         Long chatID = user.id();
         TelegramUser telegramUser = telegramUserService.findByChatID(chatID);
-
         switch (state) {
             case REQUEST_PHONE_NUMBER_FROM_USER -> processRequestPhoneNumber(message, chatID, telegramUser);
             case REQUEST_LOCATION_FROM_USER -> processRequestLocation(message, chatID, telegramUser);
