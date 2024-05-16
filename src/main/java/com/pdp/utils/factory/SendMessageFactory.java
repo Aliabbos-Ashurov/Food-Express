@@ -26,6 +26,7 @@ import com.pengrad.telegrambot.model.request.Keyboard;
 import com.pengrad.telegrambot.request.SendMessage;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -172,7 +173,7 @@ public class SendMessageFactory {
     public static List<SendMessage> sendMessagesUserArchive(Object chatID, UUID userID, Language language) {
         List<CustomerOrder> archiveOrders = customerOrderService.getArchive(userID);
         return archiveOrders.stream().map(customerOrder -> {
-            List<Order> orders = orderService.getOdersByCustomerID(customerOrder.getId());
+            List<Order> orders = orderService.getOrdersByCustomerID(customerOrder.getId());
             String format = customerOrderFormatForUser(orders, customerOrder, language);
             return new SendMessage(chatID, format);
         }).toList();
@@ -184,6 +185,13 @@ public class SendMessageFactory {
         return telegramUserByState.stream()
                 .map(telegramUser -> createMessage(telegramUser.getChatID(), format, InlineKeyboardMarkupFactory.checkMarkButton(customerOrder)))
                 .toList();
+    }
+
+    public static SendMessage sendMessageUserOrderNotConfirmed(Object chatID, UUID id, Language language) {
+        CustomerOrder notConfirmedOrder = customerOrderService.getNotConfirmedOrder(id);
+        List<Order> orders = orderService.getOrdersByCustomerID(notConfirmedOrder.getId());
+        String format = customerOrderFormatForUser(orders, notConfirmedOrder, language);
+        return createMessage(chatID, format, ReplyKeyboardMarkupFactory.backButton(language));
     }
 
     private static String customerOrderFormatForDeliverer(CustomerOrder customerOrder, Language language) {

@@ -7,6 +7,7 @@ import com.pdp.config.jsonFilePath.JsonFilePath;
 import lombok.NonNull;
 import lombok.SneakyThrows;
 
+import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.UUID;
@@ -84,10 +85,10 @@ public class CustomerOrderRepository implements BaseRepository<CustomerOrder, Li
      * @return The retrieved {@code CustomerOrder}, or {@code null} if not found.
      */
     @Override
-    public CustomerOrder findById(@NonNull UUID id) {
+    public CustomerOrder findById(@NonNull UUID userID) {
         List<CustomerOrder> customerOrders = load();
         return customerOrders.stream()
-                .filter(customerOrder -> customerOrder.getId().equals(id))
+                .filter(customerOrder -> customerOrder.getUserID().equals(userID))
                 .findFirst().orElse(null);
     }
 

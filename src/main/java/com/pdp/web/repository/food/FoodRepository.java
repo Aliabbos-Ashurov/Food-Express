@@ -6,6 +6,7 @@ import com.pdp.web.repository.BaseRepository;
 import com.pdp.config.jsonFilePath.JsonFilePath;
 import lombok.NonNull;
 import lombok.SneakyThrows;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -58,7 +59,7 @@ public class FoodRepository implements BaseRepository<Food, List<Food>> {
      * @return true if the operation was successful, false otherwise.
      */
     @Override
-    public boolean add(Food food) {
+    public boolean add(@NotNull Food food) {
         List<Food> foods = load();
         foods.add(food);
         save(foods);
@@ -72,7 +73,7 @@ public class FoodRepository implements BaseRepository<Food, List<Food>> {
      * @return true if the item was successfully removed, false otherwise.
      */
     @Override
-    public boolean remove(UUID id) {
+    public boolean remove(@NotNull UUID id) {
         List<Food> foods = load();
         boolean removed = foods.removeIf(food -> food.getId().equals(id));
         if (removed) save(foods);
@@ -86,7 +87,7 @@ public class FoodRepository implements BaseRepository<Food, List<Food>> {
      * @return The Food object if found, otherwise null.
      */
     @Override
-    public Food findById(UUID id) {
+    public Food findById(@NotNull UUID id) {
         List<Food> foods = load();
         return foods.stream()
                 .filter(food -> food.getId().equals(id))

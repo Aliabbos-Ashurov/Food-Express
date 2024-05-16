@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -34,6 +35,14 @@ public class BrandServiceImp implements BrandService {
             }
         }
         return instance;
+    }
+
+    @Override
+    public Brand getBrandByName(String name) {
+        List<Brand> brands = getAll();
+        return brands.stream()
+                .filter(brand -> Objects.equals(brand.getName(), name))
+                .findFirst().orElse(null);
     }
 
     /**

@@ -95,7 +95,7 @@ public class CustomerOrderController {
             System.out.println(MessageSourceUtils.getLocalizedMessage("error.cartEmpty", getCurrentUser().getLanguage()));
             return;
         }
-        List<Order> orders = orderService.getOdersByCustomerID(notConfirmedOrder.getId());
+        List<Order> orders = orderService.getOrdersByCustomerID(notConfirmedOrder.getId());
         orders.forEach(CustomerOrderController::displayOrderDetails);
         displayCartMenu();
         switch (Scan.scanInt()) {
@@ -125,7 +125,7 @@ public class CustomerOrderController {
         int i = Scan.scanInt();
         boolean success = i == 1;
         if (success) {
-            List<Order> orders = orderService.getOdersByCustomerID(customerOrder.getId());
+            List<Order> orders = orderService.getOrdersByCustomerID(customerOrder.getId());
             orders.forEach(order -> orderService.remove(order.getId()));
             boolean removed = customerOrderService.remove(customerOrder.getId());
             NotificationHandler.notifyAction("Cart", "cleaned", removed);
@@ -271,7 +271,7 @@ public class CustomerOrderController {
 
     private static void displayOrders(List<CustomerOrder> orders) {
         for (CustomerOrder customerOrder : orders) {
-            List<Order> orderList = orderService.getOdersByCustomerID(customerOrder.getId());
+            List<Order> orderList = orderService.getOrdersByCustomerID(customerOrder.getId());
             if (!orderList.isEmpty()) {
                 Address address = addressService.getByID(customerOrder.getAddressID());
                 System.out.println("------------------------------");

@@ -6,6 +6,7 @@ import com.pdp.web.repository.BaseRepository;
 import com.pdp.config.jsonFilePath.JsonFilePath;
 import lombok.NonNull;
 import lombok.SneakyThrows;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -52,7 +53,7 @@ public class TransportRepository implements BaseRepository<Transport,List<Transp
      * @return Always returns {@code true}, indicating the transport was added successfully.
      */
     @Override
-    public boolean add(Transport transport) {
+    public boolean add(@NotNull Transport transport) {
         List<Transport> transports = load();
         transports.add(transport);
         save(transports);

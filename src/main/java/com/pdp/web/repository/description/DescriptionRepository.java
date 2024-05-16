@@ -5,6 +5,7 @@ import com.pdp.web.model.description.Description;
 import com.pdp.web.repository.BaseRepository;
 import com.pdp.config.jsonFilePath.JsonFilePath;
 import lombok.SneakyThrows;
+import org.jetbrains.annotations.NotNull;
 
 import java.nio.file.Path;
 import java.util.List;
@@ -65,7 +66,7 @@ public class DescriptionRepository implements BaseRepository<Description, List<D
      * @return {@code true} after the entity is added and the storage file is updated.
      */
     @Override
-    public boolean add(Description description) {
+    public boolean add(@NotNull Description description) {
         List<Description> descriptions = load();
         descriptions.add(description);
         save(descriptions);
@@ -80,7 +81,7 @@ public class DescriptionRepository implements BaseRepository<Description, List<D
      * @return {@code true} if the entity is successfully found and removed; {@code false} otherwise.
      */
     @Override
-    public boolean remove(UUID id) {
+    public boolean remove(@NotNull UUID id) {
         List<Description> descriptions = load();
         boolean removed = descriptions.removeIf(description -> description.getId().equals(id));
         if (removed) save(descriptions);
@@ -94,7 +95,7 @@ public class DescriptionRepository implements BaseRepository<Description, List<D
      * @return The found {@code Description} entity if present; otherwise, {@code null}.
      */
     @Override
-    public Description findById(UUID id) {
+    public Description findById(@NotNull UUID id) {
         List<Description> descriptions = load();
         return descriptions.stream()
                 .filter(description -> description.getId().equals(id))
@@ -126,7 +127,7 @@ public class DescriptionRepository implements BaseRepository<Description, List<D
 
     @SneakyThrows
     @Override
-    public void save(List<Description> descriptions) {
+    public void save(@NotNull List<Description> descriptions) {
         jsonSerializer.write(descriptions);
     }
 }

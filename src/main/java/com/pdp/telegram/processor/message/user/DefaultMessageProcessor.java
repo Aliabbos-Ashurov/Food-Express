@@ -66,7 +66,7 @@ public class DefaultMessageProcessor implements Processor<DefaultState> {
             telegramUserService.update(telegramUser);
             bot.execute(SendMessageFactory.sendMessageMyOderMenu(chatID, getLanguage(telegramUser)));
         } else if (checkLocalizedMessage(text, "button.registerCourier", telegramUser)) {
-            telegramUser.setState(CourierRegistrationState.ENTER_FULLNAME);
+            telegramUser.setState(UserMenuOptionState.REGISTER_AS_COURIER);
             telegramUserService.update(telegramUser);
             bot.execute(SendMessageFactory.sendMessageEnterFullname(chatID, getLanguage(telegramUser)));
         }

@@ -5,6 +5,7 @@ import com.pdp.web.model.foodBrandMapping.FoodBrandMapping;
 import com.pdp.web.repository.BaseRepository;
 import lombok.NonNull;
 import lombok.SneakyThrows;
+import org.jetbrains.annotations.NotNull;
 
 import java.nio.file.Path;
 import java.util.List;
@@ -60,7 +61,7 @@ public class FoodBrandMappingRepository implements BaseRepository<FoodBrandMappi
      * @return true if the operation was successful, false otherwise.
      */
     @Override
-    public boolean add(FoodBrandMapping foodBrandMapping) {
+    public boolean add(@NotNull FoodBrandMapping foodBrandMapping) {
         List<FoodBrandMapping> foodBrandMappings = load();
         foodBrandMappings.add(foodBrandMapping);
         save(foodBrandMappings);
@@ -74,7 +75,7 @@ public class FoodBrandMappingRepository implements BaseRepository<FoodBrandMappi
      * @return true if the FoodBrandMapping was successfully removed, false otherwise.
      */
     @Override
-    public boolean remove(UUID id) {
+    public boolean remove(@NotNull UUID id) {
         List<FoodBrandMapping> foodBrandMappings = load();
         boolean removed = foodBrandMappings.removeIf(foodBrandMapping -> foodBrandMapping.getId().equals(id));
         if (removed) save(foodBrandMappings);
@@ -88,7 +89,7 @@ public class FoodBrandMappingRepository implements BaseRepository<FoodBrandMappi
      * @return The FoodBrandMapping object if found, null otherwise.
      */
     @Override
-    public FoodBrandMapping findById(UUID id) {
+    public FoodBrandMapping findById(@NotNull UUID id) {
         List<FoodBrandMapping> foodBrandMappings = load();
         return foodBrandMappings.stream()
                 .filter(foodBrandMapping -> foodBrandMapping.getId().equals(id))

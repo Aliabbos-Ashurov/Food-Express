@@ -6,6 +6,7 @@ import com.pdp.web.repository.BaseRepository;
 import com.pdp.config.jsonFilePath.JsonFilePath;
 import lombok.NonNull;
 import lombok.SneakyThrows;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -51,7 +52,7 @@ public class DelivererRepository implements BaseRepository<Deliverer, List<Deliv
     }
 
     @Override
-    public boolean remove(UUID id) {
+    public boolean remove(@NotNull UUID id) {
         List<Deliverer> deliverers = load();
         boolean removed = deliverers.removeIf(deliverer -> deliverer.getId().equals(id));
         if (removed) save(deliverers);
@@ -67,7 +68,7 @@ public class DelivererRepository implements BaseRepository<Deliverer, List<Deliv
      * @return The matching {@code Deliverer} object if found; {@code null} otherwise.
      */
     @Override
-    public Deliverer findById(UUID id) {
+    public Deliverer findById(@NotNull UUID id) {
         List<Deliverer> deliverers = load();
         return deliverers.stream()
                 .filter(deliverer -> deliverer.getId().equals(id))

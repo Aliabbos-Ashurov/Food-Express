@@ -6,6 +6,7 @@ import com.pdp.web.repository.BaseRepository;
 import com.pdp.config.jsonFilePath.JsonFilePath;
 import lombok.NonNull;
 import lombok.SneakyThrows;
+import org.jetbrains.annotations.NotNull;
 
 import java.nio.file.Path;
 import java.util.List;
@@ -51,7 +52,7 @@ public class DiscountRepository implements BaseRepository<Discount, List<Discoun
      * @return True if the operation is successful, false otherwise.
      */
     @Override
-    public boolean add(Discount discount) {
+    public boolean add(@NotNull Discount discount) {
         List<Discount> discounts = load();
         discounts.add(discount);
         save(discounts);
@@ -66,7 +67,7 @@ public class DiscountRepository implements BaseRepository<Discount, List<Discoun
      * @return True if the Discount is successfully removed, false otherwise.
      */
     @Override
-    public boolean remove(UUID id) {
+    public boolean remove(@NotNull UUID id) {
         List<Discount> discounts = load();
         boolean removed = discounts.removeIf(discount -> discount.getId().equals(id));
         if (removed) save(discounts);
@@ -74,7 +75,7 @@ public class DiscountRepository implements BaseRepository<Discount, List<Discoun
     }
 
     @Override
-    public Discount findById(UUID id) {
+    public Discount findById(@NotNull UUID id) {
         List<Discount> discounts = load();
         return discounts.stream()
                 .filter(discount -> discount.getId().equals(id))

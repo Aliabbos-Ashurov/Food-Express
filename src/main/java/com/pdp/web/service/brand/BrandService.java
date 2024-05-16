@@ -24,4 +24,6 @@ import java.util.List;
  */
 public interface BrandService extends BaseService<Brand, List<Brand>> {
     BrandRepository repository = BrandRepository.getInstance();
+
+    Brand getBrandByName(String name);
 }

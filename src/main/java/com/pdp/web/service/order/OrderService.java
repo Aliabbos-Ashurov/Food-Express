@@ -44,5 +44,5 @@ public interface OrderService extends BaseService<Order, List<Order>> {
      * @param customerOrderID The unique identifier of the customer.
      * @return A list of orders associated with the customer.
      */
-    List<Order> getOdersByCustomerID(UUID customerOrderID);
+    List<Order> getOrdersByCustomerID(UUID customerOrderID);
 }

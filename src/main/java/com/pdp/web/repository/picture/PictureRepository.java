@@ -6,6 +6,7 @@ import com.pdp.web.repository.BaseRepository;
 import com.pdp.config.jsonFilePath.JsonFilePath;
 import lombok.NonNull;
 import lombok.SneakyThrows;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -52,7 +53,7 @@ public class PictureRepository implements BaseRepository<Picture, List<Picture>>
      * @return Always returns {@code true}, indicating that the picture was successfully added.
      */
     @Override
-    public boolean add(Picture picture) {
+    public boolean add(@NotNull Picture picture) {
         List<Picture> pictures = load();
         pictures.add(picture);
         save(pictures);
@@ -66,7 +67,7 @@ public class PictureRepository implements BaseRepository<Picture, List<Picture>>
      * @return {@code true} if the picture was successfully found and removed; {@code false} otherwise.
      */
     @Override
-    public boolean remove(UUID id) {
+    public boolean remove(@NotNull UUID id) {
         List<Picture> pictures = load();
         boolean removed = pictures.removeIf(picture -> picture.getId().equals(id));
         if (removed) save(pictures);
@@ -81,7 +82,7 @@ public class PictureRepository implements BaseRepository<Picture, List<Picture>>
      */
 
     @Override
-    public Picture findById(UUID id) {
+    public Picture findById(@NotNull UUID id) {
         List<Picture> pictures = load();
         return pictures.stream()
                 .filter(picture -> picture.getId().equals(id))

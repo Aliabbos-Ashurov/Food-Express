@@ -5,14 +5,22 @@ import com.pdp.config.ThreadSafeBeansContainer;
 import com.pdp.telegram.model.telegramUser.TelegramUser;
 import com.pdp.telegram.processor.Processor;
 import com.pdp.telegram.service.telegramUser.TelegramUserService;
+import com.pdp.telegram.state.DefaultState;
+import com.pdp.telegram.state.telegramUser.ConfirmOrderState;
 import com.pdp.telegram.state.telegramUser.OrderPlacementState;
+import com.pdp.telegram.state.telegramUser.UserViewState;
 import com.pdp.utils.factory.SendMessageFactory;
 import com.pdp.utils.source.MessageSourceUtils;
 import com.pdp.web.enums.Language;
+import com.pdp.web.model.brand.Brand;
+import com.pdp.web.service.brand.BrandService;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.model.User;
+import com.pengrad.telegrambot.request.SendMessage;
+
+import static com.pdp.telegram.state.telegramUser.OrderPlacementState.*;
 
 import java.util.Objects;
 
@@ -23,6 +31,7 @@ import java.util.Objects;
 public class OrderPlacementMessageProcessor implements Processor<OrderPlacementState> {
     private final TelegramBot bot = TelegramBotConfiguration.get();
     private final TelegramUserService telegramUserService = ThreadSafeBeansContainer.telegramUserServiceThreadLocal.get();
+    BrandService brandService = ThreadSafeBeansContainer.brandServiceThreadLocal.get();
 
     @Override
     public void process(Update update, OrderPlacementState state) {
@@ -31,31 +40,75 @@ public class OrderPlacementMessageProcessor implements Processor<OrderPlacementS
         Long chatID = user.id();
         TelegramUser telegramUser = telegramUserService.findByChatID(chatID);
         String text = message.text();
-        if (state.equals(OrderPlacementState.DEFAULT_ORDER_PLACEMENT)) {
-            if (checkLocalizedMessage(text, "button.select.brand", telegramUser)) {
-                telegramUser.setState(OrderPlacementState.SELECT_BRAND);
-                telegramUserService.update(telegramUser);
-                bot.execute(SendMessageFactory.sendMessageWithBrandsMenu(chatID, getLanguage(telegramUser)));
-            }else if (checkLocalizedMessage(text,"button.view.cart", telegramUser)) {
-                telegramUser.setState(OrderPlacementState.VIEW_CART);
-                telegramUserService.update(telegramUser);
-
-            }else if (checkLocalizedMessage(text,"button.back", telegramUser)) {
-//                telegramUser.setState();
-            }
-        } else if (state.equals(OrderPlacementState.SELECT_BRAND)) {
-
-        } else if (state.equals(OrderPlacementState.VIEW_CART)) {
-
+        switch (state) {
+            case DEFAULT_ORDER_PLACEMENT -> handleDefaultOrderPlacement(text, chatID, telegramUser);
+            case SELECT_BRAND -> handleSelectBrand(text, chatID, telegramUser);
+            case VIEW_CART -> handleViewCart(text, chatID, telegramUser);
         }
     }
 
-    private Language getLanguage(TelegramUser telegramUser) {
-        return telegramUser.getLanguage();
+    private void handleDefaultOrderPlacement(String text, Long chatID, TelegramUser telegramUser) {
+        if (checkLocalizedMessage(text, "button.select.brand", chatID)) {
+            telegramUser.setState(SELECT_BRAND);
+            telegramUserService.update(telegramUser);
+            bot.execute(SendMessageFactory.sendMessageWithBrandsMenu(chatID, getTelegramUserLanguage(chatID)));
+        } else if (checkLocalizedMessage(text, "button.view.cart", chatID)) {
+            telegramUser.setState(VIEW_CART);
+            telegramUserService.update(telegramUser);
+            bot.execute(SendMessageFactory.sendMessageOrderManagementMenu(chatID, getTelegramUserLanguage(chatID)));
+            bot.execute(SendMessageFactory.sendMessageUserOrderNotConfirmed(chatID, telegramUser.getId(), getTelegramUserLanguage(chatID)));
+        } else if (checkLocalizedMessage(text, "button.back", chatID)) {
+            telegramUser.setState(DefaultState.BASE_USER_MENU);
+            telegramUserService.update(telegramUser);
+            bot.execute(SendMessageFactory.sendMessageWithUserMenu(chatID, getTelegramUserLanguage(chatID)));
+        }
     }
 
-    private boolean checkLocalizedMessage(String message, String key, TelegramUser telegramUser) {
-        String localizedMessage = MessageSourceUtils.getLocalizedMessage(key, getLanguage(telegramUser));
+    private void handleSelectBrand(String text, Long chatID, TelegramUser telegramUser) {
+        if (checkLocalizedMessage(text, "button.back", chatID)) handleBackToMain(chatID);
+        else {
+            Brand brand = brandService.getBrandByName(text);
+            if (Objects.isNull(brand)) {
+                invalidSelectionSender(chatID);
+                return;
+            }
+            telegramUser.setState(UserViewState.VIEW_CATEGORIES);
+            telegramUserService.update(telegramUser);
+            bot.execute(SendMessageFactory.sendMessageBrandCategoriesMenu(chatID, brand.getId(), getTelegramUserLanguage(chatID)));
+        }
+    }
+
+    private void handleViewCart(String text, Long chatID, TelegramUser telegramUser) {
+        if (checkLocalizedMessage(text, "button.back", chatID)) handleBackToMain(chatID);
+        else if (checkLocalizedMessage(text, "alert.make.order", chatID)) {
+            telegramUser.setState(ConfirmOrderState.REQUEST_PHONE_NUMBER_FROM_USER);
+            telegramUserService.update(telegramUser);
+            bot.execute(SendMessageFactory.sendMessageContact(chatID, getTelegramUserLanguage(chatID)));
+        } else invalidSelectionSender(chatID);
+    }
+
+
+    private void handleBackToMain(Long chatID) {
+        TelegramUser telegramUser = getTelegramUser(chatID);
+        telegramUser.setState(DEFAULT_ORDER_PLACEMENT);
+        telegramUserService.update(telegramUser);
+        bot.execute(SendMessageFactory.sendMessageOrderPlacementMenu(chatID, getTelegramUserLanguage(chatID)));
+    }
+
+    private TelegramUser getTelegramUser(Long chatID) {
+        return telegramUserService.findByChatID(chatID);
+    }
+
+    private Language getTelegramUserLanguage(Long chatID) {
+        return getTelegramUser(chatID).getLanguage();
+    }
+
+    private boolean checkLocalizedMessage(String message, String key, Long chatID) {
+        String localizedMessage = MessageSourceUtils.getLocalizedMessage(key, getTelegramUserLanguage(chatID));
         return Objects.equals(localizedMessage, message);
+    }
+
+    private void invalidSelectionSender(Long chatID) {
+        bot.execute(new SendMessage(chatID, MessageSourceUtils.getLocalizedMessage("error.invalidSelection", getTelegramUserLanguage(chatID))));
     }
 }

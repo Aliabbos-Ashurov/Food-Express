@@ -65,7 +65,7 @@ public class OrderServiceImp implements OrderService {
      * @return A list of orders associated with the customer order.
      */
     @Override
-    public List<Order> getOdersByCustomerID(UUID customerOrderID) {
+    public List<Order> getOrdersByCustomerID(UUID customerOrderID) {
         List<Order> orderList = getAll();
         return orderList.stream()
                 .filter(order -> order.getCustomerOrderID().equals(customerOrderID))
