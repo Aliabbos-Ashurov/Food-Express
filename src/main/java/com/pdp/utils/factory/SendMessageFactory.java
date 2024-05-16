@@ -42,32 +42,32 @@ public class SendMessageFactory {
     private static final FoodService foodService = ThreadSafeBeansContainer.foodServiceThreadLocal.get();
     private static final TelegramUserService telegramUserService = ThreadSafeBeansContainer.telegramUserServiceThreadLocal.get();
 
-    private static SendMessage createMessage(Object chatID, String messageText, Keyboard keyboardMarkup) {
+    public static SendMessage createMessage(Object chatID, String messageText, Keyboard keyboardMarkup) {
         SendMessage message = new SendMessage(chatID, messageText);
         return message.replyMarkup(keyboardMarkup);
     }
 
-    private static SendMessage sendMessageCartIsEmpty(Object chatID, Language language) {
+    public static SendMessage sendMessageCartIsEmpty(Object chatID, Language language) {
         String message = MessageSourceUtils.getLocalizedMessage("info.emptyCartMessage", language);
         return createMessage(chatID, message, ReplyKeyboardMarkupFactory.backButton(language));
     }
 
-    private static SendMessage sendMessageNotArchiveOrders(Object chatID, Language language) {
+    public static SendMessage sendMessageNotArchiveOrders(Object chatID, Language language) {
         String message = MessageSourceUtils.getLocalizedMessage("alert.not.archive", language);
         return createMessage(chatID, message, ReplyKeyboardMarkupFactory.backButton(language));
     }
 
-    private static SendMessage sendMessageCartCleared(Object chatID, Language language) {
+    public static SendMessage sendMessageCartCleared(Object chatID, Language language) {
         String message = MessageSourceUtils.getLocalizedMessage("alert.cart.cleaned", language);
         return createMessage(chatID, message, ReplyKeyboardMarkupFactory.orderManagementButtons(language));
     }
 
-    private static SendMessage sendMessageOrderManagementMenu(Object chatID, Language language) {
+    public static SendMessage sendMessageOrderManagementMenu(Object chatID, Language language) {
         String message = MessageSourceUtils.getLocalizedMessage("alert.choose", language);
         return createMessage(chatID, message, ReplyKeyboardMarkupFactory.orderManagementButtons(language));
     }
 
-    private static SendMessage sendMessageNotActiveOrders(Object chatID, Language language) {
+    public static SendMessage sendMessageNotActiveOrders(Object chatID, Language language) {
         String message = MessageSourceUtils.getLocalizedMessage("alert.not.active", language);
         return createMessage(chatID, message, ReplyKeyboardMarkupFactory.backButton(language));
     }
@@ -158,6 +158,7 @@ public class SendMessageFactory {
                     String format = customerOrderFormatForDeliverer(customerOrder, language);
                     return new SendMessage(chatID, format);
                 }).toList();
+
     }
 
     public static List<SendMessage> sendMessagesOrdersToDeliverer(Object chatID, Language language) {
@@ -173,7 +174,7 @@ public class SendMessageFactory {
         return archiveOrders.stream().map(customerOrder -> {
             List<Order> orders = orderService.getOdersByCustomerID(customerOrder.getId());
             String format = customerOrderFormatForUser(orders, customerOrder, language);
-            return createMessage(chatID, format, InlineKeyboardMarkupFactory.checkMarkButton(customerOrder));
+            return new SendMessage(chatID, format);
         }).toList();
     }
 

@@ -15,14 +15,12 @@ public class UpdateHandler {
     public void handle(List<Update> updates) {
         CompletableFuture.runAsync(() -> {
             for (Update update : updates) {
-                ThreadSafeBeansContainer.executor.submit(() -> {
-                    if (Objects.nonNull(update.message())) {
-                        ThreadSafeBeansContainer.messageHandlerThreadLocal.get().handle(update);
-                    } else if (Objects.nonNull(update.callbackQuery())) {
-                        ThreadSafeBeansContainer.callbackHandlerThreadLocal.get().handle(update);
-                    }
-                });
+                if (Objects.nonNull(update.message())) {
+                    ThreadSafeBeansContainer.messageHandlerThreadLocal.get().handle(update);
+                } else if (Objects.nonNull(update.callbackQuery())) {
+                    ThreadSafeBeansContainer.callbackHandlerThreadLocal.get().handle(update);
+                }
             }
-        });
+        }, ThreadSafeBeansContainer.executor);
     }
 }
