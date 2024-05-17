@@ -48,6 +48,11 @@ public class SendMessageFactory {
         return message.replyMarkup(keyboardMarkup);
     }
 
+    public static SendMessage sendMessageBackButton(Object chatID, Language language) {
+        String message = MessageSourceUtils.getLocalizedMessage("alert.choose", language);
+        return createMessage(chatID, message, ReplyKeyboardMarkupFactory.backButton(language));
+    }
+
     public static SendMessage sendMessageCartIsEmpty(Object chatID, Language language) {
         String message = MessageSourceUtils.getLocalizedMessage("info.emptyCartMessage", language);
         return createMessage(chatID, message, ReplyKeyboardMarkupFactory.backButton(language));
@@ -226,7 +231,7 @@ public class SendMessageFactory {
         CustomerOrder notConfirmedOrder = customerOrderService.getNotConfirmedOrder(id);
         List<Order> orders = orderService.getOrdersByCustomerID(notConfirmedOrder.getId());
         String format = customerOrderFormatForUser(orders, notConfirmedOrder, language);
-        return createMessage(chatID, format, ReplyKeyboardMarkupFactory.backButton(language));
+        return createMessage(chatID, format, ReplyKeyboardMarkupFactory.orderManagementButtons(language));
     }
 
     private static String customerOrderFormatForDeliverer(CustomerOrder customerOrder, Language language) {
@@ -249,11 +254,11 @@ public class SendMessageFactory {
     private static String customerOrderFormatForUser(List<Order> orders, CustomerOrder customerOrder, Language language) {
         Branch branch = getBranch(customerOrder);
         Brand brand = getBrand(branch);
-        CustomerOrderGeoPoint orderGeoPoint = getGeoPoint(customerOrder);
+//        CustomerOrderGeoPoint orderGeoPoint = getGeoPoint(customerOrder);
         String status = StatusSourceUtils.getLocalizedStatus(customerOrder.getOrderStatus(), language);
         StringBuilder formatBuilder = new StringBuilder();
         formatBuilder.append(String.format("Brand: %s\n", brand.getName()));
-        formatBuilder.append(String.format("To location: %s\n", orderGeoPoint.getLattidue() + " - " + orderGeoPoint.getLongtidue()));
+//        formatBuilder.append(String.format("To location: %s\n", orderGeoPoint.getLattidue() + " - " + orderGeoPoint.getLongtidue()));
         formatBuilder.append(String.format("Price: %s\n", customerOrder.getOrderPrice()));
         formatBuilder.append(String.format("Payment Type: %s\n", customerOrder.getPaymentType()));
         formatBuilder.append(String.format("Status: %s\n", status));

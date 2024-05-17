@@ -66,5 +66,6 @@ public interface CustomerOrderService extends BaseService<CustomerOrder, List<Cu
      * @return A list of pending {@link CustomerOrder} that require a deliverer.
      */
     List<CustomerOrder> getPendingOrdersForDeliverer();
+
     CustomerOrder getByUserID(@NonNull UUID userID);
 }

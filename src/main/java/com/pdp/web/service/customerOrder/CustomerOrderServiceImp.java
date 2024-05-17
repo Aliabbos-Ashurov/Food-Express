@@ -198,6 +198,7 @@ public class CustomerOrderServiceImp implements CustomerOrderService {
         o.setPaymentType(newCustomerOrder.getPaymentType());
         o.setOrderPrice(newCustomerOrder.getOrderPrice());
         o.setOrderStatus(newCustomerOrder.getOrderStatus());
+        o.setCustomerOrderGeoPointID(newCustomerOrder.getCustomerOrderGeoPointID());
     }
 
     /**

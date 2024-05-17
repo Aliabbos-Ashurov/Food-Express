@@ -64,7 +64,7 @@ public class TransportServiceImp implements TransportService {
      * @return false, indicating the operation is not supported yet
      */
     @Override
-    public boolean update(Transport transport) {
+    public boolean update(@NotNull Transport transport) {
         return false;
     }
 

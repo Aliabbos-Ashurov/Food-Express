@@ -193,7 +193,7 @@ public class OrderServiceImp implements OrderService {
      * @return true if the order was successfully removed, false otherwise
      */
     @Override
-    public boolean remove(UUID id) {
+    public boolean remove(@NotNull UUID id) {
         return repository.remove(id);
     }
 
@@ -204,7 +204,7 @@ public class OrderServiceImp implements OrderService {
      * @return false, indicating the operation is not supported yet
      */
     @Override
-    public boolean update(Order order) {
+    public boolean update(@NotNull Order order) {
         List<Order> orders = getAll();
         Optional<Order> first = orders.stream()
                 .filter(o -> o.getId().equals(order.getId()))
@@ -218,10 +218,10 @@ public class OrderServiceImp implements OrderService {
     }
 
     private void updateOrderData(Order order, Order updated) {
-        order.setFoodID(order.getFoodID());
-        order.setFoodPrice(order.getFoodPrice());
-        order.setFoodQuantity(order.getFoodQuantity());
-        order.setCustomerOrderID(order.getCustomerOrderID());
+        order.setFoodID(updated.getFoodID());
+        order.setFoodPrice(updated.getFoodPrice());
+        order.setFoodQuantity(updated.getFoodQuantity());
+        order.setCustomerOrderID(updated.getCustomerOrderID());
     }
 
     /**
@@ -231,7 +231,7 @@ public class OrderServiceImp implements OrderService {
      * @return an empty list, as the method is not implemented
      */
     @Override
-    public List<Order> search(String query) {
+    public List<Order> search(@NotNull String query) {
         return List.of();
     }
 
@@ -242,7 +242,7 @@ public class OrderServiceImp implements OrderService {
      * @return the {@link Order} object, or null if no order is found
      */
     @Override
-    public Order getByID(UUID id) {
+    public Order getByID(@NotNull UUID id) {
         return repository.findById(id);
     }
 

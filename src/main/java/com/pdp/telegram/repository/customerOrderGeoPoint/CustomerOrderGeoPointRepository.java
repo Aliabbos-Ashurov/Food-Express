@@ -50,9 +50,9 @@ public class CustomerOrderGeoPointRepository implements BaseRepository<CustomerO
      * @return True if the addition was successful, false otherwise.
      */
     @Override
-    public boolean add(@NonNull CustomerOrderGeoPoint object) {
+    public boolean add(@NonNull CustomerOrderGeoPoint customerOrderGeoPoint) {
         List<CustomerOrderGeoPoint> load = load();
-        load.add(object);
+        load.add(customerOrderGeoPoint);
         save(load);
         return true;
     }

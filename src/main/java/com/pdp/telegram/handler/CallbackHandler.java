@@ -11,6 +11,7 @@ import com.pdp.telegram.state.telegramUser.*;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.CallbackQuery;
 import com.pengrad.telegrambot.model.Update;
+import com.pengrad.telegrambot.model.message.MaybeInaccessibleMessage;
 
 
 /**
@@ -24,7 +25,8 @@ public class CallbackHandler implements Handler {
     @Override
     public void handle(Update update) {
         CallbackQuery callbackQuery = update.callbackQuery();
-        Long chatID = callbackQuery.message().chat().id();
+        MaybeInaccessibleMessage maybeInaccessibleMessage = callbackQuery.maybeInaccessibleMessage();
+        Long chatID = maybeInaccessibleMessage.chat().id();
         TelegramUser curUser = telegramUserService.findByChatID(chatID);
         State state = curUser.getState();
         switch (state) {

@@ -20,6 +20,7 @@ import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.CallbackQuery;
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.Update;
+import com.pengrad.telegrambot.model.message.MaybeInaccessibleMessage;
 import lombok.NonNull;
 
 import java.util.UUID;
@@ -37,9 +38,9 @@ public class DeliveryMenuCallbackProcessor implements Processor<DeliveryMenuStat
     @Override
     public void process(Update update, DeliveryMenuState state) {
         CallbackQuery callbackQuery = update.callbackQuery();
-        Message message = (Message) callbackQuery.maybeInaccessibleMessage();
+        MaybeInaccessibleMessage maybeInaccessibleMessage = callbackQuery.maybeInaccessibleMessage();
         String data = callbackQuery.data();
-        Long chatID = message.from().id();
+        Long chatID = maybeInaccessibleMessage.chat().id();
         switch (state) {
             case VIEW_ASSIGNED_ORDERS -> handleViewAssignedOrders(chatID, data);
             case VIEW_ACTIVE_ORDERS -> {
@@ -75,7 +76,7 @@ public class DeliveryMenuCallbackProcessor implements Processor<DeliveryMenuStat
         return telegramDelivererService.getDeliverByTelegramId(telegramUser.getId());
     }
 
-    private TelegramUser getTelegramUser(Long chatID) {
+    private TelegramUser getTelegramUser(@NonNull Long chatID) {
         return telegramUserService.findByChatID(chatID);
     }
 

@@ -8,6 +8,7 @@ import com.pdp.telegram.service.telegramUser.TelegramUserService;
 import com.pdp.telegram.state.State;
 import com.pdp.telegram.state.telegramUser.UserMenuOptionState;
 import com.pdp.telegram.state.telegramUser.UserViewState;
+import com.pdp.utils.factory.InlineKeyboardMarkupFactory;
 import com.pdp.utils.factory.SendMessageFactory;
 import com.pdp.utils.factory.SendPhotoFactory;
 import com.pdp.utils.source.MessageSourceUtils;
@@ -16,6 +17,8 @@ import com.pdp.web.model.branch.Branch;
 import com.pdp.web.model.brand.Brand;
 import com.pdp.web.model.category.Category;
 import com.pdp.web.model.customerOrder.CustomerOrder;
+import com.pdp.web.model.foodBrandMapping.FoodBrandMapping;
+import com.pdp.web.model.order.Order;
 import com.pdp.web.service.branch.BranchService;
 import com.pdp.web.service.brand.BrandService;
 import com.pdp.web.service.category.CategoryService;
@@ -29,6 +32,7 @@ import com.pengrad.telegrambot.model.User;
 import com.pengrad.telegrambot.request.SendMessage;
 import lombok.NonNull;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -60,11 +64,44 @@ public class UserViewMessageProcessor implements Processor<UserViewState> {
                 handleViewCategories(text, chatID);
             }
             case VIEW_FOODS -> {
-
+                handleViewFoods(text, chatID);
             }
             case COUNT -> {
+                handleOrderCount(text, chatID);
             }
         }
+    }
+
+    private void handleOrderCount(String text, Long chatID) {
+        if (checkLocalizedMessage(text, "button.back", chatID)) {
+            updateTelegramUserState(chatID, UserViewState.VIEW_FOODS);
+            CustomerOrder notConfirmedOrder = customerOrderService.getNotConfirmedOrder(getTelegramUser(chatID).getId());
+            if (notConfirmedOrder == null) {
+                invalidSelectionSender(chatID);
+                return;
+            }
+            UUID brandID = branchService.getByID(notConfirmedOrder.getBranchID()).getBrandID();
+            Category category = categoryService.getCategoryByBrandID(brandID, text);
+            if (category == null) {
+                invalidSelectionSender(chatID);
+                return;
+            }
+            bot.execute(SendMessageFactory.sendMessageBackButton(chatID, getTelegramUserLanguage(chatID)));
+            bot.execute(SendPhotoFactory.sendPhotoCategoryWithFoodsButton(chatID, brandID, category.getName()));
+        } else invalidSelectionSender(chatID);
+    }
+
+    private void handleViewFoods(String text, Long chatID) {
+        if (checkLocalizedMessage(text, "button.back", chatID)) {
+            updateTelegramUserState(chatID, UserViewState.VIEW_CATEGORIES);
+            CustomerOrder notConfirmedOrder = customerOrderService.getNotConfirmedOrder(getTelegramUser(chatID).getId());
+            if (notConfirmedOrder == null) {
+                invalidSelectionSender(chatID);
+                return;
+            }
+            UUID brandID = branchService.getByID(notConfirmedOrder.getBranchID()).getBrandID();
+            bot.execute(SendMessageFactory.sendMessageBrandCategoriesMenu(chatID, brandID, getTelegramUserLanguage(chatID)));
+        } else invalidSelectionSender(chatID);
     }
 
     private void handleViewCategories(String text, Long chatID) {
@@ -85,6 +122,7 @@ public class UserViewMessageProcessor implements Processor<UserViewState> {
             return;
         }
         updateTelegramUserState(chatID, UserViewState.VIEW_FOODS);
+        bot.execute(SendMessageFactory.sendMessageBackButton(chatID, getTelegramUserLanguage(chatID)));
         bot.execute(SendPhotoFactory.sendPhotoCategoryWithFoodsButton(chatID, brandID, category.getName()));
     }
 

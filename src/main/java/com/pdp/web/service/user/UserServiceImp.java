@@ -68,7 +68,7 @@ public class UserServiceImp implements UserService {
      * @return true if the user was successfully updated, false otherwise.
      */
     @Override
-    public boolean update(User user) {
+    public boolean update(@NotNull User user) {
         List<User> users = getAll();
         Optional<User> userOptional = users.stream()
                 .filter(o -> o.getId().equals(user.getId()))

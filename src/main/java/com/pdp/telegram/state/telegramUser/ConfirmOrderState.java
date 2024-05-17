@@ -12,6 +12,7 @@ import lombok.Getter;
  */
 @Getter
 public enum ConfirmOrderState implements State {
+    REQUEST_PAYMENT_TYPE,
     REQUEST_PHONE_NUMBER_FROM_USER,
     REQUEST_LOCATION_FROM_USER
 }

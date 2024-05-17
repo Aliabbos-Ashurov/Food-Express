@@ -46,10 +46,10 @@ public class OrderPlacementMessageProcessor implements Processor<OrderPlacementS
         User user = message.from();
         Long chatID = user.id();
         String text = message.text();
-        if (Objects.requireNonNull(state) == VIEW_CART) handleViewCart(text, chatID, getTelegramUser(chatID));
+        if (Objects.requireNonNull(state) == VIEW_CART) handleViewCart(text, chatID);
     }
 
-    private void handleViewCart(String text, Long chatID, TelegramUser telegramUser) {
+    private void handleViewCart(String text, Long chatID) {
         if (checkLocalizedMessage(text, "button.back", chatID)) handleBackToMain(chatID);
         else if (checkLocalizedMessage(text, "alert.make.order", chatID)) {
             handleMakeOrder(chatID);
@@ -61,9 +61,9 @@ public class OrderPlacementMessageProcessor implements Processor<OrderPlacementS
     private void handleMakeOrder(Long chatID) {
         TelegramUser telegramUser = getTelegramUser(chatID);
         if (checkNotConfirmedOrder(chatID)) {
-            telegramUser.setState(ConfirmOrderState.REQUEST_PHONE_NUMBER_FROM_USER);
+            telegramUser.setState(ConfirmOrderState.REQUEST_PAYMENT_TYPE);
             telegramUserService.update(telegramUser);
-            bot.execute(SendMessageFactory.sendMessageContact(chatID, getTelegramUserLanguage(chatID)));
+            bot.execute(SendMessageFactory.sendMessagePaymentType(chatID, getTelegramUserLanguage(chatID)));
         } else {
             bot.execute(new SendMessage(chatID, MessageSourceUtils.getLocalizedMessage("info.emptyCartMessage", getTelegramUserLanguage(chatID))));
         }
