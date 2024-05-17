@@ -51,6 +51,7 @@ public class UserMenuOptionMessageProcessor implements Processor<UserMenuOptionS
     private void processCourierRegistration(String text, Long chatID) {
         if (fullNameMatcher(text)) {
             buildDeliverer(chatID, text);
+            updateTelegramUserState(chatID, CourierRegistrationState.ENTER_PHONE_NUMBER);
             bot.execute(SendMessageFactory.sendMessageContact(chatID, getTelegramUserLanguage(chatID)));
         } else fullNameNotMatchedSender(chatID);
     }
@@ -69,11 +70,12 @@ public class UserMenuOptionMessageProcessor implements Processor<UserMenuOptionS
         if (checkLocalizedMessage("button.cart", text, chatID)) {
             updateTelegramUserState(chatID, OrderPlacementState.VIEW_CART);
             bot.execute(SendMessageFactory.sendMessageOrderManagementMenu(chatID, getTelegramUserLanguage(chatID)));
+            bot.execute(SendMessageFactory.sendMessageUserOrderNotConfirmed(chatID, getTelegramUser(chatID).getId(), getTelegramUserLanguage(chatID)));
         } else if (checkLocalizedMessage("button.select.brand", text, chatID)) {
             updateTelegramUserState(chatID, UserViewState.VIEW_BRANDS);
             bot.execute(SendMessageFactory.sendMessageWithBrandsMenu(chatID, getTelegramUserLanguage(chatID)));
         } else if (checkLocalizedMessage("button.back", text, chatID)) {
-            updateTelegramUserState(chatID, UserMenuOptionState.PLACE_ORDER);
+            updateTelegramUserState(chatID, DefaultState.BASE_USER_MENU);
             bot.execute(SendMessageFactory.sendMessageWithUserMenu(chatID, getTelegramUserLanguage(chatID)));
         } else invalidSelectionSender(chatID);
     }

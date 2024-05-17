@@ -58,6 +58,15 @@ public class OrderServiceImp implements OrderService {
         return instance;
     }
 
+    @Override
+    public void clearByCustomer(UUID customerOrderID) {
+        List<Order> orders = getAll();
+        List<Order> orderList = orders.stream().filter(order -> Objects.equals(order.getCustomerOrderID(), customerOrderID))
+                .toList();
+        orders.removeAll(orderList);
+        repository.save(orders);
+    }
+
     /**
      * Retrieves orders associated with a specific customer order identified by its UUID.
      *

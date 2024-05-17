@@ -46,10 +46,10 @@ public class CourierRegistrationMessageProcessor implements Processor<CourierReg
             case ENTER_TRANSPORT_NAME -> handleEnterTransportName(chatID, message.text());
             case ENTER_TRANSPORT_REGISTRATION_NUMBER -> handleEnterTransportRegistrationNumber(chatID, message.text());
         }
-        System.out.println(message.contact());
     }
 
     private void handleEnterPhoneNumber(Long chatID, Contact contact) {
+        System.out.println(contact);
         if (Objects.isNull(contact)) {
             invalidSelectionSender(chatID);
             return;

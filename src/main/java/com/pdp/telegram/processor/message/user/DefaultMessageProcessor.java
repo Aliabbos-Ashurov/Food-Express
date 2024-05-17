@@ -8,8 +8,6 @@ import com.pdp.telegram.service.telegramUser.TelegramUserService;
 import com.pdp.telegram.state.DefaultState;
 import com.pdp.telegram.state.State;
 import com.pdp.telegram.state.telegramDeliverer.DeliveryMenuState;
-import com.pdp.telegram.state.telegramUser.CourierRegistrationState;
-import com.pdp.telegram.state.telegramUser.OrderPlacementState;
 import com.pdp.telegram.state.telegramUser.UserMenuOptionState;
 import com.pdp.utils.factory.SendMessageFactory;
 import com.pdp.utils.source.MessageSourceUtils;

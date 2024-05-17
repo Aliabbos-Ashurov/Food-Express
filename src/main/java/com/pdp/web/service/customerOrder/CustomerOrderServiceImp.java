@@ -35,6 +35,14 @@ public class CustomerOrderServiceImp implements CustomerOrderService {
         return instance;
     }
 
+    @Override
+    public CustomerOrder getByUserID(@NonNull UUID userID) {
+        return getAll().stream()
+                .filter(customerOrder -> Objects.equals(customerOrder.getUserID(), userID))
+                .findFirst()
+                .orElse(null);
+    }
+
     /**
      * Retrieves all orders in process that are assigned to a specific deliverer.
      *

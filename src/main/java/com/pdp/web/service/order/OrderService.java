@@ -45,4 +45,6 @@ public interface OrderService extends BaseService<Order, List<Order>> {
      * @return A list of orders associated with the customer.
      */
     List<Order> getOrdersByCustomerID(UUID customerOrderID);
+
+    void clearByCustomer(UUID customerOrderID);
 }
