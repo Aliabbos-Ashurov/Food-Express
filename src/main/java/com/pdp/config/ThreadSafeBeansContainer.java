@@ -111,12 +111,6 @@ public class ThreadSafeBeansContainer {
     public static final ThreadLocal<ActivateOrderCallbackProcessor> activateOrderCallbackProcessor = ThreadLocal.withInitial(ActivateOrderCallbackProcessor::new);
     public static final ThreadLocal<DeliveryMenuCallbackProcessor> deliveryMenuCallbackProcessor = ThreadLocal.withInitial(DeliveryMenuCallbackProcessor::new);
     public static final ThreadLocal<ConfirmationCallbackProcessor> confirmationCallbackProcessor = ThreadLocal.withInitial(ConfirmationCallbackProcessor::new);
-    public static final ThreadLocal<ConfirmOrderCallbackProcessor> confirmOrderCallbackProcessor = ThreadLocal.withInitial(ConfirmOrderCallbackProcessor::new);
-    public static final ThreadLocal<CourierRegistrationCallbackProcessor> courierRegistrationCallbackProcessor = ThreadLocal.withInitial(CourierRegistrationCallbackProcessor::new);
-    public static final ThreadLocal<MyOrderCallbackProcessor> myOrderCallbackProcessor = ThreadLocal.withInitial(MyOrderCallbackProcessor::new);
-    public static final ThreadLocal<OrderManagementCallbackProcessor> orderManagementCallbackProcessor = ThreadLocal.withInitial(OrderManagementCallbackProcessor::new);
-    public static final ThreadLocal<OrderPlacementCallbackProcessor> orderPlacementCallbackProcessor = ThreadLocal.withInitial(OrderPlacementCallbackProcessor::new);
-    public static final ThreadLocal<UserMenuOptionCallbackProcessor> userMenuOptionCallbackProcessor = ThreadLocal.withInitial(UserMenuOptionCallbackProcessor::new);
     public static final ThreadLocal<UserViewCallbackProcessor> userViewCallbackProcessor = ThreadLocal.withInitial(UserViewCallbackProcessor::new);
     //Message
     public static final ThreadLocal<ActivateOrderMessageProcessor> activateOrderMessageProcessor = ThreadLocal.withInitial(ActivateOrderMessageProcessor::new);

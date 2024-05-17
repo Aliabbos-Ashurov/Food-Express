@@ -28,22 +28,10 @@ public class CallbackHandler implements Handler {
         TelegramUser curUser = telegramUserService.findByChatID(chatID);
         State state = curUser.getState();
         switch (state) {
-            case UserMenuOptionState userMenuOptionState ->
-                    ThreadSafeBeansContainer.userMenuOptionCallbackProcessor.get().process(update, userMenuOptionState);
-            case OrderPlacementState orderPlacementState ->
-                    ThreadSafeBeansContainer.orderPlacementCallbackProcessor.get().process(update, orderPlacementState);
             case UserViewState userViewState ->
                     ThreadSafeBeansContainer.userViewCallbackProcessor.get().process(update, userViewState);
-            case ConfirmOrderState confirmOrderState ->
-                    ThreadSafeBeansContainer.confirmOrderCallbackProcessor.get().process(update, confirmOrderState);
-            case MyOrderState myOrderState ->
-                    ThreadSafeBeansContainer.myOrderCallbackProcessor.get().process(update, myOrderState);
-            case CourierRegistrationState courierRegistrationState ->
-                    ThreadSafeBeansContainer.courierRegistrationCallbackProcessor.get().process(update, courierRegistrationState);
             case ConfirmationState confirmationState ->
                     ThreadSafeBeansContainer.confirmationCallbackProcessor.get().process(update, confirmationState);
-            case OrderManagementState orderManagementState ->
-                    ThreadSafeBeansContainer.orderManagementCallbackProcessor.get().process(update, orderManagementState);
             case DeliveryMenuState deliveryMenuState ->
                     ThreadSafeBeansContainer.deliveryMenuCallbackProcessor.get().process(update, deliveryMenuState);
             case ActiveOrderManagementState activateOrder ->

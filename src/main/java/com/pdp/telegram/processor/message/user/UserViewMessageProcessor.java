@@ -9,10 +9,12 @@ import com.pdp.telegram.state.State;
 import com.pdp.telegram.state.telegramUser.UserMenuOptionState;
 import com.pdp.telegram.state.telegramUser.UserViewState;
 import com.pdp.utils.factory.SendMessageFactory;
+import com.pdp.utils.factory.SendPhotoFactory;
 import com.pdp.utils.source.MessageSourceUtils;
 import com.pdp.web.enums.Language;
 import com.pdp.web.model.branch.Branch;
 import com.pdp.web.model.brand.Brand;
+import com.pdp.web.model.category.Category;
 import com.pdp.web.model.customerOrder.CustomerOrder;
 import com.pdp.web.service.branch.BranchService;
 import com.pdp.web.service.brand.BrandService;
@@ -55,13 +57,27 @@ public class UserViewMessageProcessor implements Processor<UserViewState> {
                 handleViewBrands(text, chatID);
             }
             case VIEW_CATEGORIES -> {
+                if (checkLocalizedMessage(text, "button.back", chatID)) {
+                    updateTelegramUserState(chatID, UserViewState.VIEW_BRANDS);
+                    bot.execute(SendMessageFactory.sendMessageWithBrandsMenu(chatID, getTelegramUserLanguage(chatID)));
+                    return;
+                }
                 TelegramUser telegramUser = getTelegramUser(chatID);
                 CustomerOrder customerOrder = customerOrderService.getByUserID(telegramUser.getId());
                 UUID branchID = customerOrder.getBranchID();
                 Branch branch = branchService.getByID(branchID);
                 UUID brandID = branch.getBrandID();
+
+                Category category = categoryService.getCategoryByBrandID(brandID, text);
+                if (category == null) {
+                    invalidSelectionSender(chatID);
+                    return;
+                }
+                updateTelegramUserState(chatID, UserViewState.VIEW_FOODS);
+                bot.execute(SendPhotoFactory.sendPhotoCategoryWithFoodsButton(chatID, brandID, category.getName()));
             }
             case VIEW_FOODS -> {
+
             }
             case COUNT -> {
             }
@@ -72,27 +88,26 @@ public class UserViewMessageProcessor implements Processor<UserViewState> {
         if (checkLocalizedMessage(text, "button.back", chatID)) {
             updateTelegramUserState(chatID, UserMenuOptionState.PLACE_ORDER);
             bot.execute(SendMessageFactory.sendMessageOrderPlacementMenu(chatID, getTelegramUserLanguage(chatID)));
-        } else if (checkLocalizedMessage(text, "button.cart", chatID)) {
-
         } else {
             Brand brand = brandService.getBrandByName(text);
             if (brand == null) {
                 invalidSelectionSender(chatID);
                 return;
             }
+            bot.execute(SendPhotoFactory.sendPhotoBrandWithDescription(chatID, brand.getId()));
             updateTelegramUserState(chatID, UserViewState.VIEW_CATEGORIES);
             TelegramUser telegramUser = getTelegramUser(chatID);
             UUID brandID = brand.getId();
-            CustomerOrder customerOrder = customerOrderService.getOrCreate(telegramUser.getId(), brandID);
+            Branch branch = branchService.getBrandBranches(brandID).getFirst();
+            CustomerOrder customerOrder = customerOrderService.getOrCreate(telegramUser.getId(), branch.getId());
             bot.execute(SendMessageFactory.sendMessageBrandCategoriesMenu(chatID, brandID, getTelegramUserLanguage(chatID)));
         }
     }
 
-    private TelegramUser updateTelegramUserState(@NonNull Long chatID, @NonNull State state) {
+    private void updateTelegramUserState(@NonNull Long chatID, @NonNull State state) {
         TelegramUser telegramUser = getTelegramUser(chatID);
         telegramUser.setState(state);
         telegramUserService.update(telegramUser);
-        return telegramUser;
     }
 
     private TelegramUser getTelegramUser(Long chatID) {
