@@ -261,7 +261,7 @@ public class SendMessageFactory {
         for (int i = 0; i < orders.size(); i++) {
             Food food = foodService.getByID(orders.get(i).getFoodID());
             Order order = orders.get(i);
-            formatBuilder.append(String.format((i + 1) + " - %s: %d x $%.2f\n", food.getName(), order.getFoodQuantity(), order.getFoodPrice()));
+            formatBuilder.append(String.format((i + 1) + " - %s: %d x %.2f\n", food.getName(), order.getFoodQuantity(), order.getFoodPrice()));
         }
         return formatBuilder.toString();
     }

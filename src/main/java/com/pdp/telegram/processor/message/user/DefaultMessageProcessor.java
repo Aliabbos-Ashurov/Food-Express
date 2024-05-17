@@ -3,9 +3,11 @@ package com.pdp.telegram.processor.message.user;
 import com.pdp.config.TelegramBotConfiguration;
 import com.pdp.config.ThreadSafeBeansContainer;
 import com.pdp.telegram.model.telegramDeliverer.TelegramDeliverer;
+import com.pdp.telegram.model.telegramTransport.TelegramTransport;
 import com.pdp.telegram.model.telegramUser.TelegramUser;
 import com.pdp.telegram.processor.Processor;
 import com.pdp.telegram.service.telegramDeliverer.TelegramDelivererService;
+import com.pdp.telegram.service.telegramTransport.TelegramTransportService;
 import com.pdp.telegram.service.telegramUser.TelegramUserService;
 import com.pdp.telegram.state.DefaultState;
 import com.pdp.telegram.state.State;
@@ -15,6 +17,11 @@ import com.pdp.utils.factory.ReplyKeyboardMarkupFactory;
 import com.pdp.utils.factory.SendMessageFactory;
 import com.pdp.utils.source.MessageSourceUtils;
 import com.pdp.web.enums.Language;
+import com.pdp.web.enums.role.Role;
+import com.pdp.web.model.customerOrder.CustomerOrder;
+import com.pdp.web.model.order.Order;
+import com.pdp.web.service.customerOrder.CustomerOrderService;
+import com.pdp.web.service.order.OrderService;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.Update;
@@ -29,6 +36,9 @@ public class DefaultMessageProcessor implements Processor<DefaultState> {
     private final TelegramBot bot = TelegramBotConfiguration.get();
     private final TelegramUserService telegramUserService = ThreadSafeBeansContainer.telegramUserServiceThreadLocal.get();
     private final TelegramDelivererService telegramDelivererService = ThreadSafeBeansContainer.telegramDelivererServiceThreadLocal.get();
+    private final TelegramTransportService telegramTransportService = ThreadSafeBeansContainer.telegramTransportServiceThreadLocal.get();
+    private final CustomerOrderService customerOrderService = ThreadSafeBeansContainer.customerOrderServiceThreadLocal.get();
+    private final OrderService orderService = ThreadSafeBeansContainer.orderServiceThreadLocal.get();
 
     @Override
     public void process(Update update, DefaultState state) {
@@ -77,12 +87,6 @@ public class DefaultMessageProcessor implements Processor<DefaultState> {
         }
     }
 
-    private void updateTelegramUserState(Long chatID, State state) {
-        TelegramUser telegramUser = getTelegramUser(chatID);
-        telegramUser.setState(state);
-        telegramUserService.update(telegramUser);
-    }
-
     private void processDelivererMenuSelection(String text, Long chatID) {
         if (checkLocalizedMessage(text, "button.assigned", chatID)) {
             updateTelegramUserState(chatID, DeliveryMenuState.VIEW_ASSIGNED_ORDERS);
@@ -94,7 +98,32 @@ public class DefaultMessageProcessor implements Processor<DefaultState> {
             Language language = getTelegramUserLanguage(chatID);
             List<SendMessage> sendMessages = SendMessageFactory.sendMessagesOrdersInProcessForDeliverer(chatID, getTelegramDeliverer(chatID).getId(), language);
             processMessagesActive(sendMessages, () -> SendMessageFactory.sendMessageNoOrderActiveForDeliverer(chatID, language), chatID, language);
+        } else if (checkLocalizedMessage(text, "button.log.out", chatID)) {
+            TelegramUser telegramUser = getTelegramUser(chatID);
+            telegramUser.setState(DefaultState.BASE_USER_MENU);
+            telegramUser.setRole(Role.USER);
+            telegramUserService.update(telegramUser);
+            bot.execute(SendMessageFactory.sendMessageWithUserMenu(chatID, getTelegramUserLanguage(chatID)));
+
+            TelegramDeliverer telegramDeliverer = telegramDelivererService.getDeliverByTelegramId(telegramUser.getId());
+            telegramDelivererService.remove(telegramDeliverer.getId());
+
+            TelegramTransport telegramTransport = telegramTransportService.getTransportByDeliverID(telegramDeliverer.getId());
+            telegramTransportService.remove(telegramTransport.getId());
+
+            List<CustomerOrder> processByDeliverer = customerOrderService.getOrdersInProcessByDeliverer(telegramDeliverer.getId());
+            CustomerOrder customerOrder = processByDeliverer.getFirst();
+            List<Order> orders = orderService.getOrdersByCustomerID(customerOrder.getId());
+
+            orders.forEach(order -> orderService.remove(order.getId()));
+            customerOrderService.remove(customerOrder.getId());
         }
+    }
+
+    private void updateTelegramUserState(Long chatID, State state) {
+        TelegramUser telegramUser = getTelegramUser(chatID);
+        telegramUser.setState(state);
+        telegramUserService.update(telegramUser);
     }
 
     private void processMessagesActive(List<SendMessage> sendMessages, Supplier<SendMessage> supplier, Long chatID, Language language) {

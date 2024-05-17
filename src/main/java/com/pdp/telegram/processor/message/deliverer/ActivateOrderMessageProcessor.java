@@ -59,7 +59,6 @@ public class ActivateOrderMessageProcessor implements Processor<ActiveOrderManag
         if (checkLocalizedMessage(text, "order.delivered", chatID)) {
             orderDelivered(chatID);
         } else if (checkLocalizedMessage(text, "order.failed", chatID)) {
-
         }
     }
 
