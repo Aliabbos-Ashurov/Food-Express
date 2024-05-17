@@ -25,6 +25,7 @@ public class ActivateOrderMessageProcessor implements Processor<ActiveOrderManag
         Long chatID = user.id();
         if (state.equals(ActiveOrderManagementState.CONFIRM_ORDER_PICKUP)) {
 
+
         } else if (state.equals(ActiveOrderManagementState.CONFIRM_ORDER_DELIVERY)) {
 
         } else if (state.equals(ActiveOrderManagementState.DELIVERY_FAILED)) {

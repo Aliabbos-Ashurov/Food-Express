@@ -1,7 +1,10 @@
 package com.pdp;
 
+import com.pdp.config.TelegramBotConfiguration;
 import com.pdp.config.ThreadSafeBeansContainer;
-import com.pdp.controller.UserController;
+import com.pdp.telegram.service.telegramUser.TelegramUserService;
+import com.pdp.utils.factory.SendMessageFactory;
+import com.pdp.utils.factory.SendPhotoFactory;
 import com.pdp.web.service.address.AddressService;
 import com.pdp.web.service.branch.BranchService;
 import com.pdp.web.service.branchLocation.BranchLocationService;
@@ -15,6 +18,13 @@ import com.pdp.web.service.foodBrandMapping.FoodBrandMappingService;
 import com.pdp.web.service.order.OrderService;
 import com.pdp.web.service.transport.TransportService;
 import com.pdp.web.service.user.UserService;
+import com.pengrad.telegrambot.TelegramBot;
+import com.pengrad.telegrambot.UpdatesListener;
+import com.pengrad.telegrambot.model.Message;
+import com.pengrad.telegrambot.model.Update;
+import com.pengrad.telegrambot.model.User;
+
+import java.util.UUID;
 
 /**
  * @author Aliabbos Ashurov
@@ -34,10 +44,22 @@ public class Test {
     private static final TransportService transportService = ThreadSafeBeansContainer.transportServiceThreadLocal.get();
     private static final UserService userService = ThreadSafeBeansContainer.userServiceThreadLocal.get();
     private static final BranchLocationService branchLocationService = ThreadSafeBeansContainer.branchLocationServiceThreadLocal.get();
+    private static final TelegramUserService telegramUserService = ThreadSafeBeansContainer.telegramUserServiceThreadLocal.get();
+    private static final TelegramBot telegramBot = TelegramBotConfiguration.get();
 
     public static void main(String[] args) {
-        UserController.startApplication();
-        //fillDefaultObjects();
+        telegramBot.setUpdatesListener(updates -> {
+            for (Update update : updates) {
+                Message message = update.message();
+                if (message != null) {
+                    User from = message.from();
+                    Long id = from.id();
+                    telegramBot.execute(SendPhotoFactory.sendPhotoCategoryWithFoodsButton(id, UUID.fromString("f60fc7f6-930b-4d00-ad64-2526e1459bce"), "LANCHBOKS"));
+                } else {
+                }
+            }
+            return UpdatesListener.CONFIRMED_UPDATES_ALL;
+        });
     }
 
     private static void fillDefaultObjects() {

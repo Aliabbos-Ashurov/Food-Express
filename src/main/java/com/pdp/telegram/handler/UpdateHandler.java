@@ -13,7 +13,7 @@ import java.util.concurrent.CompletableFuture;
  **/
 public class UpdateHandler {
     public void handle(List<Update> updates) {
-        CompletableFuture.runAsync(() -> {
+        //CompletableFuture.runAsync(() -> {
             for (Update update : updates) {
                 if (Objects.nonNull(update.message())) {
                     ThreadSafeBeansContainer.messageHandlerThreadLocal.get().handle(update);
@@ -21,6 +21,6 @@ public class UpdateHandler {
                     ThreadSafeBeansContainer.callbackHandlerThreadLocal.get().handle(update);
                 }
             }
-        }, ThreadSafeBeansContainer.executor);
+        //}, ThreadSafeBeansContainer.executor);
     }
 }

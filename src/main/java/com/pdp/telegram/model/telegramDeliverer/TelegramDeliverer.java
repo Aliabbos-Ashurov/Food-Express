@@ -2,6 +2,7 @@ package com.pdp.telegram.model.telegramDeliverer;
 
 import com.google.gson.annotations.SerializedName;
 import com.pdp.java.console.support.Displayable;
+import com.pdp.web.enums.telegram.DeliveryStatus;
 import com.pdp.web.model.BaseModel;
 import lombok.*;
 
@@ -26,6 +27,8 @@ public class TelegramDeliverer extends BaseModel implements Displayable {
     @SerializedName("telegram_user_id")
     private UUID telegramUserID;
     private String fullname;
+    @Builder.Default
+    private DeliveryStatus deliveryStatus = DeliveryStatus.EMPTY;
 
     /**
      * Retrieves the display name of the Telegram deliverer.

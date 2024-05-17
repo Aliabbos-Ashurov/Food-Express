@@ -58,6 +58,26 @@ public class SendMessageFactory {
         return createMessage(chatID, message, ReplyKeyboardMarkupFactory.backButton(language));
     }
 
+    public static SendMessage sendMessageNoOrderForDeliverer(Object chatID, Language language) {
+        String message = MessageSourceUtils.getLocalizedMessage("alert.deliverer.no.order", language);
+        return createMessage(chatID, message, ReplyKeyboardMarkupFactory.backButton(language));
+    }
+
+    public static SendMessage sendMessageOrderReceived(Object chatID, Language language) {
+        String message = MessageSourceUtils.getLocalizedMessage("order.accepted", language);
+        return createMessage(chatID, message, ReplyKeyboardMarkupFactory.deliverButtons(language));
+    }
+
+    public static SendMessage sendMessageOrderCloser(Object chatID, Language language) {
+        String message = MessageSourceUtils.getLocalizedMessage("order.already.got", language);
+        return createMessage(chatID, message, ReplyKeyboardMarkupFactory.backButton(language));
+    }
+
+    public static SendMessage sendMessageNoOrderActiveForDeliverer(Object chatID, Language language) {
+        String message = MessageSourceUtils.getLocalizedMessage("alert.deliverer.no.order.active", language);
+        return createMessage(chatID, message, ReplyKeyboardMarkupFactory.backButton(language));
+    }
+
     public static SendMessage sendMessageCartCleared(Object chatID, Language language) {
         String message = MessageSourceUtils.getLocalizedMessage("alert.cart.cleaned", language);
         return createMessage(chatID, message, ReplyKeyboardMarkupFactory.orderManagementButtons(language));
@@ -107,6 +127,16 @@ public class SendMessageFactory {
     public static SendMessage sendMessageMyOderMenu(Object chatID, Language language) {
         String message = MessageSourceUtils.getLocalizedMessage("alert.choose", language);
         return createMessage(chatID, message, ReplyKeyboardMarkupFactory.myOrderButtons(language));
+    }
+
+    public static SendMessage sendMessageOrderProcess1(Object chatID, Language language) {
+        String message = MessageSourceUtils.getLocalizedMessage("alert.choose", language);
+        return createMessage(chatID, message, ReplyKeyboardMarkupFactory.orderProcessButtons1(language));
+    }
+
+    public static SendMessage sendMessageOrderProcess2(Object chatID, Language language) {
+        String message = MessageSourceUtils.getLocalizedMessage("alert.choose", language);
+        return createMessage(chatID, message, ReplyKeyboardMarkupFactory.orderProcessButtons2(language));
     }
 
     public static SendMessage sendMessageUpdateOrder(Object chatID, UUID orderID, Language language) {
@@ -166,7 +196,7 @@ public class SendMessageFactory {
         List<CustomerOrder> pendingOrdersForDeliverer = customerOrderService.getPendingOrdersForDeliverer();
         return pendingOrdersForDeliverer.stream().map((customerOrder -> {
             String format = customerOrderFormatForDeliverer(customerOrder, language);
-            return new SendMessage(chatID, format);
+            return createMessage(chatID, format, InlineKeyboardMarkupFactory.checkMarkButton(customerOrder));
         })).toList();
     }
 

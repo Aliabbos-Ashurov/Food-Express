@@ -60,11 +60,23 @@ public class ReplyKeyboardMarkupFactory {
         return makeReplyKeyboardButtonsByStringsList(List.of(placeOrder, myOrders, registerAsACourier), true);
     }
 
+    public static ReplyKeyboardMarkup orderProcessButtons1(Language language) {
+        String gotFromPlace = MessageSourceUtils.getLocalizedMessage("order.got.place", language);
+        String orderFailed = MessageSourceUtils.getLocalizedMessage("order.failed", language);
+        return makeReplyKeyboardButtonsByStringsList(List.of(gotFromPlace, orderFailed), true, getBackMessage(language));
+    }
+
+    public static ReplyKeyboardMarkup orderProcessButtons2(Language language) {
+        String gotFromPlace = MessageSourceUtils.getLocalizedMessage("order.delivered", language);
+        String orderFailed = MessageSourceUtils.getLocalizedMessage("order.failed", language);
+        return makeReplyKeyboardButtonsByStringsList(List.of(gotFromPlace, orderFailed), true, getBackMessage(language));
+    }
+
     public static ReplyKeyboardMarkup deliverButtons(Language language) {
         String assigned = MessageSourceUtils.getLocalizedMessage("button.assigned", language);
         String activeOrder = MessageSourceUtils.getLocalizedMessage("button.active.order", language);
         String logOut = MessageSourceUtils.getLocalizedMessage("button.log.out", language);
-        return makeReplyKeyboardButtonsByStringsList(List.of(assigned, activeOrder, logOut), false);
+        return makeReplyKeyboardButtonsByStringsList(List.of(assigned, activeOrder, logOut), true);
     }
 
     public static ReplyKeyboardMarkup myOrderButtons(Language language) {
