@@ -1,11 +1,14 @@
 package com.pdp.telegram.handler;
 
 import com.pdp.config.ThreadSafeBeansContainer;
+import com.pengrad.telegrambot.UpdatesListener;
 import com.pengrad.telegrambot.model.Update;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.BiFunction;
 
 /**
  * @author Doniyor Nishonov
@@ -13,7 +16,12 @@ import java.util.concurrent.CompletableFuture;
  **/
 public class UpdateHandler {
     public void handle(List<Update> updates) {
-        //CompletableFuture.runAsync(() -> {
+//        startWithCompletableFuture(updates);
+        start(updates);
+    }
+
+    private static void startWithCompletableFuture(List<Update> updates) {
+        CompletableFuture.runAsync(() -> {
             for (Update update : updates) {
                 if (Objects.nonNull(update.message())) {
                     ThreadSafeBeansContainer.messageHandlerThreadLocal.get().handle(update);
@@ -21,6 +29,16 @@ public class UpdateHandler {
                     ThreadSafeBeansContainer.callbackHandlerThreadLocal.get().handle(update);
                 }
             }
-        //}, ThreadSafeBeansContainer.executor);
+        }, ThreadSafeBeansContainer.executor);
+    }
+
+    private static void start(List<Update> updates) {
+        for (Update update : updates) {
+            if (Objects.nonNull(update.message())) {
+                ThreadSafeBeansContainer.messageHandlerThreadLocal.get().handle(update);
+            } else if (Objects.nonNull(update.callbackQuery())) {
+                ThreadSafeBeansContainer.callbackHandlerThreadLocal.get().handle(update);
+            }
+        }
     }
 }

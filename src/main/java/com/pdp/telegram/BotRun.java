@@ -18,6 +18,6 @@ public class BotRun {
         bot.setUpdatesListener(updates -> {
             updateHandler.handle(updates);
             return UpdatesListener.CONFIRMED_UPDATES_ALL;
-        });
+        },Exception::printStackTrace);
     }
 }

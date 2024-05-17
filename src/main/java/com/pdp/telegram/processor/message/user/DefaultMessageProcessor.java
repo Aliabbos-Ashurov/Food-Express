@@ -48,9 +48,10 @@ public class DefaultMessageProcessor implements Processor<DefaultState> {
     private void processLanguageSelection(String text, Long chatID) {
         TelegramUser telegramUser = getTelegramUser(chatID);
         Language selectedLanguage = null;
-        if (text.startsWith("UZ")) {
+        if (text == null) return;
+        if (Objects.equals(text.substring(0, 2), "UZ")) {
             selectedLanguage = Language.UZ;
-        } else if (text.startsWith("EN")) {
+        } else if (Objects.equals(text.substring(0, 2), "EN")) {
             selectedLanguage = Language.EN;
         }
         if (selectedLanguage != null) {
