@@ -22,7 +22,6 @@ import com.pengrad.telegrambot.model.User;
 import com.pengrad.telegrambot.request.SendMessage;
 import lombok.NonNull;
 
-import java.util.List;
 import java.util.Objects;
 
 /**

@@ -94,10 +94,17 @@ public class CustomerOrderServiceImp implements CustomerOrderService {
      */
     @Override
     public CustomerOrder getOrCreate(@NonNull UUID userId, @NonNull UUID branchID) {
-        return getAll().stream()
+        Optional<CustomerOrder> first = getAll().stream()
                 .filter(customerOrder -> customerOrder.getUserID().equals(userId)
                         && customerOrder.getOrderStatus().equals(OrderStatus.NOT_CONFIRMED))
-                .findFirst().orElseGet(() -> {
+                .findFirst();
+        if (first.isPresent()) {
+            CustomerOrder customerOrder = first.get();
+            customerOrder.setBranchID(branchID);
+            update(customerOrder);
+            return customerOrder;
+        }
+        return first.orElseGet(() -> {
                     CustomerOrder build = CustomerOrder.builder()
                             .userID(userId)
                             .orderStatus(OrderStatus.NOT_CONFIRMED)
