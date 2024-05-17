@@ -94,7 +94,7 @@
     "image_url": "AgACAgIAAxkBAAMnZkLs3HaIZr4cWw2Ej27mxZzTLRsAAlvaMRvgigFKMwfmkz5ALYgBAAMCAAN4AAM1BA",
     "description_id": "f1d17df9-f2f2-4828-8d3e-9d9c5802b8c4",
     "price": 31000,
-    "category_id": "c3e2dfca-2b1c-49a0-b260-b765b6b3fd04",
+    "category_id": "4625e307-408f-4595-b918-56cc7204cc8f",
     "id": "afc34b21-fdbd-44d9-8368-2968cfbfbc17",
     "created_at": "14/05/2024 10:26:26",
     "is_deleted": false
@@ -104,7 +104,7 @@
     "image_url": "AgACAgIAAxkBAAMoZkLs9Prd_ZuTLZ04Qug1W6cwvXUAAlvaMRvgigFKMwfmkz5ALYgBAAMCAAN4AAM1BA",
     "description_id": "30aa5924-db19-438b-b1b8-d18be603144e",
     "price": 31000,
-    "category_id": "b51fa69a-1cf9-46ca-aeff-f22369a45b6d",
+    "category_id": "4625e307-408f-4595-b918-56cc7204cc8f",
     "id": "d830e08f-5e05-4552-bebb-2cfb2a5505c5",
     "created_at": "14/05/2024 10:29:50",
     "is_deleted": false
@@ -114,7 +114,7 @@
     "image_url": "AgACAgIAAxkBAAMpZkLtEBkKjuKAXNFzS_iwI8JOTOwAAlvWMRsfPBlKeER8R3yF7Y8BAAMCAAN4AAM1BA",
     "description_id": "6287d5f8-8af6-47cc-b952-614d63266fbf",
     "price": 15000,
-    "category_id": "228af1f2-f9d6-4d31-9def-d83d7bb72977",
+    "category_id": "4625e307-408f-4595-b918-56cc7204cc8f",
     "id": "140916ee-f5e0-478f-9990-0516e9a04605",
     "created_at": "14/05/2024 10:31:24",
     "is_deleted": false
@@ -124,7 +124,7 @@
     "image_url": "AgACAgIAAxkBAAMqZkLtK0qSKyVvrI_xmt1KE5n99jsAAmTaMRvgigFKjtQGrBp700UBAAMCAAN4AAM1BA",
     "description_id": "91a7f9ad-0c75-43e9-a1db-5346c20832ef",
     "price": 37000,
-    "category_id": "ac4df0cd-e170-47f8-ae86-70d0123e7b18",
+    "category_id": "4625e307-408f-4595-b918-56cc7204cc8f",
     "id": "10fb63c5-d376-4eca-ac9f-239ddc5f059a",
     "created_at": "14/05/2024 10:32:35",
     "is_deleted": false
@@ -134,7 +134,7 @@
     "image_url": "AgACAgIAAxkBAAMrZkLtQHqIV05tgE70snS5pjunuegAAlzWMRsfPBlKvI12rTqIvW4BAAMCAAN4AAM1BA",
     "description_id": "ceab6211-bc5a-4105-b531-c46bf3242aeb",
     "price": 19000,
-    "category_id": "a4edaffe-42c9-4f20-9e71-b7d61d41d071",
+    "category_id": "4625e307-408f-4595-b918-56cc7204cc8f",
     "id": "a387eb03-69ce-423d-ae7f-49134527acc8",
     "created_at": "14/05/2024 10:34:21",
     "is_deleted": false
@@ -154,7 +154,7 @@
     "image_url": "AgACAgIAAxkBAAMtZkLteIqbxeU6BMRGCbArRN2o6RUAAoPaMRvgigFKW4Xk9py0xbMBAAMCAAN4AAM1BA",
     "description_id": "8a9d4e5a-9630-4d7a-b102-a6c70a4851ee",
     "price": 4000,
-    "category_id": "548d2591-6e58-4b6c-b4f6-29ba4e769a3c",
+    "category_id": "f3213e9b-6403-4eb5-8fb5-98667797844b",
     "id": "7dbffe69-b92d-4052-909a-6103f2d5061f",
     "created_at": "14/05/2024 10:37:27",
     "is_deleted": false
@@ -164,7 +164,7 @@
     "image_url": "AgACAgIAAxkBAAMuZkLtkAyyk23ry2u3U-dwEDoe1fsAAnraMRvgigFKJnHmPvStc64BAAMCAAN4AAM1BA",
     "description_id": "11ba54da-4ac2-4ae5-a849-fcfd0f6ca748",
     "price": 4000,
-    "category_id": "229aa4fa-3247-48b7-98b0-446da050dcae",
+    "category_id": "f3213e9b-6403-4eb5-8fb5-98667797844b",
     "id": "62f7845f-325f-40c8-a52a-d5811bbc395d",
     "created_at": "14/05/2024 10:38:03",
     "is_deleted": false
@@ -174,7 +174,7 @@
     "image_url": "AgACAgIAAxkBAAMvZkLtmyZFytXmsYGdOUvrK4w3gKkAAorcMRs_ughK08IotPMhIBsBAAMCAAN4AAM1BA",
     "description_id": "1543b48d-f4a0-4811-9f55-5f2f8787597c",
     "price": 4000,
-    "category_id": "3da37243-6995-450e-a59b-c50a8e925a1a",
+    "category_id": "f3213e9b-6403-4eb5-8fb5-98667797844b",
     "id": "f3676139-1699-41fc-90e2-885b3132fbb4",
     "created_at": "14/05/2024 10:38:45",
     "is_deleted": false
@@ -194,7 +194,7 @@
     "image_url": "AgACAgIAAxkBAAMxZkLt7vFrQIREIOvUGorRW0RRwEEAAmHWMRsfPBlKZyQAARxW8WGXAQADAgADeAADNQQ",
     "description_id": "b257581f-8b65-49a1-8a69-d1bf158fd9bb",
     "price": 35000,
-    "category_id": "3558e173-b9bb-48be-a5f1-12c26e177b7a",
+    "category_id": "5f9d4f12-b56e-4058-afdc-b80b77fae849",
     "id": "3ab9b3ad-0000-421b-9234-38d19b7b2de6",
     "created_at": "14/05/2024 10:42:59",
     "is_deleted": false
@@ -214,7 +214,7 @@
     "image_url": "AgACAgIAAxkBAAMzZkLuI2F5pL4B_Z_wmrKCNQ1EaEsAAmPWMRsfPBlKQBH9qx9GOGkBAAMCAAN4AAM1BA",
     "description_id": "690f2359-5fcf-4494-a24f-78eeadec53d5",
     "price": 130000,
-    "category_id": "095ee3a8-c9d0-4770-8a68-e4ca71b7b9a5",
+    "category_id": "18216ae1-23ea-4783-baab-26dc9fe274d1",
     "id": "74eb185f-b0b2-437c-acb8-b51e01f2394d",
     "created_at": "14/05/2024 10:46:37",
     "is_deleted": false
