@@ -25,7 +25,7 @@ public class ReplyKeyboardMarkupFactory {
     private static final CategoryService categoryService = ThreadSafeBeansContainer.categoryServiceThreadLocal.get();
 
     public static ReplyKeyboardMarkup selectLangButtons() {
-        return makeReplyKeyboardButtonsByStringsList(List.of("UZ \uD83C\uDDFA\uD83C\uDDFF", "EN \uD83C\uDDFA\uD83C\uDDF8"), true);
+        return makeReplyKeyboardButtonsByStringsList(List.of("UZ \uD83C\uDDFA\uD83C\uDDFF", "EN \uD83C\uDDFA\uD83C\uDDF8"), false);
     }
 
     public static ReplyKeyboardMarkup confirmLocationButton() {
@@ -50,21 +50,21 @@ public class ReplyKeyboardMarkupFactory {
     public static ReplyKeyboardMarkup registrationButtons(Language language) {
         String singIn = MessageSourceUtils.getLocalizedMessage("button.signIn", language);
         String singUp = MessageSourceUtils.getLocalizedMessage("button.signUp", language);
-        return makeReplyKeyboardButtonsByStringsList(List.of(singIn, singUp), true);
+        return makeReplyKeyboardButtonsByStringsList(List.of(singIn, singUp), false);
     }
 
     public static ReplyKeyboardMarkup userButtons(Language language) {
         String placeOrder = MessageSourceUtils.getLocalizedMessage("button.placeOrder", language);
         String myOrders = MessageSourceUtils.getLocalizedMessage("button.myOrders", language);
         String registerAsACourier = MessageSourceUtils.getLocalizedMessage("button.registerCourier", language);
-        return makeReplyKeyboardButtonsByStringsList(List.of(placeOrder, myOrders, registerAsACourier), true);
+        return makeReplyKeyboardButtonsByStringsList(List.of(placeOrder, myOrders, registerAsACourier), false);
     }
 
     public static ReplyKeyboardMarkup deliverButtons(Language language) {
         String assigned = MessageSourceUtils.getLocalizedMessage("button.assigned", language);
         String activeOrder = MessageSourceUtils.getLocalizedMessage("button.active.order", language);
         String logOut = MessageSourceUtils.getLocalizedMessage("button.log.out", language);
-        return makeReplyKeyboardButtonsByStringsList(List.of(assigned, activeOrder, logOut), true);
+        return makeReplyKeyboardButtonsByStringsList(List.of(assigned, activeOrder, logOut), false);
     }
 
     public static ReplyKeyboardMarkup myOrderButtons(Language language) {
