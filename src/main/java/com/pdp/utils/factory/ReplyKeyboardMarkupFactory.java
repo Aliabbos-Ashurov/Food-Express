@@ -94,7 +94,7 @@ public class ReplyKeyboardMarkupFactory {
     public static ReplyKeyboardMarkup viewBrandsButtons(Language language) {
         String backMessage = getBackMessage(language);
         String cartMessage = getCartMessage(language);
-        return makeReplyKeyboardButtons(brandService.getAll(), false, backMessage, cartMessage);
+        return makeReplyKeyboardButtons(brandService.getAll(), false, backMessage);
     }
 
     public static ReplyKeyboardMarkup viewBrandCategoriesButtons(UUID brandID, Language language) {
