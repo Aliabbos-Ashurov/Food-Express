@@ -68,9 +68,9 @@ public class DeliveryMenuCallbackProcessor implements Processor<DeliveryMenuStat
     }
 
     private void handleBackToMainMenu(@NonNull Long chatID) {
-        updateTelegramUserState(chatID, DefaultState.BASE_USER_MENU);
+        updateTelegramUserState(chatID, DefaultState.BASE_DELIVERER_MENU);
         Language telegramUserLanguage = getTelegramUserLanguage(chatID);
-        bot.execute(SendMessageFactory.sendMessageWithUserMenu(chatID, telegramUserLanguage));
+        bot.execute(SendMessageFactory.sendMessageDeliverMenu(chatID, telegramUserLanguage));
     }
 
     private void updateTelegramUserState(@NonNull Long chatID, @NonNull State state) {

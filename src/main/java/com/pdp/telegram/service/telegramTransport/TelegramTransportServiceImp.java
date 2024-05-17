@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -55,7 +56,7 @@ public class TelegramTransportServiceImp implements TelegramTransportService {
     public boolean add(@NonNull TelegramTransport telegramTransport) {
         List<TelegramTransport> telegramTransports = getAll();
         boolean anyMatch = telegramTransports.stream()
-                .anyMatch(transport -> transport.getRegisteredNumber().equals(telegramTransport.getRegisteredNumber()));
+                .anyMatch(transport -> Objects.equals(telegramTransport.getRegisteredNumber(), transport.getRegisteredNumber()));
         if (!anyMatch)
             repository.add(telegramTransport);
         return !anyMatch;

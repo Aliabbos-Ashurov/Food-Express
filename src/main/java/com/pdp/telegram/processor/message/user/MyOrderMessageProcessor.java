@@ -16,8 +16,6 @@ import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.model.User;
 import com.pengrad.telegrambot.request.SendMessage;
 
-import java.awt.desktop.AboutEvent;
-
 /**
  * @author Doniyor Nishonov
  * Date: 14/May/2024  18:09
@@ -32,8 +30,7 @@ public class MyOrderMessageProcessor implements Processor<MyOrderState> {
         User user = message.from();
         String text = message.text();
         Long chatID = user.id();
-        if (state.equals(MyOrderState.VIEW_ACTIVE_ORDERS) || state.equals(MyOrderState.VIEW_ARCHIVED_ORDERS)) {
-            System.out.println(text);
+        if (state.equals(MyOrderState.VIEW_ACTIVE_ORDERS_USER) || state.equals(MyOrderState.VIEW_ARCHIVED_ORDERS)) {
             if (checkLocalizedMessage("button.back", text, chatID)) back(chatID);
             else invalidSelectionSender(chatID);
         }

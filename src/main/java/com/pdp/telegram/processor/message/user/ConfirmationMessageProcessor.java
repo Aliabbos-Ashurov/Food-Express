@@ -51,7 +51,6 @@ public class ConfirmationMessageProcessor implements Processor<ConfirmationState
     }
 
     private void handleAcceptClearCart(String text, @NonNull Long chatID) {
-        System.out.println(text);
         if (checkLocalizedMessage(text, "button.yes", chatID)) {
             TelegramUser telegramUser = getTelegramUser(chatID);
             CustomerOrder notConfirmedOrder = customerOrderService.getNotConfirmedOrder(telegramUser.getId());

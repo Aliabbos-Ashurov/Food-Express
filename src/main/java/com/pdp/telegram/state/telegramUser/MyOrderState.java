@@ -12,6 +12,6 @@ import lombok.Getter;
  */
 @Getter
 public enum MyOrderState implements State {
-    VIEW_ACTIVE_ORDERS,
+    VIEW_ACTIVE_ORDERS_USER,
     VIEW_ARCHIVED_ORDERS
 }
