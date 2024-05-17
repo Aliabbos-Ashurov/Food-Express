@@ -35,7 +35,7 @@ public class MessageHandler implements Handler {
         Long chatId = user.id();
         TelegramUser telegramUser = telegramUserService.findByChatID(chatId);
         if (Objects.isNull(telegramUser)) telegramUser = registerTelegramUser(user, chatId);
-        if (message.text().equals("/start")) startMessage(telegramUser);
+        if (Objects.equals(message.text(),"/start")) startMessage(telegramUser);
         State state = telegramUser.getState();
         switch (state) {
             case null -> startRegister(telegramUser);

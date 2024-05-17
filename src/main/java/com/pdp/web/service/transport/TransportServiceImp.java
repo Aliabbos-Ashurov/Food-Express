@@ -4,6 +4,7 @@ import com.pdp.utils.Validator;
 import com.pdp.web.model.transport.Transport;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.UUID;
@@ -41,7 +42,7 @@ public class TransportServiceImp implements TransportService {
      * @return true if the transport was successfully added, false otherwise
      */
     @Override
-    public boolean add(Transport transport) {
+    public boolean add(@NotNull Transport transport) {
         return repository.add(transport);
     }
 

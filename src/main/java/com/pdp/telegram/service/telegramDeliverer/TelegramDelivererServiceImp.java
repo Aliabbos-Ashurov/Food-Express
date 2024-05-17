@@ -56,7 +56,7 @@ public class TelegramDelivererServiceImp implements TelegramDelivererService {
     public boolean add(@NonNull TelegramDeliverer telegramDeliverer) {
         List<TelegramDeliverer> telegramDeliverers = getAll();
         boolean anyMatch = telegramDeliverers.stream().anyMatch(t -> Objects.equals(t.getTelegramUserID(), telegramDeliverer.getTelegramUserID()));
-        if (!anyMatch) return false;
+        if (anyMatch) return false;
         repository.add(telegramDeliverer);
         return true;
     }

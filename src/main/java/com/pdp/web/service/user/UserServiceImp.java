@@ -5,6 +5,7 @@ import com.pdp.utils.Validator;
 import com.pdp.web.model.user.User;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Optional;
@@ -43,7 +44,7 @@ public class UserServiceImp implements UserService {
      * @return {@code true} if the user was added successfully, {@code false} otherwise.
      */
     @Override
-    public boolean add(User user) {
+    public boolean add(@NotNull User user) {
         user.setPassword(PasswordEncoderUtils.encode(user.getPassword()));
         return repository.add(user);
     }

@@ -13,6 +13,7 @@ import com.pdp.web.service.food.FoodService;
 import com.pdp.web.service.foodBrandMapping.FoodBrandMappingService;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -181,7 +182,7 @@ public class OrderServiceImp implements OrderService {
      * @return true if the order was successfully added, false otherwise
      */
     @Override
-    public boolean add(Order order) {
+    public boolean add(@NotNull Order order) {
         return repository.add(order);
     }
 

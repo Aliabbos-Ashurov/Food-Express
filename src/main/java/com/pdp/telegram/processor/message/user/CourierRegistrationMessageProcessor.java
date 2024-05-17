@@ -86,8 +86,9 @@ public class CourierRegistrationMessageProcessor implements Processor<CourierReg
     }
 
     private static boolean registeredNumberMatcher(String message) {
-        Pattern pattern = Pattern.compile("^(\\\\d{2}[a-zA-Z]\\\\d{3}[a-zA-Z]{2}|\\\\d{5}[a-zA-Z]{3})$");
-        return pattern.matcher(message).matches();
+        Pattern pattern1 = Pattern.compile("^\\d{2}[A-Za-z]\\d{3}[A-Za-z]{2}$");
+        Pattern pattern2 = Pattern.compile("^\\d{5}[A-Za-z]{3}$");
+        return pattern1.matcher(message).matches()||pattern2.matcher(message).matches();
     }
 
     private static boolean validateTransportName(String input) {
