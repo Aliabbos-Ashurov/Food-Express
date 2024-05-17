@@ -12,6 +12,7 @@ import com.pdp.telegram.state.State;
 import com.pdp.telegram.state.telegramDeliverer.DeliveryMenuState;
 import com.pdp.utils.factory.SendMessageFactory;
 import com.pdp.web.enums.Language;
+import com.pdp.web.enums.OrderStatus;
 import com.pdp.web.enums.telegram.DeliveryStatus;
 import com.pdp.web.model.customerOrder.CustomerOrder;
 import com.pdp.web.service.customerOrder.CustomerOrderService;
@@ -21,7 +22,6 @@ import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.Update;
 import lombok.NonNull;
 
-import java.util.List;
 import java.util.UUID;
 
 /**
@@ -40,37 +40,28 @@ public class DeliveryMenuCallbackProcessor implements Processor<DeliveryMenuStat
         Message message = (Message) callbackQuery.maybeInaccessibleMessage();
         String data = callbackQuery.data();
         Long chatID = message.from().id();
-        if (state.equals(DeliveryMenuState.VIEW_ASSIGNED_ORDERS)) {
-            handleViewAssignedOrders(chatID, data);
-        } else if (state.equals(DeliveryMenuState.VIEW_ACTIVE_ORDERS)) {
-
+        switch (state) {
+            case VIEW_ASSIGNED_ORDERS -> handleViewAssignedOrders(chatID, data);
+            case VIEW_ACTIVE_ORDERS -> {
+            }
         }
     }
 
     private void handleViewAssignedOrders(Long chatID, String data) {
-        TelegramDeliverer tgDeliverer = getTelegramDeliverer(chatID);
-        if (tgDeliverer.getDeliveryStatus().equals(DeliveryStatus.ACCEPTED)) {
+        TelegramDeliverer telegramDeliverer = getTelegramDeliverer(chatID);
+        if (telegramDeliverer.getDeliveryStatus().equals(DeliveryStatus.ACCEPTED)) {
             bot.execute(SendMessageFactory.sendMessageOrderCloser(chatID, getTelegramUserLanguage(chatID)));
             return;
         }
-
-        CustomerOrder customerOrder = customerOrderService.getByID(UUID.fromString(data));
-        TelegramDeliverer telegramDeliverer = telegramDelivererService.getDeliverByTelegramId(getTelegramUser(chatID).getId());
+        UUID orderId = UUID.fromString(data);
+        CustomerOrder customerOrder = customerOrderService.getByID(orderId);
         customerOrder.setDeliverID(telegramDeliverer.getId());
+        customerOrder.setOrderStatus(OrderStatus.YOUR_ORDER_RECEIVED);
         customerOrderService.update(customerOrder);
-
         updateTelegramUserState(chatID, DefaultState.BASE_DELIVERER_MENU);
-
         telegramDeliverer.setDeliveryStatus(DeliveryStatus.ACCEPTED);
         telegramDelivererService.update(telegramDeliverer);
-
         bot.execute(SendMessageFactory.sendMessageOrderReceived(chatID, getTelegramUserLanguage(chatID)));
-    }
-
-    private void handleBackToMainMenu(@NonNull Long chatID) {
-        updateTelegramUserState(chatID, DefaultState.BASE_DELIVERER_MENU);
-        Language telegramUserLanguage = getTelegramUserLanguage(chatID);
-        bot.execute(SendMessageFactory.sendMessageDeliverMenu(chatID, telegramUserLanguage));
     }
 
     private void updateTelegramUserState(@NonNull Long chatID, @NonNull State state) {
