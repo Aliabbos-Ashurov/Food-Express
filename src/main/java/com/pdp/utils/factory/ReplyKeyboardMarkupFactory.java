@@ -57,7 +57,7 @@ public class ReplyKeyboardMarkupFactory {
         String placeOrder = MessageSourceUtils.getLocalizedMessage("button.placeOrder", language);
         String myOrders = MessageSourceUtils.getLocalizedMessage("button.myOrders", language);
         String registerAsACourier = MessageSourceUtils.getLocalizedMessage("button.registerCourier", language);
-        return makeReplyKeyboardButtonsByStringsList(List.of(placeOrder, myOrders, registerAsACourier), false);
+        return makeReplyKeyboardButtonsByStringsList(List.of(placeOrder, myOrders, registerAsACourier), true);
     }
 
     public static ReplyKeyboardMarkup deliverButtons(Language language) {

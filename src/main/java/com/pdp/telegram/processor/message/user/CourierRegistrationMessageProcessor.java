@@ -49,7 +49,6 @@ public class CourierRegistrationMessageProcessor implements Processor<CourierReg
     }
 
     private void handleEnterPhoneNumber(Long chatID, Contact contact) {
-        System.out.println(contact);
         if (Objects.isNull(contact)) {
             invalidSelectionSender(chatID);
             return;

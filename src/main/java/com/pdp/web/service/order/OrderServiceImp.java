@@ -97,8 +97,8 @@ public class OrderServiceImp implements OrderService {
                 Order orderWithSameFood = findOrderWithSameFood(order, exists);
                 if (Objects.nonNull(orderWithSameFood)) return updateOrderQuantityAndPrice(orderWithSameFood, order);
                 else return createNewOrder(order, exists);
-
             } else {
+                removeAllOrdersFromCustomer(exists);
                 customerOrderService.remove(exists.getId());
                 CustomerOrder build = CustomerOrder.builder()
                         .userID(dto.userID())
@@ -107,7 +107,6 @@ public class OrderServiceImp implements OrderService {
                 customerOrderService.add(build);
                 order.setCustomerOrderID(build.getId());
                 add(order);
-                removeAllOrdersFromCustomer(exists);
                 return order;
             }
         }
