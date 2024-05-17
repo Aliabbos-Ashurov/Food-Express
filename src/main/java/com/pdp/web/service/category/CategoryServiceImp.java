@@ -6,10 +6,7 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -67,6 +64,10 @@ public class CategoryServiceImp implements CategoryService {
      */
     @Override
     public boolean add(@NonNull Category category) {
+        Set<Category> categories = getAll();
+        boolean anyMatch = categories.stream().anyMatch(c -> Objects.equals(c.getBrandId(), category.getBrandId())
+                && Objects.equals(c.getName(), category.getName()));
+        if (anyMatch) return false;
         return repository.add(category);
     }
 
