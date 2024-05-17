@@ -98,7 +98,6 @@ public class ReplyKeyboardMarkupFactory {
     }
 
     public static ReplyKeyboardMarkup viewBrandCategoriesButtons(UUID brandID, Language language) {
-        categoryService.getBrandCategories(brandID);
         String backMessage = getBackMessage(language);
         return makeReplyKeyboardButtons(new ArrayList<>(categoryService.getBrandCategories(brandID)), true, backMessage);
     }

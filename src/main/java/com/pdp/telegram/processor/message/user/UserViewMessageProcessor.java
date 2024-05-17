@@ -57,24 +57,7 @@ public class UserViewMessageProcessor implements Processor<UserViewState> {
                 handleViewBrands(text, chatID);
             }
             case VIEW_CATEGORIES -> {
-                if (checkLocalizedMessage(text, "button.back", chatID)) {
-                    updateTelegramUserState(chatID, UserViewState.VIEW_BRANDS);
-                    bot.execute(SendMessageFactory.sendMessageWithBrandsMenu(chatID, getTelegramUserLanguage(chatID)));
-                    return;
-                }
-                TelegramUser telegramUser = getTelegramUser(chatID);
-                CustomerOrder customerOrder = customerOrderService.getByUserID(telegramUser.getId());
-                UUID branchID = customerOrder.getBranchID();
-                Branch branch = branchService.getByID(branchID);
-                UUID brandID = branch.getBrandID();
-
-                Category category = categoryService.getCategoryByBrandID(brandID, text);
-                if (category == null) {
-                    invalidSelectionSender(chatID);
-                    return;
-                }
-                updateTelegramUserState(chatID, UserViewState.VIEW_FOODS);
-                bot.execute(SendPhotoFactory.sendPhotoCategoryWithFoodsButton(chatID, brandID, category.getName()));
+                handleViewCategories(text, chatID);
             }
             case VIEW_FOODS -> {
 
@@ -82,6 +65,27 @@ public class UserViewMessageProcessor implements Processor<UserViewState> {
             case COUNT -> {
             }
         }
+    }
+
+    private void handleViewCategories(String text, Long chatID) {
+        if (checkLocalizedMessage(text, "button.back", chatID)) {
+            updateTelegramUserState(chatID, UserViewState.VIEW_BRANDS);
+            bot.execute(SendMessageFactory.sendMessageWithBrandsMenu(chatID, getTelegramUserLanguage(chatID)));
+            return;
+        }
+        TelegramUser telegramUser = getTelegramUser(chatID);
+        CustomerOrder customerOrder = customerOrderService.getByUserID(telegramUser.getId());
+        UUID branchID = customerOrder.getBranchID();
+        Branch branch = branchService.getByID(branchID);
+        UUID brandID = branch.getBrandID();
+
+        Category category = categoryService.getCategoryByBrandID(brandID, text);
+        if (category == null) {
+            invalidSelectionSender(chatID);
+            return;
+        }
+        updateTelegramUserState(chatID, UserViewState.VIEW_FOODS);
+        bot.execute(SendPhotoFactory.sendPhotoCategoryWithFoodsButton(chatID, brandID, category.getName()));
     }
 
     private void handleViewBrands(String text, Long chatID) {
