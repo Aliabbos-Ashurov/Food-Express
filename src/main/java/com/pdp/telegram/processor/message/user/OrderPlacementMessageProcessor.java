@@ -52,25 +52,33 @@ public class OrderPlacementMessageProcessor implements Processor<OrderPlacementS
     private void handleViewCart(String text, Long chatID, TelegramUser telegramUser) {
         if (checkLocalizedMessage(text, "button.back", chatID)) handleBackToMain(chatID);
         else if (checkLocalizedMessage(text, "alert.make.order", chatID)) {
-            if (checkNotConfirmedOrder(chatID)) {
-                telegramUser.setState(ConfirmOrderState.REQUEST_PHONE_NUMBER_FROM_USER);
-                telegramUserService.update(telegramUser);
-                bot.execute(SendMessageFactory.sendMessageContact(chatID, getTelegramUserLanguage(chatID)));
-            } else {
-                bot.execute(new SendMessage(chatID, MessageSourceUtils.getLocalizedMessage("info.emptyCartMessage", getTelegramUserLanguage(chatID))));
-            }
+            handleMakeOrder(chatID);
         } else if (checkLocalizedMessage(text, "alert.clear.cart", chatID)) {
-            boolean confirmedOrder = checkNotConfirmedOrder(chatID);
-            if (confirmedOrder) {
-                telegramUser.setState(ConfirmationState.ACCEPT_CLEAR_CART);
-                telegramUserService.update(telegramUser);
-                bot.execute(SendMessageFactory.sendMessageConfirmation(chatID, getTelegramUserLanguage(chatID)));
-            } else {
-                bot.execute(new SendMessage(chatID, MessageSourceUtils.getLocalizedMessage("info.emptyCartMessage", getTelegramUserLanguage(chatID))));
-            }
+            handleClearCart(chatID);
         } else invalidSelectionSender(chatID);
     }
 
+    private void handleMakeOrder(Long chatID) {
+        TelegramUser telegramUser = getTelegramUser(chatID);
+        if (checkNotConfirmedOrder(chatID)) {
+            telegramUser.setState(ConfirmOrderState.REQUEST_PHONE_NUMBER_FROM_USER);
+            telegramUserService.update(telegramUser);
+            bot.execute(SendMessageFactory.sendMessageContact(chatID, getTelegramUserLanguage(chatID)));
+        } else {
+            bot.execute(new SendMessage(chatID, MessageSourceUtils.getLocalizedMessage("info.emptyCartMessage", getTelegramUserLanguage(chatID))));
+        }
+    }
+
+    private void handleClearCart(Long chatID) {
+        TelegramUser telegramUser = getTelegramUser(chatID);
+        if (checkNotConfirmedOrder(chatID)) {
+            telegramUser.setState(ConfirmationState.ACCEPT_CLEAR_CART);
+            telegramUserService.update(telegramUser);
+            bot.execute(SendMessageFactory.sendMessageConfirmation(chatID, getTelegramUserLanguage(chatID)));
+        } else {
+            bot.execute(new SendMessage(chatID, MessageSourceUtils.getLocalizedMessage("info.emptyCartMessage", getTelegramUserLanguage(chatID))));
+        }
+    }
 
     private void handleBackToMain(Long chatID) {
         TelegramUser telegramUser = getTelegramUser(chatID);
