@@ -61,7 +61,6 @@ public class OrderPlacementMessageProcessor implements Processor<OrderPlacementS
             }
         } else if (checkLocalizedMessage(text, "alert.clear.cart", chatID)) {
             boolean confirmedOrder = checkNotConfirmedOrder(chatID);
-            System.out.println(confirmedOrder);
             if (confirmedOrder) {
                 telegramUser.setState(ConfirmationState.ACCEPT_CLEAR_CART);
                 telegramUserService.update(telegramUser);
