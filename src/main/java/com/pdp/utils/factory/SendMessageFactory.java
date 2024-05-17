@@ -78,6 +78,11 @@ public class SendMessageFactory {
         return createMessage(chatID, message, ReplyKeyboardMarkupFactory.backButton(language));
     }
 
+    public static SendMessage sendMessagePaymentType(Object chatID, Language language) {
+        String message = MessageSourceUtils.getLocalizedMessage("alert.payment.type", language);
+        return createMessage(chatID, message, ReplyKeyboardMarkupFactory.paymentTypeButtons(language));
+    }
+
     public static SendMessage sendMessageCartCleared(Object chatID, Language language) {
         String message = MessageSourceUtils.getLocalizedMessage("alert.cart.cleaned", language);
         return createMessage(chatID, message, ReplyKeyboardMarkupFactory.orderManagementButtons(language));

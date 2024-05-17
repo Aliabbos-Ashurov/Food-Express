@@ -4,6 +4,7 @@ import com.pdp.config.ThreadSafeBeansContainer;
 import com.pdp.java.console.support.Displayable;
 import com.pdp.utils.source.MessageSourceUtils;
 import com.pdp.web.enums.Language;
+import com.pdp.web.enums.PaymentType;
 import com.pdp.web.model.BaseModel;
 import com.pdp.web.service.brand.BrandService;
 import com.pdp.web.service.category.CategoryService;
@@ -70,6 +71,14 @@ public class ReplyKeyboardMarkupFactory {
         String gotFromPlace = MessageSourceUtils.getLocalizedMessage("order.delivered", language);
         String orderFailed = MessageSourceUtils.getLocalizedMessage("order.failed", language);
         return makeReplyKeyboardButtonsByStringsList(List.of(gotFromPlace, orderFailed), true, getBackMessage(language));
+    }
+
+    public static ReplyKeyboardMarkup paymentTypeButtons(Language language) {
+        PaymentType[] values = PaymentType.values();
+        List<String> collected = Arrays.stream(values)
+                .map(String::valueOf)
+                .collect(Collectors.toList());
+        return makeReplyKeyboardButtonsByStringsList(collected, true);
     }
 
     public static ReplyKeyboardMarkup deliverButtons(Language language) {

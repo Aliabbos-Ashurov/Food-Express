@@ -47,8 +47,10 @@ public class DeliveryMenuMessageProcessor implements Processor<DeliveryMenuState
                 return;
             }
             if (checkLocalizedMessage(text, "order.got.place", chatID)) {
-
-
+                if (checkLocalizedMessage(text, "button.back", chatID)) {
+                    handleBackToMainMenu(chatID);
+                    return;
+                }
             } else if (checkLocalizedMessage(text, "order.failed", chatID)) {
 
             }
