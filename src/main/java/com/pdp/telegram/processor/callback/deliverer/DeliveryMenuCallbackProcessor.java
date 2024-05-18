@@ -69,6 +69,7 @@ public class DeliveryMenuCallbackProcessor implements Processor<DeliveryMenuStat
             bot.execute(SendMessageFactory.sendMessageOrderReceived(chatID, getTelegramUserLanguage(chatID)));
             TelegramUser telegramUser = telegramUserService.getByID(customerOrder.getUserID());
             bot.execute(new SendMessage(telegramUser.getChatID(), MessageSourceUtils.getLocalizedMessage("alert.user.order.accept", getTelegramUserLanguage(chatID))));
+            return;
         }
         bot.execute(new SendMessage(chatID, MessageSourceUtils.getLocalizedMessage("alert.deliverer.order.exception", getTelegramUserLanguage(chatID))));
     }
