@@ -25,6 +25,7 @@ import com.pengrad.telegrambot.model.message.MaybeInaccessibleMessage;
 import com.pengrad.telegrambot.request.SendMessage;
 import lombok.NonNull;
 
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -58,17 +59,18 @@ public class DeliveryMenuCallbackProcessor implements Processor<DeliveryMenuStat
         }
         UUID orderId = UUID.fromString(data);
         CustomerOrder customerOrder = customerOrderService.getByID(orderId);
-
-        customerOrder.setDeliverID(telegramDeliverer.getId());
-        customerOrder.setOrderStatus(OrderStatus.YOUR_ORDER_RECEIVED);
-        customerOrderService.update(customerOrder);
-        updateTelegramUserState(chatID, DefaultState.BASE_DELIVERER_MENU);
-        telegramDeliverer.setDeliveryStatus(DeliveryStatus.ACCEPTED);
-        telegramDelivererService.update(telegramDeliverer);
-        bot.execute(SendMessageFactory.sendMessageOrderReceived(chatID, getTelegramUserLanguage(chatID)));
-        TelegramUser telegramUser = telegramUserService.getByID(customerOrder.getUserID());
-        bot.execute(new SendMessage(telegramUser.getChatID(), MessageSourceUtils.getLocalizedMessage("alert.user.order.accept", getTelegramUserLanguage(chatID))));
-
+        if (Objects.nonNull(customerOrder.getDeliverID())) {
+            customerOrder.setDeliverID(telegramDeliverer.getId());
+            customerOrder.setOrderStatus(OrderStatus.YOUR_ORDER_RECEIVED);
+            customerOrderService.update(customerOrder);
+            updateTelegramUserState(chatID, DefaultState.BASE_DELIVERER_MENU);
+            telegramDeliverer.setDeliveryStatus(DeliveryStatus.ACCEPTED);
+            telegramDelivererService.update(telegramDeliverer);
+            bot.execute(SendMessageFactory.sendMessageOrderReceived(chatID, getTelegramUserLanguage(chatID)));
+            TelegramUser telegramUser = telegramUserService.getByID(customerOrder.getUserID());
+            bot.execute(new SendMessage(telegramUser.getChatID(), MessageSourceUtils.getLocalizedMessage("alert.user.order.accept", getTelegramUserLanguage(chatID))));
+        }
+        bot.execute(new SendMessage(chatID, MessageSourceUtils.getLocalizedMessage("alert.deliverer.order.exception", getTelegramUserLanguage(chatID))));
     }
 
     private void updateTelegramUserState(@NonNull Long chatID, @NonNull State state) {
