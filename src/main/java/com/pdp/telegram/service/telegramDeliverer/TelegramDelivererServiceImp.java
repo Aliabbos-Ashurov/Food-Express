@@ -101,6 +101,7 @@ public class TelegramDelivererServiceImp implements TelegramDelivererService {
     private void updateTelegramDelivererData(TelegramDeliverer deliverer, TelegramDeliverer updated) {
         deliverer.setFullname(updated.getFullname());
         deliverer.setTelegramUserID(updated.getTelegramUserID());
+        deliverer.setDeliveryStatus(updated.getDeliveryStatus());
     }
 
     /**

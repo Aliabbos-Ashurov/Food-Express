@@ -11,6 +11,7 @@ import com.pdp.telegram.state.DefaultState;
 import com.pdp.telegram.state.State;
 import com.pdp.telegram.state.telegramDeliverer.DeliveryMenuState;
 import com.pdp.utils.factory.SendMessageFactory;
+import com.pdp.utils.source.MessageSourceUtils;
 import com.pdp.web.enums.Language;
 import com.pdp.web.enums.OrderStatus;
 import com.pdp.web.enums.telegram.DeliveryStatus;
@@ -21,6 +22,7 @@ import com.pengrad.telegrambot.model.CallbackQuery;
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.model.message.MaybeInaccessibleMessage;
+import com.pengrad.telegrambot.request.SendMessage;
 import lombok.NonNull;
 
 import java.util.UUID;
@@ -56,6 +58,7 @@ public class DeliveryMenuCallbackProcessor implements Processor<DeliveryMenuStat
         }
         UUID orderId = UUID.fromString(data);
         CustomerOrder customerOrder = customerOrderService.getByID(orderId);
+
         customerOrder.setDeliverID(telegramDeliverer.getId());
         customerOrder.setOrderStatus(OrderStatus.YOUR_ORDER_RECEIVED);
         customerOrderService.update(customerOrder);
@@ -63,6 +66,9 @@ public class DeliveryMenuCallbackProcessor implements Processor<DeliveryMenuStat
         telegramDeliverer.setDeliveryStatus(DeliveryStatus.ACCEPTED);
         telegramDelivererService.update(telegramDeliverer);
         bot.execute(SendMessageFactory.sendMessageOrderReceived(chatID, getTelegramUserLanguage(chatID)));
+        TelegramUser telegramUser = telegramUserService.getByID(customerOrder.getUserID());
+        bot.execute(new SendMessage(telegramUser.getChatID(), MessageSourceUtils.getLocalizedMessage("alert.user.order.accept", getTelegramUserLanguage(chatID))));
+
     }
 
     private void updateTelegramUserState(@NonNull Long chatID, @NonNull State state) {
