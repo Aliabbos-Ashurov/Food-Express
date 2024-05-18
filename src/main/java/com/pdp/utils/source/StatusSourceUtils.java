@@ -1,7 +1,7 @@
 package com.pdp.utils.source;
 
-import com.pdp.web.enums.Language;
-import com.pdp.web.enums.OrderStatus;
+import com.pdp.enums.Language;
+import com.pdp.enums.OrderStatus;
 import lombok.NonNull;
 
 import java.util.Locale;

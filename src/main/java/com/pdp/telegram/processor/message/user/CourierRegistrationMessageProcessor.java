@@ -16,8 +16,8 @@ import static com.pdp.telegram.state.telegramUser.CourierRegistrationState.*;
 
 import com.pdp.utils.factory.SendMessageFactory;
 import com.pdp.utils.source.MessageSourceUtils;
-import com.pdp.web.enums.Language;
-import com.pdp.web.enums.role.Role;
+import com.pdp.enums.Language;
+import com.pdp.enums.role.Role;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.*;
 import com.pengrad.telegrambot.request.SendMessage;

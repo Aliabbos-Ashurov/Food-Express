@@ -8,7 +8,7 @@ import com.pdp.telegram.service.telegramUser.TelegramUserService;
 import com.pdp.telegram.state.telegramDeliverer.DeliveryMenuState;
 import com.pdp.utils.source.MessageSourceUtils;
 import com.pdp.utils.source.StatusSourceUtils;
-import com.pdp.web.enums.Language;
+import com.pdp.enums.Language;
 import com.pdp.web.model.branch.Branch;
 import com.pdp.web.model.branchLocation.BranchLocation;
 import com.pdp.web.model.brand.Brand;
@@ -26,7 +26,6 @@ import com.pengrad.telegrambot.model.request.Keyboard;
 import com.pengrad.telegrambot.request.SendMessage;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 
 /**

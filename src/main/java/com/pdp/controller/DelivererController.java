@@ -6,7 +6,7 @@ import com.pdp.java.console.NotificationHandler;
 import com.pdp.java.console.Scan;
 import com.pdp.utils.front.MenuUtils;
 import com.pdp.utils.source.MessageSourceUtils;
-import com.pdp.web.enums.OrderStatus;
+import com.pdp.enums.OrderStatus;
 import com.pdp.web.model.address.Address;
 import com.pdp.web.model.branch.Branch;
 import com.pdp.web.model.brand.Brand;

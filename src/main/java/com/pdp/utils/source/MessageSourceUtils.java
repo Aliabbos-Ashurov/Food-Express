@@ -1,6 +1,6 @@
 package com.pdp.utils.source;
 
-import com.pdp.web.enums.Language;
+import com.pdp.enums.Language;
 import lombok.NonNull;
 
 import java.util.Locale;

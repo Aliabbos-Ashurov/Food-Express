@@ -2,7 +2,6 @@ package com.pdp.telegram.handler;
 
 import com.pdp.config.TelegramBotConfiguration;
 import com.pdp.config.ThreadSafeBeansContainer;
-import com.pdp.telegram.model.telegramDeliverer.TelegramDeliverer;
 import com.pdp.telegram.model.telegramUser.TelegramUser;
 import com.pdp.telegram.service.telegramUser.TelegramUserService;
 import com.pdp.telegram.state.DefaultState;
@@ -11,7 +10,7 @@ import com.pdp.telegram.state.telegramDeliverer.ActiveOrderManagementState;
 import com.pdp.telegram.state.telegramDeliverer.DeliveryMenuState;
 import com.pdp.telegram.state.telegramUser.*;
 import com.pdp.utils.factory.SendMessageFactory;
-import com.pdp.web.enums.role.Role;
+import com.pdp.enums.role.Role;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.Update;

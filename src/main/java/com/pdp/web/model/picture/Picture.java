@@ -1,7 +1,7 @@
 package com.pdp.web.model.picture;
 
 import com.google.gson.annotations.SerializedName;
-import com.pdp.web.enums.format.PictureFormat;
+import com.pdp.enums.format.PictureFormat;
 import com.pdp.web.model.BaseModel;
 import com.pdp.java.console.support.Displayable;
 import lombok.AllArgsConstructor;

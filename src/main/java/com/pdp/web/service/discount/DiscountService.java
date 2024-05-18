@@ -17,8 +17,6 @@ import java.util.List;
  * storing discounts, typically through a {@link DiscountRepository}.
  * </p>
  * @author Nishonov Doniyor
- * @param <T> the type of discount entity
- * @param <L> the type of list containing discounts
  * @see DiscountRepository For managing the storage of discounts.
  * @see BaseService Base service interface providing common methods for service implementations.
  */

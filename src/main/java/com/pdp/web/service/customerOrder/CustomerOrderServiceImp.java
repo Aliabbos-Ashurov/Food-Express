@@ -1,8 +1,7 @@
 package com.pdp.web.service.customerOrder;
 
-import com.pdp.web.enums.OrderStatus;
+import com.pdp.enums.OrderStatus;
 import com.pdp.web.model.customerOrder.CustomerOrder;
-import com.pdp.web.model.user.User;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;

@@ -10,7 +10,7 @@ import com.pdp.telegram.state.State;
 import com.pdp.telegram.state.telegramUser.ConfirmationState;
 import com.pdp.utils.factory.SendMessageFactory;
 import com.pdp.utils.source.MessageSourceUtils;
-import com.pdp.web.enums.Language;
+import com.pdp.enums.Language;
 import com.pdp.web.model.customerOrder.CustomerOrder;
 import com.pdp.web.service.customerOrder.CustomerOrderService;
 import com.pdp.web.service.order.OrderService;

@@ -3,12 +3,10 @@ package com.pdp.telegram.model.telegramUser;
 import com.google.gson.annotations.SerializedName;
 import com.pdp.java.console.support.Displayable;
 import com.pdp.telegram.state.State;
-import com.pdp.web.enums.Language;
-import com.pdp.web.enums.role.Role;
+import com.pdp.enums.Language;
+import com.pdp.enums.role.Role;
 import com.pdp.web.model.BaseModel;
 import lombok.*;
-
-import java.util.UUID;
 
 /**
  * Represents a user within the Telegram messaging platform in a delivery service application.

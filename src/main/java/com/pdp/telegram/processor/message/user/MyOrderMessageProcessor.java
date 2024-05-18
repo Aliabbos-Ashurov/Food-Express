@@ -9,7 +9,7 @@ import com.pdp.telegram.state.telegramUser.MyOrderState;
 import com.pdp.telegram.state.telegramUser.UserMenuOptionState;
 import com.pdp.utils.factory.SendMessageFactory;
 import com.pdp.utils.source.MessageSourceUtils;
-import com.pdp.web.enums.Language;
+import com.pdp.enums.Language;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.Update;

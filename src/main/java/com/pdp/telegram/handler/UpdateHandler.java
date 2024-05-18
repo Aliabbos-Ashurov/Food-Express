@@ -16,11 +16,6 @@ import java.util.function.BiFunction;
  **/
 public class UpdateHandler {
     public void handle(List<Update> updates) {
-//        startWithCompletableFuture(updates);
-        start(updates);
-    }
-
-    private static void startWithCompletableFuture(List<Update> updates) {
         CompletableFuture.runAsync(() -> {
             for (Update update : updates) {
                 if (Objects.nonNull(update.message())) {
@@ -30,15 +25,5 @@ public class UpdateHandler {
                 }
             }
         }, ThreadSafeBeansContainer.executor);
-    }
-
-    private static void start(List<Update> updates) {
-        for (Update update : updates) {
-            if (Objects.nonNull(update.message())) {
-                ThreadSafeBeansContainer.messageHandlerThreadLocal.get().handle(update);
-            } else if (Objects.nonNull(update.callbackQuery())) {
-                ThreadSafeBeansContainer.callbackHandlerThreadLocal.get().handle(update);
-            }
-        }
     }
 }

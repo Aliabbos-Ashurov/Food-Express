@@ -5,7 +5,7 @@ import com.pdp.dto.LoginDTO;
 import com.pdp.java.console.NotificationHandler;
 import com.pdp.java.console.Scan;
 import com.pdp.utils.front.MenuUtils;
-import com.pdp.web.enums.Language;
+import com.pdp.enums.Language;
 import com.pdp.web.model.user.User;
 import com.pdp.web.service.login.LoginService;
 import com.pdp.web.service.user.UserService;

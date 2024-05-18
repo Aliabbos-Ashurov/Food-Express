@@ -1,8 +1,8 @@
 package com.pdp.web.model.customerOrder;
 
 import com.google.gson.annotations.SerializedName;
-import com.pdp.web.enums.OrderStatus;
-import com.pdp.web.enums.PaymentType;
+import com.pdp.enums.OrderStatus;
+import com.pdp.enums.PaymentType;
 import com.pdp.web.model.BaseModel;
 import lombok.*;
 

@@ -17,8 +17,6 @@ import java.util.List;
  * storing food items, typically through a {@link FoodRepository}.
  * </p>
  *
- * @param <T> the type of food entity
- * @param <L> the type of list containing food items
  * @see FoodRepository For managing the storage of food items.
  * @see BaseService Base service interface providing common methods for service implementations.
  */

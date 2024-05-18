@@ -13,7 +13,7 @@ import com.pdp.utils.factory.InlineKeyboardMarkupFactory;
 import com.pdp.utils.factory.SendMessageFactory;
 import com.pdp.utils.factory.SendPhotoFactory;
 import com.pdp.utils.source.MessageSourceUtils;
-import com.pdp.web.enums.Language;
+import com.pdp.enums.Language;
 import com.pdp.web.model.customerOrder.CustomerOrder;
 import com.pdp.web.model.food.Food;
 import com.pdp.web.model.order.Order;
@@ -43,7 +43,6 @@ public class UserViewCallbackProcessor implements Processor<UserViewState> {
     private final FoodService foodService = ThreadSafeBeansContainer.foodServiceThreadLocal.get();
     private final OrderService orderService = ThreadSafeBeansContainer.orderServiceThreadLocal.get();
     private final CustomerOrderService customerOrderService = ThreadSafeBeansContainer.customerOrderServiceThreadLocal.get();
-    private final FoodBrandMappingService foodBrandMappingService = ThreadSafeBeansContainer.foodBrandMappingServiceThreadLocal.get();
 
     @Override
     public void process(Update update, UserViewState state) {

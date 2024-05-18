@@ -3,7 +3,7 @@ package com.pdp.telegram.service.telegramUser;
 import com.pdp.telegram.model.telegramUser.TelegramUser;
 import com.pdp.telegram.repository.telegramUser.TelegramUserRepository;
 import com.pdp.telegram.state.State;
-import com.pdp.web.enums.Language;
+import com.pdp.enums.Language;
 import com.pdp.web.service.BaseService;
 import lombok.NonNull;
 

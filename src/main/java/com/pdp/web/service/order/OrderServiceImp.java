@@ -2,7 +2,7 @@ package com.pdp.web.service.order;
 
 import com.pdp.config.ThreadSafeBeansContainer;
 import com.pdp.dto.CustomOrderDTO;
-import com.pdp.web.enums.OrderStatus;
+import com.pdp.enums.OrderStatus;
 import com.pdp.web.model.branch.Branch;
 import com.pdp.web.model.customerOrder.CustomerOrder;
 import com.pdp.web.model.food.Food;

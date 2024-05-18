@@ -1,6 +1,6 @@
 package com.pdp.controller;
 
-import com.pdp.web.enums.role.Role;
+import com.pdp.enums.role.Role;
 import com.pdp.web.model.user.User;
 
 /**

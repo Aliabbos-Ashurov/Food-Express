@@ -1,4 +1,4 @@
-package com.pdp.web.enums.telegram;
+package com.pdp.enums.telegram;
 
 /**
  * @author Aliabbos Ashurov

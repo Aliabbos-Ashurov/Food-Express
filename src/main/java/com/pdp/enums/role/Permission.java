@@ -1,4 +1,4 @@
-package com.pdp.web.enums.role;
+package com.pdp.enums.role;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

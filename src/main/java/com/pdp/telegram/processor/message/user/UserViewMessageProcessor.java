@@ -11,7 +11,7 @@ import com.pdp.telegram.state.telegramUser.UserViewState;
 import com.pdp.utils.factory.SendMessageFactory;
 import com.pdp.utils.factory.SendPhotoFactory;
 import com.pdp.utils.source.MessageSourceUtils;
-import com.pdp.web.enums.Language;
+import com.pdp.enums.Language;
 import com.pdp.web.model.branch.Branch;
 import com.pdp.web.model.brand.Brand;
 import com.pdp.web.model.category.Category;
@@ -20,8 +20,6 @@ import com.pdp.web.service.branch.BranchService;
 import com.pdp.web.service.brand.BrandService;
 import com.pdp.web.service.category.CategoryService;
 import com.pdp.web.service.customerOrder.CustomerOrderService;
-import com.pdp.web.service.foodBrandMapping.FoodBrandMappingService;
-import com.pdp.web.service.order.OrderService;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.Update;
@@ -41,9 +39,7 @@ public class UserViewMessageProcessor implements Processor<UserViewState> {
     private final TelegramUserService telegramUserService = ThreadSafeBeansContainer.telegramUserServiceThreadLocal.get();
     private final BrandService brandService = ThreadSafeBeansContainer.brandServiceThreadLocal.get();
     private final CustomerOrderService customerOrderService = ThreadSafeBeansContainer.customerOrderServiceThreadLocal.get();
-    private final OrderService orderService = ThreadSafeBeansContainer.orderServiceThreadLocal.get();
     private final CategoryService categoryService = ThreadSafeBeansContainer.categoryServiceThreadLocal.get();
-    private final FoodBrandMappingService foodBrandMappingService = ThreadSafeBeansContainer.foodBrandMappingServiceThreadLocal.get();
     private final BranchService branchService = ThreadSafeBeansContainer.branchServiceThreadLocal.get();
 
     @Override

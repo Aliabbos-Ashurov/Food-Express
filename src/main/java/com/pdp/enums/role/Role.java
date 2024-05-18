@@ -1,8 +1,8 @@
-package com.pdp.web.enums.role;
+package com.pdp.enums.role;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import static com.pdp.web.enums.role.Permission.*;
+import static com.pdp.enums.role.Permission.*;
 import java.util.Set;
 /**
  * Enum representing different roles within the system and their associated permissions.

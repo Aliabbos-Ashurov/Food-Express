@@ -16,9 +16,6 @@ import java.util.List;
  * Implementing classes should provide functionality to interact with a repository
  * storing descriptions, typically through a {@link DescriptionRepository}.
  * </p>
- *
- * @param <T> the type of description entity
- * @param <L> the type of list containing descriptions
  * @author Nishonov Doniyor
  * @see DescriptionRepository For managing the storage of descriptions.
  * @see BaseService Base service interface providing common methods for service implementations.

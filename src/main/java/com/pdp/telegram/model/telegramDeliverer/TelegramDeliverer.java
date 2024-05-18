@@ -2,7 +2,7 @@ package com.pdp.telegram.model.telegramDeliverer;
 
 import com.google.gson.annotations.SerializedName;
 import com.pdp.java.console.support.Displayable;
-import com.pdp.web.enums.telegram.DeliveryStatus;
+import com.pdp.enums.telegram.DeliveryStatus;
 import com.pdp.web.model.BaseModel;
 import lombok.*;
 

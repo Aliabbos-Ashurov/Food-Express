@@ -1,8 +1,8 @@
 package com.pdp.web.model.user;
 
 import com.google.gson.annotations.SerializedName;
-import com.pdp.web.enums.Language;
-import com.pdp.web.enums.role.Role;
+import com.pdp.enums.Language;
+import com.pdp.enums.role.Role;
 import com.pdp.web.model.BaseModel;
 import com.pdp.java.console.support.Displayable;
 import lombok.*;
