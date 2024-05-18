@@ -59,7 +59,7 @@ public class DeliveryMenuCallbackProcessor implements Processor<DeliveryMenuStat
         }
         UUID orderId = UUID.fromString(data);
         CustomerOrder customerOrder = customerOrderService.getByID(orderId);
-        if (Objects.nonNull(customerOrder.getDeliverID())) {
+        if (Objects.isNull(customerOrder.getDeliverID())) {
             customerOrder.setDeliverID(telegramDeliverer.getId());
             customerOrder.setOrderStatus(OrderStatus.YOUR_ORDER_RECEIVED);
             customerOrderService.update(customerOrder);
