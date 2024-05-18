@@ -88,7 +88,7 @@ public class UserMenuOptionMessageProcessor implements Processor<UserMenuOptionS
     }
 
     private static boolean fullNameMatcher(String message) {
-        Pattern pattern = Pattern.compile("^[A-Z][a-z]+ [A-Z][a-z]+$");
+        Pattern pattern = Pattern.compile("[A-Z][a-z]+[A-Z][a-z]");
         return pattern.matcher(message).matches();
     }
 
