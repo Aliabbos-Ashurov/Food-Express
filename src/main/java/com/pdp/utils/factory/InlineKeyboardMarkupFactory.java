@@ -121,7 +121,7 @@ public class InlineKeyboardMarkupFactory {
         Order order = orderService.getByID(orderID);
         InlineKeyboardButton minusButton = createInlineButton(" ➖ ", orderID, "-");
         InlineKeyboardButton plusButton = createInlineButton(" ➕ ", orderID, "+");
-        InlineKeyboardButton priceButton = createInlineButton(String.format("$%.2f", order.getFoodPrice()), orderID, "price");
+        InlineKeyboardButton priceButton = createInlineButton(String.format("\uD83D\uDED2%.2f", order.getFoodPrice()), orderID, "price");
         InlineKeyboardButton quantityButton = createInlineButton(String.valueOf(order.getFoodQuantity()), orderID, "quantity");
 
         return new InlineKeyboardMarkup(new InlineKeyboardButton[][]{

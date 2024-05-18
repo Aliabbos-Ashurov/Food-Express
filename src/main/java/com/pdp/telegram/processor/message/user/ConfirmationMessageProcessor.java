@@ -12,7 +12,6 @@ import com.pdp.utils.factory.SendMessageFactory;
 import com.pdp.utils.source.MessageSourceUtils;
 import com.pdp.web.enums.Language;
 import com.pdp.web.model.customerOrder.CustomerOrder;
-import com.pdp.web.model.order.Order;
 import com.pdp.web.service.customerOrder.CustomerOrderService;
 import com.pdp.web.service.order.OrderService;
 import com.pengrad.telegrambot.TelegramBot;
@@ -64,11 +63,10 @@ public class ConfirmationMessageProcessor implements Processor<ConfirmationState
         } else invalidSelectionSender(chatID);
     }
 
-    private TelegramUser updateTelegramUserState(@NonNull Long chatID, @NonNull State state) {
+    private void updateTelegramUserState(@NonNull Long chatID, @NonNull State state) {
         TelegramUser telegramUser = getTelegramUser(chatID);
         telegramUser.setState(state);
         telegramUserService.update(telegramUser);
-        return telegramUser;
     }
 
     private TelegramUser getTelegramUser(Long chatID) {
