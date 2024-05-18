@@ -65,7 +65,7 @@ public class OrderPlacementMessageProcessor implements Processor<OrderPlacementS
             telegramUserService.update(telegramUser);
             bot.execute(SendMessageFactory.sendMessagePaymentType(chatID, getTelegramUserLanguage(chatID)));
         } else {
-            bot.execute(new SendMessage(chatID, MessageSourceUtils.getLocalizedMessage("info.emptyCartMessage", getTelegramUserLanguage(chatID))));
+            bot.execute(SendMessageFactory.sendMessageCartIsEmpty(chatID,getTelegramUserLanguage(chatID)));
         }
     }
 
@@ -76,7 +76,7 @@ public class OrderPlacementMessageProcessor implements Processor<OrderPlacementS
             telegramUserService.update(telegramUser);
             bot.execute(SendMessageFactory.sendMessageConfirmation(chatID, getTelegramUserLanguage(chatID)));
         } else {
-            bot.execute(new SendMessage(chatID, MessageSourceUtils.getLocalizedMessage("info.emptyCartMessage", getTelegramUserLanguage(chatID))));
+            bot.execute(SendMessageFactory.sendMessageCartIsEmpty(chatID,getTelegramUserLanguage(chatID)));
         }
     }
 

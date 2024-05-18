@@ -54,6 +54,7 @@ public class ConfirmationMessageProcessor implements Processor<ConfirmationState
             TelegramUser telegramUser = getTelegramUser(chatID);
             CustomerOrder notConfirmedOrder = customerOrderService.getNotConfirmedOrder(telegramUser.getId());
             orderService.clearByCustomer(notConfirmedOrder.getId());
+            customerOrderService.remove(notConfirmedOrder.getId());
             bot.execute(new SendMessage(chatID, MessageSourceUtils.getLocalizedMessage("alert.cart.cleaned", getTelegramUserLanguage(chatID))));
             updateTelegramUserState(chatID, DefaultState.BASE_USER_MENU);
             bot.execute(SendMessageFactory.sendMessageWithUserMenu(chatID, getTelegramUserLanguage(chatID)));

@@ -96,7 +96,7 @@ public class UserMenuOptionMessageProcessor implements Processor<UserMenuOptionS
         TelegramUser telegramUser = updateTelegramUserState(chatID, MyOrderState.VIEW_ACTIVE_ORDERS_USER);
         Language telegramUserLanguage = getTelegramUserLanguage(chatID);
         List<SendMessage> sendMessages = SendMessageFactory.sendMessagesOrdersInProcessForUser(chatID, telegramUser.getId(), telegramUserLanguage);
-        processMessages(sendMessages, () -> SendMessageFactory.sendMessageCartIsEmpty(chatID, telegramUserLanguage), chatID, telegramUserLanguage);
+        processMessages(sendMessages, () -> SendMessageFactory.sendMessageNotActiveOrders(chatID, telegramUserLanguage), chatID, telegramUserLanguage);
     }
 
     private void handleViewArchivedOrders(@NonNull Long chatID) {
