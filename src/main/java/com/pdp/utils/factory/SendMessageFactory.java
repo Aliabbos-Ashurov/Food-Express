@@ -241,7 +241,7 @@ public class SendMessageFactory {
         CustomerOrderGeoPoint orderGeoPoint = getGeoPoint(customerOrder);
         String status = StatusSourceUtils.getLocalizedStatus(customerOrder.getOrderStatus(), language);
         return String.format(
-                "Brand: %s\nFrom location: %s\nTo location: %s\nPrice: %s\nPayment Type: %s\nStatus: %s",
+                "\uD83C\uDFE2 Brand: %s\n⬆\uFE0F From location: %s\n ⬇\uFE0FTo location: %s\n \uD83D\uDCB0Price: %s\n \uD83D\uDCB5Payment Type: %s\n \uD83D\uDCCAStatus: %s",
                 brand.getName(),
                 branchLocation.getLatidue() + " - " + branchLocation.getLongtidue(),
                 orderGeoPoint.getLattidue() + " - " + orderGeoPoint.getLongtidue(),
@@ -257,16 +257,16 @@ public class SendMessageFactory {
 //        CustomerOrderGeoPoint orderGeoPoint = getGeoPoint(customerOrder);
         String status = StatusSourceUtils.getLocalizedStatus(customerOrder.getOrderStatus(), language);
         StringBuilder formatBuilder = new StringBuilder();
-        formatBuilder.append(String.format("Brand: %s\n", brand.getName()));
+        formatBuilder.append(String.format("\uD83C\uDFE2 Brand: %s\n", brand.getName()));
 //        formatBuilder.append(String.format("To location: %s\n", orderGeoPoint.getLattidue() + " - " + orderGeoPoint.getLongtidue()));
-        formatBuilder.append(String.format("Price: %s\n", customerOrder.getOrderPrice()));
-        formatBuilder.append(String.format("Payment Type: %s\n", customerOrder.getPaymentType()));
-        formatBuilder.append(String.format("Status: %s\n", status));
+        formatBuilder.append(String.format("\uD83D\uDCB0 Price: %s\n", customerOrder.getOrderPrice()));
+        formatBuilder.append(String.format("\uD83D\uDCB5 Payment Type: %s\n", customerOrder.getPaymentType()));
+        formatBuilder.append(String.format("\uD83D\uDCCA Status: %s\n", status));
 
         for (int i = 0; i < orders.size(); i++) {
             Food food = foodService.getByID(orders.get(i).getFoodID());
             Order order = orders.get(i);
-            formatBuilder.append(String.format((i + 1) + " - %s: %d x %.2f\n", food.getName(), order.getFoodQuantity(), order.getFoodPrice()));
+            formatBuilder.append(String.format("\uD83C\uDF5F "+(i + 1) + " - %s: %d x %.2f\n", food.getName(), order.getFoodQuantity(), order.getFoodPrice()));
         }
         return formatBuilder.toString();
     }

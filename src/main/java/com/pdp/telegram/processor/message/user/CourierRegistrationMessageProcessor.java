@@ -74,7 +74,7 @@ public class CourierRegistrationMessageProcessor implements Processor<CourierReg
 
     private void handleEnterTransportRegistrationNumber(Long chatID, String registeredNum) {
         if (!registeredNumberMatcher(registeredNum)) {
-            invalidRegisterdNumSender(chatID);
+            invalidRegisteredNumSender(chatID);
             return;
         }
         TelegramUser telegramUser = getTelegramUser(chatID);
@@ -118,7 +118,7 @@ public class CourierRegistrationMessageProcessor implements Processor<CourierReg
         bot.execute(new SendMessage(chatID, MessageSourceUtils.getLocalizedMessage("error.invalidSelection", getTelegramUserLanguage(chatID))));
     }
 
-    private void invalidRegisterdNumSender(Long chatID) {
+    private void invalidRegisteredNumSender(Long chatID) {
         bot.execute(new SendMessage(chatID, MessageSourceUtils.getLocalizedMessage("alert.invalid.registered.num", getTelegramUserLanguage(chatID))));
     }
 

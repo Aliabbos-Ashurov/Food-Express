@@ -14,6 +14,8 @@ import com.pdp.utils.factory.ReplyKeyboardMarkupFactory;
 import com.pdp.utils.factory.SendMessageFactory;
 import com.pdp.utils.source.MessageSourceUtils;
 import com.pdp.web.enums.Language;
+import com.pdp.web.model.customerOrder.CustomerOrder;
+import com.pdp.web.service.customerOrder.CustomerOrderService;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.Update;
@@ -22,6 +24,7 @@ import com.pengrad.telegrambot.request.SendMessage;
 import lombok.NonNull;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.regex.Pattern;
@@ -34,6 +37,7 @@ public class UserMenuOptionMessageProcessor implements Processor<UserMenuOptionS
     private final TelegramBot bot = TelegramBotConfiguration.get();
     private final TelegramUserService telegramUserService = ThreadSafeBeansContainer.telegramUserServiceThreadLocal.get();
     private final TelegramDelivererService telegramDelivererService = ThreadSafeBeansContainer.telegramDelivererServiceThreadLocal.get();
+    private final CustomerOrderService customerOrderService = ThreadSafeBeansContainer.customerOrderServiceThreadLocal.get();
 
     @Override
     public void process(Update update, UserMenuOptionState state) {
@@ -70,7 +74,10 @@ public class UserMenuOptionMessageProcessor implements Processor<UserMenuOptionS
         if (checkLocalizedMessage("button.cart", text, chatID)) {
             updateTelegramUserState(chatID, OrderPlacementState.VIEW_CART);
             bot.execute(SendMessageFactory.sendMessageOrderManagementMenu(chatID, getTelegramUserLanguage(chatID)));
-            bot.execute(SendMessageFactory.sendMessageUserOrderNotConfirmed(chatID, getTelegramUser(chatID).getId(), getTelegramUserLanguage(chatID)));
+            CustomerOrder notConfirmedOrder = customerOrderService.getNotConfirmedOrder(getTelegramUser(chatID).getId());
+            if(Objects.nonNull(notConfirmedOrder)) {
+                bot.execute(SendMessageFactory.sendMessageUserOrderNotConfirmed(chatID, getTelegramUser(chatID).getId(), getTelegramUserLanguage(chatID)));
+            }else bot.execute(SendMessageFactory.sendMessageCartIsEmpty(chatID, getTelegramUserLanguage(chatID)));
         } else if (checkLocalizedMessage("button.select.brand", text, chatID)) {
             updateTelegramUserState(chatID, UserViewState.VIEW_BRANDS);
             bot.execute(SendMessageFactory.sendMessageWithBrandsMenu(chatID, getTelegramUserLanguage(chatID)));
