@@ -48,8 +48,9 @@ public class ActivateOrderMessageProcessor implements Processor<ActiveOrderManag
         Long chatID = user.id();
         switch (state) {
             case CONFIRM_ORDER_PICKUP -> handleConfirmOrderDelivery(chatID, message.text());
-            case CONFIRM_ORDER_DELIVERY -> {}
-            case DELIVERY_FAILED -> handleOrderFailed(chatID, message.text());
+            case CONFIRM_ORDER_DELIVERY -> {
+            }
+            case DELIVERY_FAILED -> handleOrderFailed(chatID, message.text(), true);
         }
     }
 
@@ -57,7 +58,7 @@ public class ActivateOrderMessageProcessor implements Processor<ActiveOrderManag
         if (checkLocalizedMessage(text, "order.delivered", chatID)) {
             orderDelivered(chatID);
         } else if (checkLocalizedMessage(text, "order.failed", chatID)) {
-            handleOrderFailed(chatID, "?");
+            handleOrderFailed(chatID, "", false);
         }
     }
 
@@ -79,15 +80,14 @@ public class ActivateOrderMessageProcessor implements Processor<ActiveOrderManag
         bot.execute(new SendMessage(tgUser.getChatID(), MessageSourceUtils.getLocalizedMessage("alert.order.delivered", tgUser.getLanguage())));
     }
 
-    private void handleOrderFailed(Long chatID, String text) {
+    private void handleOrderFailed(Long chatID, String text, boolean check) {
         backToDeliverMenu(chatID);
 
         TelegramUser telegramUser = getTelegramUser(chatID);
         TelegramDeliverer telegramDeliverer = telegramDelivererService.getDeliverByTelegramId(telegramUser.getId());
         telegramDeliverer.setDeliveryStatus(DeliveryStatus.EMPTY);
         telegramDelivererService.update(telegramDeliverer);
-
-        CustomerOrder currentOrder = getCurrentOrder(telegramDeliverer.getId(), OrderStatus.IN_TRANSIT);
+        CustomerOrder currentOrder = getCurrentOrder(telegramDeliverer.getId(), check ? OrderStatus.YOUR_ORDER_RECEIVED : OrderStatus.IN_TRANSIT);
         Description description = new Description("ORDER FAILED", text);
         descriptionService.add(description);
         currentOrder.setDescriptionID(description.getId());
@@ -104,8 +104,8 @@ public class ActivateOrderMessageProcessor implements Processor<ActiveOrderManag
         bot.execute(SendMessageFactory.sendMessageDeliverMenu(chatID, getTelegramUserLanguage(chatID)));
     }
 
-    private CustomerOrder getCurrentOrder(UUID telegramDelivereID, OrderStatus orderStatus) {
-        List<CustomerOrder> processByDeliverer = customerOrderService.getOrdersInProcessByDeliverer(telegramDelivereID);
+    private CustomerOrder getCurrentOrder(UUID telegramDelivererID, OrderStatus orderStatus) {
+        List<CustomerOrder> processByDeliverer = customerOrderService.getOrdersInProcessByDeliverer(telegramDelivererID);
         return processByDeliverer.stream()
                 .filter(customerOrder -> customerOrder.getOrderStatus().equals(orderStatus))
                 .findFirst()
