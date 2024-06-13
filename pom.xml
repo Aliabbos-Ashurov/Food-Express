@@ -40,6 +40,11 @@
             <version>7.2.1</version>
         </dependency>
         <dependency>
+            <groupId>org.jetbrains</groupId>
+            <artifactId>annotations</artifactId>
+            <version>24.1.0</version>
+        </dependency>
+        <dependency>
             <groupId>com.pdp</groupId>
             <artifactId>sql-helper</artifactId>
             <version>1.0</version>
