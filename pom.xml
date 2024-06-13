@@ -44,6 +44,11 @@
             <artifactId>annotations</artifactId>
             <version>24.1.0</version>
         </dependency>
+        <dependency>
+            <groupId>com.pdp</groupId>
+            <artifactId>sql-helper</artifactId>
+            <version>1.0</version>
+        </dependency>
     </dependencies>
 
 </project>
