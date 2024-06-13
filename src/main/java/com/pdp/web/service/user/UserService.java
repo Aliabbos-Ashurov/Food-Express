@@ -17,5 +17,5 @@ public interface UserService extends BaseService<User, List<User>> {
     /**
      * The singleton instance of the UserRepository.
      */
-    UserRepository repository = UserRepository.getInstance();
+    UserRepository repository = new UserRepository();
 }

@@ -51,8 +51,4 @@ public interface BaseRepository<T extends BaseModel, R extends Collection<T>> ex
      * @return A list of all entities.
      */
     R getAll();
-
-    R load();
-
-    void save(@NonNull R r);
 }

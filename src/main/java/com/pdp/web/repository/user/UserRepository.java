@@ -1,14 +1,18 @@
 package com.pdp.web.repository.user;
 
-import com.pdp.utils.serializer.JsonSerializer;
+import com.pdp.config.SQLConfiguration;
+import com.pdp.enums.Language;
+import com.pdp.enums.role.Role;
 import com.pdp.web.model.user.User;
 import com.pdp.web.repository.BaseRepository;
 import lombok.NonNull;
 import lombok.SneakyThrows;
+import sql.helper.SQLHelper;
 
-import java.io.IOException;
-import java.nio.file.Path;
+import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -22,23 +26,7 @@ import java.util.UUID;
  * @since 04/May/2024 17:06
  */
 public class UserRepository implements BaseRepository<User, List<User>> {
-    private static volatile UserRepository instance;
-    private static JsonSerializer<User> jsonSerializer;
-
-    private UserRepository() {
-    }
-
-    public static UserRepository getInstance() {
-        if (instance == null) {
-            synchronized (UserRepository.class) {
-                if (instance == null) {
-                    instance = new UserRepository();
-                    jsonSerializer = new JsonSerializer<>(Path.of(PATH_USER));
-                }
-            }
-        }
-        return instance;
-    }
+    private final SQLHelper sql = SQLConfiguration.getSQL();
 
     /**
      * Adds a new {@link User} to the repository and persists the changes to the data file.
@@ -46,12 +34,10 @@ public class UserRepository implements BaseRepository<User, List<User>> {
      * @param user The user to add.
      * @return Always returns {@code true} after adding and saving the user.
      */
+    @SneakyThrows
     @Override
     public boolean add(@NonNull User user) {
-        List<User> users = load();
-        users.add(user);
-        save(users);
-        return true;
+        return Objects.nonNull(sql.executeQuery("SELECT web.add_user(?,?,?);", user.getFullname(), user.getUsername(), user.getPassword(), user.getLanguage()));
     }
 
     /**
@@ -60,12 +46,10 @@ public class UserRepository implements BaseRepository<User, List<User>> {
      * @param id The unique ID of the user to remove.
      * @return {@code true} if a user was found and removed, {@code false} otherwise.
      */
+    @SneakyThrows
     @Override
     public boolean remove(@NonNull UUID id) {
-        List<User> users = load();
-        boolean removed = users.removeIf(user -> user.getId().equals(id));
-        if (removed) save(users);
-        return removed;
+        return sql.executeUpdate("DELETE FROM web.auth_user WHERE id = ?;", id) > 0;
     }
 
     /**
@@ -76,11 +60,7 @@ public class UserRepository implements BaseRepository<User, List<User>> {
      */
     @Override
     public User findById(@NonNull UUID id) {
-        List<User> people = load();
-        return people.stream()
-                .filter(user -> user.getId().equals(id))
-                .findFirst()
-                .orElse(null);
+        return getAll().stream().filter(user -> user.getId().equals(id)).findFirst().orElse(null);
     }
 
     /**
@@ -88,30 +68,27 @@ public class UserRepository implements BaseRepository<User, List<User>> {
      *
      * @return An unmodifiable list view of users.
      */
+    @SneakyThrows
     @Override
     public List<User> getAll() {
-        return load();
-    }
-
-    /**
-     * Loads the list of users from the data file into the repository's memory.
-     *
-     * @return A list of users; if the file does not exist or an error occurs during reading, returns an empty list.
-     */
-    @SneakyThrows
-    @Override
-    public List<User> load() {
-        return jsonSerializer.read(User.class);
-    }
-
-    /**
-     * Persists the current state of users to the data file.
-     *
-     * @throws IOException if an I/O error occurs while writing the data.
-     */
-    @SneakyThrows
-    @Override
-    public void save(@NonNull List<User> users) {
-        jsonSerializer.write(users);
+        ResultSet resultSet = sql.executeQuery("SELECT * FROM web.auth_user;");
+        List<User> users = new ArrayList<>();
+        while (resultSet.next()) {
+            User user = new User();
+            user.setId(UUID.fromString(resultSet.getString("id")));
+            user.setFullname(resultSet.getString("full_name"));
+            user.setUsername(resultSet.getString("user_name"));
+            user.setPassword(resultSet.getString("password"));
+            user.setPhoneNumber(resultSet.getString("phone_number"));
+            user.setEmail(resultSet.getString("email"));
+            user.setNumberVerified(resultSet.getBoolean("is_number_verified"));
+            user.setEmailVerified(resultSet.getBoolean("is_email_verified"));
+            user.setRole(Role.valueOf(resultSet.getString("role")));
+            user.setLanguage(Language.valueOf(resultSet.getString("language")));
+            user.setProfilePictureUrl(resultSet.getString("profile_picture_url"));
+            user.setCreatedAt(resultSet.getTimestamp("created_at").toLocalDateTime());
+            users.add(user);
+        }
+        return users;
     }
 }
