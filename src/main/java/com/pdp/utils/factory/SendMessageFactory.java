@@ -253,11 +253,9 @@ public class SendMessageFactory {
     private static String customerOrderFormatForUser(List<Order> orders, CustomerOrder customerOrder, Language language) {
         Branch branch = getBranch(customerOrder);
         Brand brand = getBrand(branch);
-//        CustomerOrderGeoPoint orderGeoPoint = getGeoPoint(customerOrder);
         String status = StatusSourceUtils.getLocalizedStatus(customerOrder.getOrderStatus(), language);
         StringBuilder formatBuilder = new StringBuilder();
         formatBuilder.append(String.format("\uD83C\uDFE2 Brand: %s\n", brand.getName()));
-//        formatBuilder.append(String.format("To location: %s\n", orderGeoPoint.getLattidue() + " - " + orderGeoPoint.getLongtidue()));
         formatBuilder.append(String.format("\uD83D\uDCB0 Price: %s\n", customerOrder.getOrderPrice()));
         formatBuilder.append(String.format("\uD83D\uDCB5 Payment Type: %s\n", customerOrder.getPaymentType()));
         formatBuilder.append(String.format("\uD83D\uDCCA Status: %s\n", status));

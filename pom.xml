@@ -39,6 +39,11 @@
             <artifactId>java-telegram-bot-api</artifactId>
             <version>7.2.1</version>
         </dependency>
+        <dependency>
+            <groupId>com.pdp</groupId>
+            <artifactId>sql-helper</artifactId>
+            <version>1.0</version>
+        </dependency>
     </dependencies>
 
 </project>
