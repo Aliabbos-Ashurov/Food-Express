@@ -14,5 +14,5 @@ import java.util.List;
  * @see Deliverer
  */
 public interface DelivererService extends BaseService<Deliverer, List<Deliverer>> {
-    DelivererRepository repository = DelivererRepository.getInstance();
+    DelivererRepository repository = new DelivererRepository();
 }

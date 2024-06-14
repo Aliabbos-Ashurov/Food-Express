@@ -15,7 +15,7 @@ import lombok.*;
 @Setter
 @ToString(callSuper = true)
 @AllArgsConstructor
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor
 public class CustomerOrderGeoPoint extends BaseModel {
     private float lattidue;
     private float longtidue;

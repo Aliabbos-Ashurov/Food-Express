@@ -17,5 +17,5 @@ public interface TransportService extends BaseService<Transport, List<Transport>
     /**
      * The singleton instance of the TransportRepository.
      */
-    TransportRepository repository = TransportRepository.getInstance();
+    TransportRepository repository = new TransportRepository();
 }

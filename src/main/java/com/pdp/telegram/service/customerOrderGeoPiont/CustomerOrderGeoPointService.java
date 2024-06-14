@@ -17,5 +17,5 @@ public interface CustomerOrderGeoPointService extends BaseService<CustomerOrderG
     /**
      * The repository instance for accessing customer order geo point data.
      */
-    CustomerOrderGeoPointRepository repository = CustomerOrderGeoPointRepository.getInstance();
+    CustomerOrderGeoPointRepository repository = new CustomerOrderGeoPointRepository();
 }

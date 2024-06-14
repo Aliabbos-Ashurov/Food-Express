@@ -4,9 +4,7 @@ import com.google.gson.annotations.SerializedName;
 import com.pdp.enums.format.PictureFormat;
 import com.pdp.web.model.BaseModel;
 import com.pdp.java.console.support.Displayable;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.ToString;
+import lombok.*;
 
 /**
  * Encapsulates details about a picture associated with items in the system, such as its name,
@@ -20,12 +18,14 @@ import lombok.ToString;
  */
 @Getter
 @ToString(callSuper = true)
+@NoArgsConstructor
 @AllArgsConstructor
-public class Picture extends BaseModel implements Displayable{
+@Setter
+public class Picture extends BaseModel implements Displayable {
     private String name;
     private PictureFormat format;
-    private boolean width;
-    private boolean height;
+    private int width;
+    private int height;
     @SerializedName("image_url")
     private String imageUrl;
 

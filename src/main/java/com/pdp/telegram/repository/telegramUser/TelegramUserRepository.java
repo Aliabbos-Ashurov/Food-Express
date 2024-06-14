@@ -1,14 +1,25 @@
 package com.pdp.telegram.repository.telegramUser;
 
+import com.pdp.config.SQLConfiguration;
+import com.pdp.enums.Language;
+import com.pdp.enums.role.Role;
 import com.pdp.telegram.model.telegramUser.TelegramUser;
+import com.pdp.telegram.state.DefaultState;
+import com.pdp.telegram.state.State;
+import com.pdp.telegram.state.telegramDeliverer.ActiveOrderManagementState;
+import com.pdp.telegram.state.telegramDeliverer.DeliveryMenuState;
+import com.pdp.telegram.state.telegramUser.*;
 import com.pdp.utils.serializer.JsonSerializer;
 import com.pdp.web.repository.BaseRepository;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.SneakyThrows;
+import sql.helper.SQLHelper;
 
 import java.nio.file.Path;
+import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -20,27 +31,8 @@ import java.util.UUID;
  * @author Doniyor Nishonov
  * @since 14th May 2024, 14:43
  */
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class TelegramUserRepository implements BaseRepository<TelegramUser, List<TelegramUser>> {
-    private static volatile TelegramUserRepository instance;
-    private static JsonSerializer<TelegramUser> jsonSerializer;
-
-    /**
-     * Returns the singleton instance of the repository.
-     *
-     * @return The singleton instance of the repository.
-     */
-    public static TelegramUserRepository getInstance() {
-        if (instance == null) {
-            synchronized (TelegramUserRepository.class) {
-                if (instance == null) {
-                    instance = new TelegramUserRepository();
-                    jsonSerializer = new JsonSerializer<>(Path.of(PATH_TELEGRAM_USER));
-                }
-            }
-        }
-        return instance;
-    }
+    private final SQLHelper sql = SQLConfiguration.getSQL();
 
     /**
      * Adds a Telegram user to the repository.
@@ -48,12 +40,13 @@ public class TelegramUserRepository implements BaseRepository<TelegramUser, List
      * @param object The Telegram user to add.
      * @return True if the addition was successful, false otherwise.
      */
+    @SneakyThrows
     @Override
     public boolean add(@NonNull TelegramUser object) {
-        List<TelegramUser> load = load();
-        load.add(object);
-        save(load);
-        return true;
+        return sql.executeUpdate("INSERT INTO telegram.telegramUser(chat_id,first_name,user_name,phone_number,role,state,language) " +
+                        "VALUES (?,?,?,?,?,?,?);",
+                object.getChatID(), object.getFirstName(), object.getUsername(), object.getPhoneNumber(),
+                object.getRole(), String.valueOf(object.getState()), object.getLanguage()) > 0;
     }
 
     /**
@@ -62,12 +55,10 @@ public class TelegramUserRepository implements BaseRepository<TelegramUser, List
      * @param id The ID of the Telegram user to remove.
      * @return True if the removal was successful, false otherwise.
      */
+    @SneakyThrows
     @Override
     public boolean remove(@NonNull UUID id) {
-        List<TelegramUser> load = load();
-        boolean b = load.removeIf(t -> Objects.equals(t.getId(), id));
-        if (b) save(load);
-        return b;
+        return sql.executeUpdate("DELETE FROM telegram.telegramUser WHERE id = ?", id) > 0;
     }
 
     /**
@@ -78,10 +69,7 @@ public class TelegramUserRepository implements BaseRepository<TelegramUser, List
      */
     @Override
     public TelegramUser findById(@NonNull UUID id) {
-        return load().stream()
-                .filter(t -> Objects.equals(t.getId(), id))
-                .findFirst()
-                .orElse(null);
+        return getAll().stream().filter(t -> Objects.equals(t.getId(), id)).findFirst().orElse(null);
     }
 
     /**
@@ -89,32 +77,71 @@ public class TelegramUserRepository implements BaseRepository<TelegramUser, List
      *
      * @return A list of all Telegram users.
      */
+    @SneakyThrows
     @Override
     public List<TelegramUser> getAll() {
-        return load();
+        ResultSet resultSet = sql.executeQuery("SELECT * FROM telegram.telegramUser;");
+        List<TelegramUser> users = new ArrayList<>();
+        while (resultSet.next()) {
+            TelegramUser telegramUser = new TelegramUser();
+            telegramUser.setId(UUID.fromString(resultSet.getString("id")));
+            telegramUser.setChatID(resultSet.getLong("chat_id"));
+            telegramUser.setFirstName(resultSet.getString("first_name"));
+            telegramUser.setUsername(resultSet.getString("user_name"));
+            telegramUser.setPhoneNumber(resultSet.getString("phone_number"));
+            telegramUser.setRole(Role.valueOf(resultSet.getString("role")));
+            telegramUser.setState(getUserState(resultSet.getString("state")));
+            telegramUser.setLanguage(Language.valueOf(resultSet.getString("language")));
+            telegramUser.setCreatedAt(resultSet.getTimestamp("created_at").toLocalDateTime());
+        }
+        return users;
     }
 
-    /**
-     * Loads Telegram users from storage.
-     *
-     * @return A list of loaded Telegram users.
-     * @throws Exception If there's an error during deserialization.
-     */
-    @SneakyThrows
-    @Override
-    public List<TelegramUser> load() {
-        return jsonSerializer.read(TelegramUser.class);
-    }
-
-    /**
-     * Saves Telegram users to storage.
-     *
-     * @param telegramUsers The list of Telegram users to save.
-     * @throws Exception If there's an error during serialization.
-     */
-    @SneakyThrows
-    @Override
-    public void save(@NonNull List<TelegramUser> telegramUsers) {
-        jsonSerializer.write(telegramUsers);
+    private State getUserState(String state) {
+        try {
+            return DefaultState.valueOf(state);
+        } catch (Exception ignored) {
+        }
+        try {
+            return UserViewState.valueOf(state);
+        } catch (Exception ignored) {
+        }
+        try {
+            return UserMenuOptionState.valueOf(state);
+        } catch (Exception ignored) {
+        }
+        try {
+            return OrderPlacementState.valueOf(state);
+        } catch (Exception ignored) {
+        }
+        try {
+            return OrderManagementState.valueOf(state);
+        } catch (Exception ignored) {
+        }
+        try {
+            return MyOrderState.valueOf(state);
+        } catch (Exception ignored) {
+        }
+        try {
+            return CourierRegistrationState.valueOf(state);
+        } catch (Exception ignored) {
+        }
+        try {
+            return ConfirmOrderState.valueOf(state);
+        } catch (Exception ignored) {
+        }
+        try {
+            return ConfirmationState.valueOf(state);
+        } catch (Exception ignored) {
+        }
+        try {
+            return ActiveOrderManagementState.valueOf(state);
+        } catch (Exception ignored) {
+        }
+        try {
+            return DeliveryMenuState.valueOf(state);
+        } catch (Exception ignored) {
+        }
+        return null;
     }
 }

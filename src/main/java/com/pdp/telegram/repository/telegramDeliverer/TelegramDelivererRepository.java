@@ -1,16 +1,16 @@
 package com.pdp.telegram.repository.telegramDeliverer;
 
+import com.pdp.config.SQLConfiguration;
+import com.pdp.enums.telegram.DeliveryStatus;
 import com.pdp.telegram.model.telegramDeliverer.TelegramDeliverer;
-import com.pdp.utils.serializer.JsonSerializer;
 import com.pdp.web.repository.BaseRepository;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.SneakyThrows;
+import sql.helper.SQLHelper;
 
-import java.nio.file.Path;
+import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -20,27 +20,8 @@ import java.util.UUID;
  * @author Doniyor Nishonov
  * @since 14th May 2024, 14:39
  */
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class TelegramDelivererRepository implements BaseRepository<TelegramDeliverer, List<TelegramDeliverer>> {
-    private static volatile TelegramDelivererRepository instance;
-    private static JsonSerializer<TelegramDeliverer> jsonSerializer;
-
-    /**
-     * Returns the singleton instance of the repository.
-     *
-     * @return The singleton instance of the repository.
-     */
-    public static TelegramDelivererRepository getInstance() {
-        if (instance == null) {
-            synchronized (TelegramDelivererRepository.class) {
-                if (instance == null) {
-                    instance = new TelegramDelivererRepository();
-                    jsonSerializer = new JsonSerializer<>(Path.of(PATH_TELEGRAM_DELIVERER));
-                }
-            }
-        }
-        return instance;
-    }
+    private final SQLHelper sql = SQLConfiguration.getSQL();
 
     /**
      * Adds a Telegram deliverer to the repository.
@@ -48,12 +29,11 @@ public class TelegramDelivererRepository implements BaseRepository<TelegramDeliv
      * @param object The Telegram deliverer to add.
      * @return True if the addition was successful, false otherwise.
      */
+    @SneakyThrows
     @Override
     public boolean add(@NonNull TelegramDeliverer object) {
-        List<TelegramDeliverer> load = load();
-        load.add(object);
-        save(load);
-        return true;
+        return sql.executeUpdate("INSERT INTO telegram.telegramDeliverer(telegram_user_id,full_name,deliveryStatus) VALUES (?,?,?);",
+                object.getTelegramUserID(), object.getFullname(), String.valueOf(object.getDeliveryStatus())) > 0;
     }
 
     /**
@@ -62,12 +42,10 @@ public class TelegramDelivererRepository implements BaseRepository<TelegramDeliv
      * @param id The ID of the Telegram deliverer to remove.
      * @return True if the removal was successful, false otherwise.
      */
+    @SneakyThrows
     @Override
     public boolean remove(@NonNull UUID id) {
-        List<TelegramDeliverer> load = load();
-        boolean b = load.removeIf(t -> Objects.equals(t.getId(), id));
-        if (b) save(load);
-        return b;
+        return sql.executeUpdate("DELETE FROM telegram.telegramDeliverer WHERE id = ?;", id) > 0;
     }
 
     /**
@@ -78,10 +56,8 @@ public class TelegramDelivererRepository implements BaseRepository<TelegramDeliv
      */
     @Override
     public TelegramDeliverer findById(@NonNull UUID id) {
-        return load().stream()
-                .filter(t -> Objects.equals(t.getId(), id))
-                .findFirst()
-                .orElse(null);
+        return getAll().stream()
+                .filter(telegramDeliverer -> telegramDeliverer.getId().equals(id)).findFirst().orElse(null);
     }
 
     /**
@@ -89,32 +65,20 @@ public class TelegramDelivererRepository implements BaseRepository<TelegramDeliv
      *
      * @return A list of all Telegram deliverers.
      */
+    @SneakyThrows
     @Override
     public List<TelegramDeliverer> getAll() {
-        return load();
-    }
-
-    /**
-     * Loads Telegram deliverers from storage.
-     *
-     * @return A list of loaded Telegram deliverers.
-     * @throws Exception If there's an error during deserialization.
-     */
-    @SneakyThrows
-    @Override
-    public List<TelegramDeliverer> load() {
-        return jsonSerializer.read(TelegramDeliverer.class);
-    }
-
-    /**
-     * Saves Telegram deliverers to storage.
-     *
-     * @param telegramDeliverers The list of Telegram deliverers to save.
-     * @throws Exception If there's an error during serialization.
-     */
-    @SneakyThrows
-    @Override
-    public void save(@NonNull List<TelegramDeliverer> telegramDeliverers) {
-        jsonSerializer.write(telegramDeliverers);
+        ResultSet resultSet = sql.executeQuery("SELECT * FROM telegram.telegramDeliverer;");
+        List<TelegramDeliverer> telegramDeliverers = new ArrayList<>();
+        while (resultSet.next()) {
+            TelegramDeliverer telegramDeliverer = new TelegramDeliverer();
+            telegramDeliverer.setId(resultSet.getObject("id", UUID.class));
+            telegramDeliverer.setTelegramUserID(resultSet.getObject("telegram_user_id", UUID.class));
+            telegramDeliverer.setFullname(resultSet.getString("full_name"));
+            telegramDeliverer.setDeliveryStatus(DeliveryStatus.valueOf(resultSet.getString("deliveryStatus")));
+            telegramDeliverer.setCreatedAt(resultSet.getTimestamp("created_at").toLocalDateTime());
+            telegramDeliverers.add(telegramDeliverer);
+        }
+        return telegramDeliverers;
     }
 }

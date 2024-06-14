@@ -1,13 +1,17 @@
 package com.pdp.web.repository.description;
 
+import com.pdp.config.SQLConfiguration;
 import com.pdp.utils.serializer.JsonSerializer;
 import com.pdp.web.model.description.Description;
 import com.pdp.web.repository.BaseRepository;
 import com.pdp.config.jsonFilePath.JsonFilePath;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
+import sql.helper.SQLHelper;
 
 import java.nio.file.Path;
+import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -29,34 +33,7 @@ import java.util.UUID;
  * @since 04/May/2024 16:44
  */
 public class DescriptionRepository implements BaseRepository<Description, List<Description>> {
-    private static JsonSerializer<Description> jsonSerializer;
-    private static volatile DescriptionRepository instance;
-
-    /**
-     * Initializes the repository by setting up the JsonSerializer and loads
-     * existing descriptions from the JSON file located at the path specified by
-     * JsonFilePath.DESCRIPTION.
-     */
-    private DescriptionRepository() {
-    }
-
-    /**
-     * Retrieves the singleton instance of the {@code DescriptionRepository} class, creating it
-     * if necessary. This method is thread-safe.
-     *
-     * @return The single global instance of {@code DescriptionRepository}.
-     */
-    public static DescriptionRepository getInstance() {
-        if (instance == null) {
-            synchronized (DescriptionRepository.class) {
-                if (instance == null) {
-                    instance = new DescriptionRepository();
-                    jsonSerializer = new JsonSerializer<>(Path.of(JsonFilePath.PATH_DESCRIPTION));
-                }
-            }
-        }
-        return instance;
-    }
+    private final SQLHelper sql = SQLConfiguration.getSQL();
 
     /**
      * Adds a new {@link Description} to the repository and updates the JSON storage file to reflect
@@ -65,12 +42,10 @@ public class DescriptionRepository implements BaseRepository<Description, List<D
      * @param description The {@code Description} entity to be added.
      * @return {@code true} after the entity is added and the storage file is updated.
      */
+    @SneakyThrows
     @Override
     public boolean add(@NotNull Description description) {
-        List<Description> descriptions = load();
-        descriptions.add(description);
-        save(descriptions);
-        return true;
+        return sql.executeUpdate("INSERT INTO web.description(name,text) VALUES (?,?);", description.getName(), description.getText()) > 0;
     }
 
     /**
@@ -80,12 +55,10 @@ public class DescriptionRepository implements BaseRepository<Description, List<D
      * @param id The UUID of the {@code Description} entity to remove.
      * @return {@code true} if the entity is successfully found and removed; {@code false} otherwise.
      */
+    @SneakyThrows
     @Override
     public boolean remove(@NotNull UUID id) {
-        List<Description> descriptions = load();
-        boolean removed = descriptions.removeIf(description -> description.getId().equals(id));
-        if (removed) save(descriptions);
-        return removed;
+        return sql.executeUpdate("DELETE FROM web.description WHERE id = ?;", id) > 0;
     }
 
     /**
@@ -96,10 +69,8 @@ public class DescriptionRepository implements BaseRepository<Description, List<D
      */
     @Override
     public Description findById(@NotNull UUID id) {
-        List<Description> descriptions = load();
-        return descriptions.stream()
-                .filter(description -> description.getId().equals(id))
-                .findFirst().orElse(null);
+        return getAll().stream()
+                .filter(description -> description.getId().equals(id)).findFirst().orElse(null);
     }
 
     /**
@@ -107,27 +78,19 @@ public class DescriptionRepository implements BaseRepository<Description, List<D
      *
      * @return A {@link List} comprising all current {@code Description} entities.
      */
+    @SneakyThrows
     @Override
     public List<Description> getAll() {
-        return load();
-    }
-
-    /**
-     * Reads the contents of the predefined JSON storage file and deserializes the data into a {@link List}
-     * of {@link Description} entities.
-     *
-     * @return A {@link List} of {@code Description} entities.
-     * @throws IOException If any reading errors occur while accessing the JSON file.
-     */
-    @SneakyThrows
-    @Override
-    public List<Description> load() {
-        return jsonSerializer.read(Description.class);
-    }
-
-    @SneakyThrows
-    @Override
-    public void save(@NotNull List<Description> descriptions) {
-        jsonSerializer.write(descriptions);
+        ResultSet resultSet = sql.executeQuery("SELECT * FROM web.description;");
+        List<Description> descriptions = new ArrayList<>();
+        while (resultSet.next()) {
+            Description description = new Description();
+            description.setId(UUID.fromString(resultSet.getString("id")));
+            description.setName(resultSet.getString("name"));
+            description.setText(resultSet.getString("text"));
+            description.setCreatedAt(resultSet.getTimestamp("created_at").toLocalDateTime());
+            descriptions.add(description);
+        }
+        return descriptions;
     }
 }

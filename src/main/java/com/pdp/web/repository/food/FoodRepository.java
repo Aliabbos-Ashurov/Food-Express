@@ -1,15 +1,16 @@
 package com.pdp.web.repository.food;
 
+import com.pdp.config.SQLConfiguration;
 import com.pdp.utils.serializer.JsonSerializer;
 import com.pdp.web.model.food.Food;
 import com.pdp.web.repository.BaseRepository;
-import com.pdp.config.jsonFilePath.JsonFilePath;
-import lombok.NonNull;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
+import sql.helper.SQLHelper;
 
-import java.io.IOException;
-import java.nio.file.Path;
+import java.math.BigDecimal;
+import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -29,28 +30,7 @@ import java.util.UUID;
  * @since 04/May/2024 16:51
  */
 public class FoodRepository implements BaseRepository<Food, List<Food>> {
-    private static JsonSerializer<Food> jsonSerializer;
-    private static volatile FoodRepository instance;
-
-    private FoodRepository() {
-    }
-
-    /**
-     * Retrieves the singleton instance of FoodRepository.
-     *
-     * @return The singleton instance of FoodRepository.
-     */
-    public static FoodRepository getInstance() {
-        if (instance == null) {
-            synchronized (FoodRepository.class) {
-                if (instance == null) {
-                    instance = new FoodRepository();
-                    jsonSerializer = new JsonSerializer<>(Path.of(JsonFilePath.PATH_FOOD));
-                }
-            }
-        }
-        return instance;
-    }
+    private final SQLHelper sql = SQLConfiguration.getSQL();
 
     /**
      * Adds a new Food item to the repository and persists the change to JSON storage.
@@ -58,12 +38,11 @@ public class FoodRepository implements BaseRepository<Food, List<Food>> {
      * @param food The Food object to be added.
      * @return true if the operation was successful, false otherwise.
      */
+    @SneakyThrows
     @Override
     public boolean add(@NotNull Food food) {
-        List<Food> foods = load();
-        foods.add(food);
-        save(foods);
-        return true;
+        return sql.executeUpdate("INSERT INTO web.food(name,image_url,description_id,price,category_id) VALUES (?,?,?,?,?);",
+                food.getName(), food.getImageUrl(), food.getDescriptionID(), food.getPrice(), food.getCategoryID()) > 0;
     }
 
     /**
@@ -72,12 +51,10 @@ public class FoodRepository implements BaseRepository<Food, List<Food>> {
      * @param id The UUID of the Food item to remove.
      * @return true if the item was successfully removed, false otherwise.
      */
+    @SneakyThrows
     @Override
     public boolean remove(@NotNull UUID id) {
-        List<Food> foods = load();
-        boolean removed = foods.removeIf(food -> food.getId().equals(id));
-        if (removed) save(foods);
-        return removed;
+        return sql.executeUpdate("DELETE FROM web.food WHERE id = ?;", id) > 0;
     }
 
     /**
@@ -88,10 +65,7 @@ public class FoodRepository implements BaseRepository<Food, List<Food>> {
      */
     @Override
     public Food findById(@NotNull UUID id) {
-        List<Food> foods = load();
-        return foods.stream()
-                .filter(food -> food.getId().equals(id))
-                .findFirst().orElse(null);
+        return getAll().stream().filter(f -> f.getId().equals(id)).findFirst().orElse(null);
     }
 
     /**
@@ -99,31 +73,22 @@ public class FoodRepository implements BaseRepository<Food, List<Food>> {
      *
      * @return A list of all Food items in the repository.
      */
+    @SneakyThrows
     @Override
     public List<Food> getAll() {
-        return load();
-    }
-
-    /**
-     * Loads the list of Food items from JSON storage into memory.
-     *
-     * @return A List containing Food items loaded from storage, or an empty List if loading fails.
-     */
-    @SneakyThrows
-    @Override
-    public List<Food> load() {
-        return jsonSerializer.read(Food.class);
-    }
-
-    /**
-     * Persists the current list of foods to JSON storage. The @SneakyThrows annotation
-     * is used to avoid the need of handling the IOException in this context.
-     *
-     * @throws IOException if any IO error occurs during the save operation.
-     */
-    @SneakyThrows
-    @Override
-    public void save(@NonNull List<Food> foods) {
-        jsonSerializer.write(foods);
+        ResultSet resultSet = sql.executeQuery("SELECT * FROM web.food;");
+        List<Food> foods = new ArrayList<>();
+        while (resultSet.next()) {
+            Food food = new Food();
+            food.setId(UUID.fromString(resultSet.getString("id")));
+            food.setName(resultSet.getString("name"));
+            food.setPrice(BigDecimal.valueOf(resultSet.getDouble("price")));
+            food.setDescriptionID(UUID.fromString(resultSet.getString("description_id")));
+            food.setCategoryID(UUID.fromString(resultSet.getString("category_id")));
+            food.setImageUrl(resultSet.getString("image_url"));
+            food.setCreatedAt(resultSet.getTimestamp("created_at").toLocalDateTime());
+            foods.add(food);
+        }
+        return foods;
     }
 }
