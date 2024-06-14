@@ -2,10 +2,7 @@ package com.pdp.web.model.foodBrandMapping;
 
 import com.google.gson.annotations.SerializedName;
 import com.pdp.web.model.BaseModel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import java.util.UUID;
 
@@ -23,6 +20,7 @@ import java.util.UUID;
 @ToString(callSuper = true)
 @AllArgsConstructor
 @Setter
+@NoArgsConstructor
 public class FoodBrandMapping extends BaseModel {
     @SerializedName("category_name")
     private String categoryName;

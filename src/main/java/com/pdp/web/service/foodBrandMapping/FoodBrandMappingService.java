@@ -13,13 +13,11 @@ import java.util.UUID;
  * Service interface for managing the mapping between food items and brands.
  * This includes operations such as retrieving food items for a specific brand and category.
  * @author Nishonov Doniyor
- * @param <T> the type of food brand mapping entity
- * @param <L> the type of list containing food brand mappings
  * @see BaseService Base service interface providing common methods for service implementations.
  * @see FoodBrandMapping
  */
 public interface FoodBrandMappingService extends BaseService<FoodBrandMapping, List<FoodBrandMapping>> {
-    FoodBrandMappingRepository repository = FoodBrandMappingRepository.getInstance();
+    FoodBrandMappingRepository repository = new FoodBrandMappingRepository();
 
     /**
      * Retrieves a list of food items associated with a particular brand by its UUID.

@@ -17,5 +17,5 @@ public interface PictureService extends BaseService<Picture, List<Picture>> {
     /**
      * The singleton instance of the PictureRepository.
      */
-    PictureRepository repository = PictureRepository.getInstance();
+    PictureRepository repository = new PictureRepository();
 }

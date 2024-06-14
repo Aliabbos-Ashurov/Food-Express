@@ -1,15 +1,16 @@
 package com.pdp.web.repository.discount;
 
-import com.pdp.utils.serializer.JsonSerializer;
+import com.pdp.config.SQLConfiguration;
 import com.pdp.web.model.discount.Discount;
 import com.pdp.web.repository.BaseRepository;
-import com.pdp.config.jsonFilePath.JsonFilePath;
-import lombok.NonNull;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
+import sql.helper.SQLHelper;
 
-import java.nio.file.Path;
+import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -26,23 +27,7 @@ import java.util.UUID;
  * @since 04/May/2024 16:47
  */
 public class DiscountRepository implements BaseRepository<Discount, List<Discount>> {
-    private static JsonSerializer<Discount> jsonSerializer;
-    private static volatile DiscountRepository instance;
-
-    private DiscountRepository() {
-    }
-
-    public static DiscountRepository getInstance() {
-        if (instance == null) {
-            synchronized (DiscountRepository.class) {
-                if (instance == null) {
-                    instance = new DiscountRepository();
-                    jsonSerializer = new JsonSerializer<>(Path.of(JsonFilePath.PATH_DISCOUNT));
-                }
-            }
-        }
-        return instance;
-    }
+    private final SQLHelper sql = SQLConfiguration.getSQL();
 
     /**
      * Adds a new Discount to the repository, automatically saving the updated
@@ -51,12 +36,11 @@ public class DiscountRepository implements BaseRepository<Discount, List<Discoun
      * @param discount The Discount to be added.
      * @return True if the operation is successful, false otherwise.
      */
+    @SneakyThrows
     @Override
     public boolean add(@NotNull Discount discount) {
-        List<Discount> discounts = load();
-        discounts.add(discount);
-        save(discounts);
-        return true;
+        return (sql.executeUpdate("INSERT INTO web.discount(food_id,starting_time,ending_time,description_id,discount_percentage) VALUES (?,?,?,?,?);",
+                discount.getFoodID(), discount.getStartingTime(), discount.getEndingTime(), discount.getDescriptionID(), discount.getDiscountPersentage())) > 0;
     }
 
     /**
@@ -66,20 +50,15 @@ public class DiscountRepository implements BaseRepository<Discount, List<Discoun
      * @param id The UUID of the Discount to remove.
      * @return True if the Discount is successfully removed, false otherwise.
      */
+    @SneakyThrows
     @Override
     public boolean remove(@NotNull UUID id) {
-        List<Discount> discounts = load();
-        boolean removed = discounts.removeIf(discount -> discount.getId().equals(id));
-        if (removed) save(discounts);
-        return removed;
+        return sql.executeUpdate("DELETE FROM web.discount WHERE id = ?;", id) > 0;
     }
 
     @Override
     public Discount findById(@NotNull UUID id) {
-        List<Discount> discounts = load();
-        return discounts.stream()
-                .filter(discount -> discount.getId().equals(id))
-                .findFirst().orElse(null);
+        return getAll().stream().filter(discount -> Objects.equals(discount.getId(), id)).findFirst().orElse(null);
     }
 
     /**
@@ -88,25 +67,22 @@ public class DiscountRepository implements BaseRepository<Discount, List<Discoun
      *
      * @return An unmodifiable List of Discounts.
      */
+    @SneakyThrows
     @Override
     public List<Discount> getAll() {
-        return load();
-    }
-
-    /**
-     * Loads the list of Discounts from the JSON file into the repository.
-     *
-     * @return A list of Discounts, empty in case of an IOException.
-     */
-    @SneakyThrows
-    @Override
-    public List<Discount> load() {
-        return jsonSerializer.read(Discount.class);
-    }
-
-    @SneakyThrows
-    @Override
-    public void save(@NonNull List<Discount> discounts) {
-        jsonSerializer.write(discounts);
+        ResultSet resultSet = sql.executeQuery("SELECT * FROM web.discount;");
+        List<Discount> discounts = new ArrayList<>();
+        while (resultSet.next()) {
+            Discount discount = new Discount();
+            discount.setId(UUID.fromString(resultSet.getString("id")));
+            discount.setFoodID(UUID.fromString(resultSet.getString("food_id")));
+            discount.setDescriptionID(UUID.fromString(resultSet.getString("description_id")));
+            discount.setDiscountPersentage(resultSet.getInt("discount_percentage"));
+            discount.setStartingTime(resultSet.getTimestamp("starting_time").toLocalDateTime());
+            discount.setEndingTime(resultSet.getTimestamp("ending_time").toLocalDateTime());
+            discount.setCreatedAt(resultSet.getTimestamp("created_at").toLocalDateTime());
+            discounts.add(discount);
+        }
+        return discounts;
     }
 }

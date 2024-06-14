@@ -1,15 +1,14 @@
 package com.pdp.web.repository.picture;
 
-import com.pdp.utils.serializer.JsonSerializer;
+import com.pdp.config.SQLConfiguration;
+import com.pdp.enums.format.PictureFormat;
 import com.pdp.web.model.picture.Picture;
 import com.pdp.web.repository.BaseRepository;
-import com.pdp.config.jsonFilePath.JsonFilePath;
-import lombok.NonNull;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
-
-import java.io.IOException;
-import java.nio.file.Path;
+import sql.helper.SQLHelper;
+import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -24,27 +23,7 @@ import java.util.UUID;
  * @since 04/May/2024 16:59
  */
 public class PictureRepository implements BaseRepository<Picture, List<Picture>> {
-    private static JsonSerializer<Picture> jsonSerializer;
-    private static volatile PictureRepository instance;
-
-    /**
-     * Constructs a new PictureRepository, setting up the JSON serializer with the file path for picture data,
-     * and loading the existing pictures from this file into the memory.
-     */
-    private PictureRepository() {
-    }
-
-    public static PictureRepository getInstance() {
-        if (instance == null) {
-            synchronized (PictureRepository.class) {
-                if (instance == null) {
-                    instance = new PictureRepository();
-                    jsonSerializer = new JsonSerializer<>(Path.of(JsonFilePath.PATH_PICTURE));
-                }
-            }
-        }
-        return instance;
-    }
+    private final SQLHelper sql = SQLConfiguration.getSQL();
 
     /**
      * Adds a {@link Picture} to the repository and saves the updated list to the JSON file.
@@ -52,12 +31,11 @@ public class PictureRepository implements BaseRepository<Picture, List<Picture>>
      * @param picture The picture to add to the repository.
      * @return Always returns {@code true}, indicating that the picture was successfully added.
      */
+    @SneakyThrows
     @Override
     public boolean add(@NotNull Picture picture) {
-        List<Picture> pictures = load();
-        pictures.add(picture);
-        save(pictures);
-        return true;
+        return sql.executeUpdate("INSERT INTO web.picture(name,format,width,height,image_url) VALUES (?,?,?,?,?);",
+                picture.getName(), picture.getFormat(), picture.getWidth(), picture.getHeight(), picture.getImageUrl()) > 0;
     }
 
     /**
@@ -66,12 +44,10 @@ public class PictureRepository implements BaseRepository<Picture, List<Picture>>
      * @param id The UUID of the picture to remove.
      * @return {@code true} if the picture was successfully found and removed; {@code false} otherwise.
      */
+    @SneakyThrows
     @Override
     public boolean remove(@NotNull UUID id) {
-        List<Picture> pictures = load();
-        boolean removed = pictures.removeIf(picture -> picture.getId().equals(id));
-        if (removed) save(pictures);
-        return removed;
+        return sql.executeUpdate("DELETE FROM web.picture WHERE id = ?;", id) > 0;
     }
 
     /**
@@ -80,14 +56,9 @@ public class PictureRepository implements BaseRepository<Picture, List<Picture>>
      * @param id The UUID of the picture to find.
      * @return The picture if found, or {@code null} if no picture with such ID exists.
      */
-
     @Override
     public Picture findById(@NotNull UUID id) {
-        List<Picture> pictures = load();
-        return pictures.stream()
-                .filter(picture -> picture.getId().equals(id))
-                .findFirst()
-                .orElse(null);
+        return getAll().stream().filter(picture -> picture.getId().equals(id)).findFirst().orElse(null);
     }
 
     /**
@@ -95,30 +66,22 @@ public class PictureRepository implements BaseRepository<Picture, List<Picture>>
      *
      * @return An unmodifiable list of {@link Picture} entities.
      */
+    @SneakyThrows
     @Override
     public List<Picture> getAll() {
-        return load();
-    }
-
-    /**
-     * Loads the list of pictures from the JSON file into the repository's internal list.
-     *
-     * @return A list of {@link Picture} entities. Returns an empty list if there is an error during the file reading.
-     */
-    @SneakyThrows
-    @Override
-    public List<Picture> load() {
-        return jsonSerializer.read(Picture.class);
-    }
-
-    /**
-     * Saves the current list of pictures to the JSON file.
-     *
-     * @throws IOException if there is an I/O error during writing to the file.
-     */
-    @SneakyThrows
-    @Override
-    public void save(@NonNull List<Picture> pictures) {
-        jsonSerializer.write(pictures);
+        ResultSet resultSet = sql.executeQuery("SELECT * FROM web.picture;");
+        List<Picture> pictures = new ArrayList<>();
+        while (resultSet.next()) {
+            Picture picture = new Picture();
+            picture.setId(UUID.fromString(resultSet.getString("id")));
+            picture.setName(resultSet.getString("name"));
+            picture.setFormat(PictureFormat.valueOf(resultSet.getString("format")));
+            picture.setWidth(resultSet.getInt("width"));
+            picture.setHeight(resultSet.getInt("height"));
+            picture.setImageUrl(resultSet.getString("image_url"));
+            picture.setCreatedAt(resultSet.getTimestamp("created_at").toLocalDateTime());
+            pictures.add(picture);
+        }
+        return pictures;
     }
 }

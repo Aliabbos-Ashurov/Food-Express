@@ -2,10 +2,7 @@ package com.pdp.web.model.description;
 
 import com.pdp.web.model.BaseModel;
 import com.pdp.java.console.support.Displayable;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 /**
  * Represents a descriptive entity that provides detailed information about
@@ -21,6 +18,7 @@ import lombok.ToString;
 @ToString(callSuper = true)
 @AllArgsConstructor
 @Setter
+@NoArgsConstructor
 public class Description extends BaseModel implements Displayable {
     private String name;
     private String text;

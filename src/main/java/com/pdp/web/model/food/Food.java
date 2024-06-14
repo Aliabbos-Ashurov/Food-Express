@@ -23,6 +23,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @Setter
 @Builder
+@NoArgsConstructor
 public class Food extends BaseModel implements Displayable {
     private String name;
     @SerializedName("image_url")

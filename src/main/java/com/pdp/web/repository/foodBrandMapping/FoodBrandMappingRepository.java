@@ -1,14 +1,17 @@
 package com.pdp.web.repository.foodBrandMapping;
 
+import com.pdp.config.SQLConfiguration;
 import com.pdp.utils.serializer.JsonSerializer;
 import com.pdp.web.model.foodBrandMapping.FoodBrandMapping;
 import com.pdp.web.repository.BaseRepository;
-import lombok.NonNull;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
+import sql.helper.SQLHelper;
 
-import java.nio.file.Path;
+import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 
@@ -27,32 +30,7 @@ import java.util.UUID;
  * @since 04/May/2024 16:54
  */
 public class FoodBrandMappingRepository implements BaseRepository<FoodBrandMapping, List<FoodBrandMapping>> {
-    private static JsonSerializer<FoodBrandMapping> jsonSerializer;
-    private static volatile FoodBrandMappingRepository instance;
-
-    /**
-     * Initializes the repository, setting up the jsonSerializer with the path to the
-     * food-brand mappings data file and loads existing mappings from persistent storage.
-     */
-    private FoodBrandMappingRepository() {
-    }
-
-    /**
-     * Retrieves the singleton instance of FoodBrandMappingRepository.
-     *
-     * @return The singleton instance of FoodBrandMappingRepository.
-     */
-    public static FoodBrandMappingRepository getInstance() {
-        if (instance == null) {
-            synchronized (FoodBrandMappingRepository.class) {
-                if (instance == null) {
-                    instance = new FoodBrandMappingRepository();
-                    jsonSerializer = new JsonSerializer<>(Path.of(PATH_FOOD_BRAND_MAPPING));
-                }
-            }
-        }
-        return instance;
-    }
+    private final SQLHelper sql = SQLConfiguration.getSQL();
 
     /**
      * Adds a new FoodBrandMapping to the repository and saves the updated list to JSON storage.
@@ -60,12 +38,11 @@ public class FoodBrandMappingRepository implements BaseRepository<FoodBrandMappi
      * @param foodBrandMapping The FoodBrandMapping object to be added.
      * @return true if the operation was successful, false otherwise.
      */
+    @SneakyThrows
     @Override
     public boolean add(@NotNull FoodBrandMapping foodBrandMapping) {
-        List<FoodBrandMapping> foodBrandMappings = load();
-        foodBrandMappings.add(foodBrandMapping);
-        save(foodBrandMappings);
-        return true;
+        return Objects.nonNull(sql.executeQuery("INSERT INTO web.food_brand_mapping(category_name varchar,food_id,brand_id) VALUES (?,?,?);"
+                , foodBrandMapping.getCategoryName(), foodBrandMapping.getFoodID(), foodBrandMapping.getBrandID()));
     }
 
     /**
@@ -74,12 +51,10 @@ public class FoodBrandMappingRepository implements BaseRepository<FoodBrandMappi
      * @param id The UUID of the FoodBrandMapping to remove.
      * @return true if the FoodBrandMapping was successfully removed, false otherwise.
      */
+    @SneakyThrows
     @Override
     public boolean remove(@NotNull UUID id) {
-        List<FoodBrandMapping> foodBrandMappings = load();
-        boolean removed = foodBrandMappings.removeIf(foodBrandMapping -> foodBrandMapping.getId().equals(id));
-        if (removed) save(foodBrandMappings);
-        return removed;
+        return sql.executeUpdate("DELETE FROM web.food_brand_mapping WHERE id = ?;", id) > 0;
     }
 
     /**
@@ -90,10 +65,7 @@ public class FoodBrandMappingRepository implements BaseRepository<FoodBrandMappi
      */
     @Override
     public FoodBrandMapping findById(@NotNull UUID id) {
-        List<FoodBrandMapping> foodBrandMappings = load();
-        return foodBrandMappings.stream()
-                .filter(foodBrandMapping -> foodBrandMapping.getId().equals(id))
-                .findFirst().orElse(null);
+        return getAll().stream().filter(foodBrandMapping -> foodBrandMapping.getId().equals(id)).findFirst().orElse(null);
     }
 
     /**
@@ -101,31 +73,20 @@ public class FoodBrandMappingRepository implements BaseRepository<FoodBrandMappi
      *
      * @return A list of all FoodBrandMappings in the repository.
      */
+    @SneakyThrows
     @Override
     public List<FoodBrandMapping> getAll() {
-        return load();
-    }
-
-    /**
-     * Loads the list of FoodBrandMappings from JSON storage into memory.
-     *
-     * @return A List containing FoodBrandMappings loaded from storage, or an empty List if loading fails.
-     */
-    @SneakyThrows
-    @Override
-    public List<FoodBrandMapping> load() {
-        return jsonSerializer.read(FoodBrandMapping.class);
-    }
-
-    /**
-     * Persists the current list of FoodBrandMappings to JSON storage.
-     *
-     * @param foodBrandMappings The list of FoodBrandMappings to save.
-     * @throws IOException if an error occurs during the save operation.
-     */
-    @SneakyThrows
-    @Override
-    public void save(@NonNull List<FoodBrandMapping> foodBrandMappings) {
-        jsonSerializer.write(foodBrandMappings);
+        ResultSet resultSet = sql.executeQuery("SELECT * FROM web.food_brand_mapping;");
+        List<FoodBrandMapping> foodBrandMappings = new ArrayList<>();
+        while (resultSet.next()) {
+            FoodBrandMapping foodBrandMapping = new FoodBrandMapping();
+            foodBrandMapping.setId(UUID.fromString(resultSet.getString("id")));
+            foodBrandMapping.setFoodID(UUID.fromString(resultSet.getString("food_id")));
+            foodBrandMapping.setBrandID(UUID.fromString(resultSet.getString("brand_id")));
+            foodBrandMapping.setCategoryName(resultSet.getString("category_name"));
+            foodBrandMapping.setCreatedAt(resultSet.getTimestamp("created_at").toLocalDateTime());
+            foodBrandMappings.add(foodBrandMapping);
+        }
+        return foodBrandMappings;
     }
 }

@@ -17,7 +17,7 @@ import java.util.List;
  * @since 14th May 2024, 15:16
  */
 public interface TelegramUserService extends BaseService<TelegramUser, List<TelegramUser>> {
-    TelegramUserRepository repository = TelegramUserRepository.getInstance();
+    TelegramUserRepository repository = new TelegramUserRepository();
 
     /**
      * Finds the language associated with a given chat ID.

@@ -21,5 +21,5 @@ import java.util.List;
  * @see BaseService Base service interface providing common methods for service implementations.
  */
 public interface FoodService extends BaseService<Food, List<Food>> {
-    FoodRepository repository = FoodRepository.getInstance();
+    FoodRepository repository = new FoodRepository();
 }

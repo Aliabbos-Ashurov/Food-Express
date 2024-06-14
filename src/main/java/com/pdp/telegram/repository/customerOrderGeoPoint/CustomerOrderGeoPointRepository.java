@@ -1,17 +1,16 @@
 package com.pdp.telegram.repository.customerOrderGeoPoint;
 
 
+import com.pdp.config.SQLConfiguration;
 import com.pdp.telegram.model.customerOrderGeoPoint.CustomerOrderGeoPoint;
-import com.pdp.utils.serializer.JsonSerializer;
 import com.pdp.web.repository.BaseRepository;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.SneakyThrows;
+import sql.helper.SQLHelper;
 
-import java.nio.file.Path;
+import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -21,40 +20,20 @@ import java.util.UUID;
  * @author Doniyor Nishonov
  * @since 14th May 2024, 14:37
  */
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class CustomerOrderGeoPointRepository implements BaseRepository<CustomerOrderGeoPoint, List<CustomerOrderGeoPoint>> {
-    private static volatile CustomerOrderGeoPointRepository instance;
-    private static JsonSerializer<CustomerOrderGeoPoint> jsonSerializer;
-
-    /**
-     * Returns the singleton instance of the repository.
-     *
-     * @return The singleton instance of the repository.
-     */
-    public static CustomerOrderGeoPointRepository getInstance() {
-        if (instance == null) {
-            synchronized (CustomerOrderGeoPointRepository.class) {
-                if (instance == null) {
-                    instance = new CustomerOrderGeoPointRepository();
-                    jsonSerializer = new JsonSerializer<>(Path.of(PATH_TELEGRAM_CUSTOMER_ORDER_GEO_POINT));
-                }
-            }
-        }
-        return instance;
-    }
+    private final SQLHelper sql = SQLConfiguration.getSQL();
 
     /**
      * Adds a customer order geo point to the repository.
      *
-     * @param object The customer order geo point to add.
+     * @param customerOrderGeoPoint The customer order geo point to add.
      * @return True if the addition was successful, false otherwise.
      */
+    @SneakyThrows
     @Override
     public boolean add(@NonNull CustomerOrderGeoPoint customerOrderGeoPoint) {
-        List<CustomerOrderGeoPoint> load = load();
-        load.add(customerOrderGeoPoint);
-        save(load);
-        return true;
+        return sql.executeUpdate("INSERT INTO telegram.customer_order_geo_point(lattidue,longtidue) VALUES (?,?);",
+                customerOrderGeoPoint.getLattidue(), customerOrderGeoPoint.getLongtidue()) > 0;
     }
 
     /**
@@ -63,12 +42,10 @@ public class CustomerOrderGeoPointRepository implements BaseRepository<CustomerO
      * @param id The ID of the customer order geo point to remove.
      * @return True if the removal was successful, false otherwise.
      */
+    @SneakyThrows
     @Override
     public boolean remove(@NonNull UUID id) {
-        List<CustomerOrderGeoPoint> load = load();
-        boolean b = load.removeIf(c -> Objects.equals(c.getId(), id));
-        if (b) save(load);
-        return b;
+        return sql.executeUpdate("DELETE FROM telegram.customer_order_geo_point WHERE id = ?;", id) > 0;
     }
 
     /**
@@ -79,10 +56,8 @@ public class CustomerOrderGeoPointRepository implements BaseRepository<CustomerO
      */
     @Override
     public CustomerOrderGeoPoint findById(@NonNull UUID id) {
-        return load().stream()
-                .filter(c -> Objects.equals(c.getId(), id))
-                .findFirst()
-                .orElse(null);
+        return getAll().stream()
+                .filter(customerOrderGeoPoint -> customerOrderGeoPoint.getId().equals(id)).findFirst().orElse(null);
     }
 
     /**
@@ -90,32 +65,19 @@ public class CustomerOrderGeoPointRepository implements BaseRepository<CustomerO
      *
      * @return A list of all customer order geo points.
      */
+    @SneakyThrows
     @Override
     public List<CustomerOrderGeoPoint> getAll() {
-        return load();
-    }
-
-    /**
-     * Loads customer order geo points from storage.
-     *
-     * @return A list of loaded customer order geo points.
-     * @throws Exception If there's an error during deserialization.
-     */
-    @SneakyThrows
-    @Override
-    public List<CustomerOrderGeoPoint> load() {
-        return jsonSerializer.read(CustomerOrderGeoPoint.class);
-    }
-
-    /**
-     * Saves customer order geo points to storage.
-     *
-     * @param customerOrderGeoPoints The list of customer order geo points to save.
-     * @throws Exception If there's an error during serialization.
-     */
-    @SneakyThrows
-    @Override
-    public void save(@NonNull List<CustomerOrderGeoPoint> customerOrderGeoPoints) {
-        jsonSerializer.write(customerOrderGeoPoints);
+        ResultSet resultSet = sql.executeQuery("SELECT * FROM telegram.customer_order_geo_point;");
+        List<CustomerOrderGeoPoint> customerOrderGeoPoints = new ArrayList<>();
+        while (resultSet.next()) {
+            CustomerOrderGeoPoint customerOrderGeoPoint = new CustomerOrderGeoPoint();
+            customerOrderGeoPoint.setId(UUID.fromString(resultSet.getString("id")));
+            customerOrderGeoPoint.setLattidue(resultSet.getFloat("lattidue"));
+            customerOrderGeoPoint.setLongtidue(resultSet.getFloat("longtidue"));
+            customerOrderGeoPoint.setCreatedAt(resultSet.getTimestamp("created_at").toLocalDateTime());
+            customerOrderGeoPoints.add(customerOrderGeoPoint);
+        }
+        return customerOrderGeoPoints;
     }
 }

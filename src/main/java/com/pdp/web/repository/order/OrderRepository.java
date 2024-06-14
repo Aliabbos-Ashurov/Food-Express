@@ -1,13 +1,16 @@
 package com.pdp.web.repository.order;
 
+import com.pdp.config.SQLConfiguration;
 import com.pdp.utils.serializer.JsonSerializer;
 import com.pdp.web.model.order.Order;
 import com.pdp.web.repository.BaseRepository;
-import com.pdp.config.jsonFilePath.JsonFilePath;
 import lombok.NonNull;
 import lombok.SneakyThrows;
+import sql.helper.SQLHelper;
 
-import java.nio.file.Path;
+import java.math.BigDecimal;
+import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -27,23 +30,7 @@ import java.util.UUID;
  * @since 04/May/2024 16:57
  */
 public class OrderRepository implements BaseRepository<Order, List<Order>> {
-    private static JsonSerializer<Order> jsonSerializer;
-    private static volatile OrderRepository instance;
-
-    private OrderRepository() {
-    }
-
-    public static OrderRepository getInstance() {
-        if (instance == null) {
-            synchronized (OrderRepository.class) {
-                if (instance == null) {
-                    instance = new OrderRepository();
-                    jsonSerializer = new JsonSerializer<>(Path.of(JsonFilePath.PATH_ORDER));
-                }
-            }
-        }
-        return instance;
-    }
+    private final SQLHelper sql = SQLConfiguration.getSQL();
 
     /**
      * Adds a new order to the repository. The order is also immediately persisted to the JSON file.
@@ -51,12 +38,11 @@ public class OrderRepository implements BaseRepository<Order, List<Order>> {
      * @param order The new {@code Order} object to be added.
      * @return True if the order was successfully added to the repository; false otherwise.
      */
+    @SneakyThrows
     @Override
     public boolean add(@NonNull Order order) {
-        List<Order> orders = load();
-        orders.add(order);
-        save(orders);
-        return true;
+        return sql.executeUpdate("INSERT INTO web.orders(food_id,food_price,food_quantity,customer_order_id) VALUES (?,?,?,?);",
+                order.getFoodID(), order.getFoodPrice(), order.getFoodQuantity(), order.getCustomerOrderID()) > 0;
     }
 
     /**
@@ -65,12 +51,10 @@ public class OrderRepository implements BaseRepository<Order, List<Order>> {
      * @param id The ID of the order to remove.
      * @return {@code true} if the order was found and removed; {@code false} otherwise.
      */
+    @SneakyThrows
     @Override
     public boolean remove(@NonNull UUID id) {
-        List<Order> orders = load();
-        boolean removed = orders.removeIf(order -> order.getId().equals(id));
-        if (removed) save(orders);
-        return removed;
+        return sql.executeUpdate("DELETE FROM web.orders WHERE id = ?;", id) > 0;
     }
 
     /**
@@ -81,32 +65,24 @@ public class OrderRepository implements BaseRepository<Order, List<Order>> {
      */
     @Override
     public Order findById(@NonNull UUID id) {
-        List<Order> orders = load();
-        return orders.stream()
-                .filter(order -> order.getId().equals(id))
-                .findFirst()
-                .orElse(null);
+        return getAll().stream().filter(order -> order.getId().equals(id)).findFirst().orElse(null);
     }
 
+    @SneakyThrows
     @Override
     public List<Order> getAll() {
-        return load();
-    }
-
-    /**
-     * Loads orders from the JSON file using the configured serializer.
-     *
-     * @return A list of {@code Order} objects loaded from the JSON file.
-     */
-    @SneakyThrows
-    @Override
-    public List<Order> load() {
-        return jsonSerializer.read(Order.class);
-    }
-
-    @SneakyThrows
-    @Override
-    public void save(@NonNull List<Order> orders) {
-        jsonSerializer.write(orders);
+        ResultSet resultSet = sql.executeQuery("SELECT * FROM web.orders;");
+        List<Order> orders = new ArrayList<>();
+        while (resultSet.next()) {
+            Order order = new Order();
+            order.setId(UUID.fromString(resultSet.getString("id")));
+            order.setFoodID(UUID.fromString(resultSet.getString("food_id")));
+            order.setFoodPrice(BigDecimal.valueOf(Double.parseDouble(resultSet.getString("food_price"))));
+            order.setFoodQuantity(resultSet.getInt("food_quantity"));
+            order.setCustomerOrderID(UUID.fromString(resultSet.getString("customer_order_id")));
+            order.setCreatedAt(resultSet.getTimestamp("created_at").toLocalDateTime());
+            orders.add(order);
+        }
+        return orders;
     }
 }

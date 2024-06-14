@@ -37,7 +37,8 @@ public class UserRepository implements BaseRepository<User, List<User>> {
     @SneakyThrows
     @Override
     public boolean add(@NonNull User user) {
-        return Objects.nonNull(sql.executeQuery("SELECT web.add_user(?,?,?);", user.getFullname(), user.getUsername(), user.getPassword(), user.getLanguage()));
+        return Objects.nonNull(sql.executeQuery("SELECT web.add_user(?,?,?);",
+                user.getFullname(), user.getUsername(), user.getPassword(), user.getLanguage()));
     }
 
     /**

@@ -1,15 +1,15 @@
 package com.pdp.web.repository.deliverer;
 
-import com.pdp.utils.serializer.JsonSerializer;
+import com.pdp.config.SQLConfiguration;
 import com.pdp.web.model.deliverer.Deliverer;
 import com.pdp.web.repository.BaseRepository;
-import com.pdp.config.jsonFilePath.JsonFilePath;
 import lombok.NonNull;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
+import sql.helper.SQLHelper;
 
-import java.io.IOException;
-import java.nio.file.Path;
+import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -25,38 +25,18 @@ import java.util.UUID;
  * @since 04/May/2024 16:41
  */
 public class DelivererRepository implements BaseRepository<Deliverer, List<Deliverer>> {
-    private static JsonSerializer<Deliverer> jsonSerializer;
-    private static volatile DelivererRepository instance;
+    private final SQLHelper sql = SQLConfiguration.getSQL();
 
-    private DelivererRepository() {
-    }
-
-    public static DelivererRepository getInstance() {
-        if (instance == null) {
-            synchronized (DelivererRepository.class) {
-                if (instance == null) {
-                    instance = new DelivererRepository();
-                    jsonSerializer = new JsonSerializer<>(Path.of(JsonFilePath.PATH_DELIVERER));
-                }
-            }
-        }
-        return instance;
-    }
-
+    @SneakyThrows
     @Override
     public boolean add(@NonNull Deliverer deliverer) {
-        List<Deliverer> deliverers = load();
-        deliverers.add(deliverer);
-        save(deliverers);
-        return true;
+        return sql.executeUpdate("INSERT INTO web.deliverer(full_name,phone_number) VALUES (?,?);", deliverer.getFullname(), deliverer.getPhoneNumber()) > 0;
     }
 
+    @SneakyThrows
     @Override
     public boolean remove(@NotNull UUID id) {
-        List<Deliverer> deliverers = load();
-        boolean removed = deliverers.removeIf(deliverer -> deliverer.getId().equals(id));
-        if (removed) save(deliverers);
-        return removed;
+        return sql.executeUpdate("DELETE FROM web.deliverer WHERE id = ?;", id) > 0;
     }
 
     /**
@@ -69,10 +49,8 @@ public class DelivererRepository implements BaseRepository<Deliverer, List<Deliv
      */
     @Override
     public Deliverer findById(@NotNull UUID id) {
-        List<Deliverer> deliverers = load();
-        return deliverers.stream()
-                .filter(deliverer -> deliverer.getId().equals(id))
-                .findFirst().orElse(null);
+        return getAll().stream()
+                .filter(deliverer -> deliverer.getId().equals(id)).findFirst().orElse(null);
     }
 
     /**
@@ -81,33 +59,19 @@ public class DelivererRepository implements BaseRepository<Deliverer, List<Deliv
      *
      * @return A list of all {@code Deliverer} objects contained in the repository.
      */
+    @SneakyThrows
     @Override
     public List<Deliverer> getAll() {
-        return load();
-    }
-
-    /**
-     * Loads and deserializes the list of {@code Deliverer} entities from the JSON storage file.
-     * The {@link JsonSerializer} is used here to convert the contents of the file to a list of
-     * {@code Deliverer} objects.
-     *
-     * @return A list containing all deserialized {@code Deliverer} entities from the file.
-     * @throws IOException If any issues occur during file reading and deserialization.
-     */
-    @SneakyThrows
-    @Override
-    public List<Deliverer> load() {
-        return jsonSerializer.read(Deliverer.class);
-    }
-
-    /**
-     * Persists the current list of deliverers to the permanent storage.
-     *
-     * @throws IOException if a problem occurs during writing to storage.
-     */
-    @SneakyThrows
-    @Override
-    public void save(@NonNull List<Deliverer> deliverers) {
-        jsonSerializer.write(deliverers);
+        ResultSet resultSet = sql.executeQuery("SELECT * FROM web.deliverer;");
+        List<Deliverer> deliverers = new ArrayList<>();
+        while (resultSet.next()) {
+            Deliverer deliverer = new Deliverer();
+            deliverer.setId(resultSet.getObject("id", UUID.class));
+            deliverer.setFullname(resultSet.getString("full_name"));
+            deliverer.setPhoneNumber(resultSet.getString("phone_number"));
+            deliverer.setCreatedAt(resultSet.getTimestamp("created_at").toLocalDateTime());
+            deliverers.add(deliverer);
+        }
+        return deliverers;
     }
 }

@@ -2,10 +2,7 @@ package com.pdp.web.model.discount;
 
 import com.google.gson.annotations.SerializedName;
 import com.pdp.web.model.BaseModel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -23,16 +20,17 @@ import java.util.UUID;
 @Getter
 @ToString(callSuper = true)
 @AllArgsConstructor
+@NoArgsConstructor
 @Setter
 public class Discount extends BaseModel {
     @SerializedName("food_id")
     private UUID foodID;
     @SerializedName("starting_time")
-    private final LocalDateTime startingTime;
+    private LocalDateTime startingTime;
     @SerializedName("ending_time")
-    private final LocalDateTime endingTime;
+    private LocalDateTime endingTime;
     @SerializedName("description_id")
     private UUID descriptionID;
     @SerializedName("discount_persentage")
-    private boolean discountPersentage;
+    private double discountPersentage;
 }

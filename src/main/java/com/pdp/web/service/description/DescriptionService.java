@@ -21,5 +21,5 @@ import java.util.List;
  * @see BaseService Base service interface providing common methods for service implementations.
  */
 public interface DescriptionService extends BaseService<Description, List<Description>> {
-    DescriptionRepository repository = DescriptionRepository.getInstance();
+    DescriptionRepository repository = new DescriptionRepository();
 }

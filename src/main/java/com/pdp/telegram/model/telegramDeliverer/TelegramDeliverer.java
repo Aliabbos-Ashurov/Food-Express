@@ -22,7 +22,7 @@ import java.util.UUID;
 @ToString(callSuper = true)
 @AllArgsConstructor
 @Builder
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor
 public class TelegramDeliverer extends BaseModel implements Displayable {
     @SerializedName("telegram_user_id")
     private UUID telegramUserID;

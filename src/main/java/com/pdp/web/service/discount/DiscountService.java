@@ -21,5 +21,5 @@ import java.util.List;
  * @see BaseService Base service interface providing common methods for service implementations.
  */
 public interface DiscountService extends BaseService<Discount, List<Discount>> {
-    DiscountRepository repository = DiscountRepository.getInstance();
+    DiscountRepository repository = new DiscountRepository();
 }

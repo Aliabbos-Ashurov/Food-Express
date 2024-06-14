@@ -1,15 +1,15 @@
 package com.pdp.web.repository.transport;
 
-import com.pdp.utils.serializer.JsonSerializer;
+import com.pdp.config.SQLConfiguration;
 import com.pdp.web.model.transport.Transport;
 import com.pdp.web.repository.BaseRepository;
-import com.pdp.config.jsonFilePath.JsonFilePath;
 import lombok.NonNull;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
+import sql.helper.SQLHelper;
 
-import java.io.IOException;
-import java.nio.file.Path;
+import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -17,47 +17,27 @@ import java.util.UUID;
  * Manages the persistence and retrieval of {@link Transport} objects using JSON serialization.
  * This class implements the {@link BaseRepository} interface to provide CRUD operations on
  * transport entities stored in a JSON file.
- *
+ * <p>
  * The repository is backed by a list that is synchronized with a local JSON file, allowing for
  * persistent storage and retrieval operations on Transport entities.
  *
  * @author Aliabbos Ashurov
  * @since 04/May/2024 17:03
  */
-public class TransportRepository implements BaseRepository<Transport,List<Transport>> {
-    private static volatile TransportRepository instance;
-    private static JsonSerializer<Transport> jsonSerializer;
+public class TransportRepository implements BaseRepository<Transport, List<Transport>> {
+    private final SQLHelper sql = SQLConfiguration.getSQL();
 
-    /**
-     * Constructs a new TransportRepository, initializing the serializer with the file path for transport data,
-     * and loading the existing transport data from this file into memory.
-     */
-    private TransportRepository() {
-    }
-
-    public static TransportRepository getInstance() {
-        if (instance == null) {
-            synchronized (TransportRepository.class) {
-                if (instance == null) {
-                    instance = new TransportRepository();
-                    jsonSerializer = new JsonSerializer<>(Path.of(JsonFilePath.PATH_TRANSPORT));
-                }
-            }
-        }
-        return instance;
-    }
     /**
      * Adds a {@link Transport} object to the repository and saves the updated list to the JSON file.
      *
      * @param transport The transport entity to add.
      * @return Always returns {@code true}, indicating the transport was added successfully.
      */
+    @SneakyThrows
     @Override
     public boolean add(@NotNull Transport transport) {
-        List<Transport> transports = load();
-        transports.add(transport);
-        save(transports);
-        return true;
+        return sql.executeUpdate("INSERT INTO web.transport(deliverer_id,name,registered_number) VALUES (?,?,?);",
+                transport.getDeliverID(), transport.getName(), transport.getRegisteredNumber()) > 0;
     }
 
     /**
@@ -66,12 +46,10 @@ public class TransportRepository implements BaseRepository<Transport,List<Transp
      * @param id The UUID of the transport entity to be removed.
      * @return {@code true} if the transport entity was found and removed, {@code false} otherwise.
      */
+    @SneakyThrows
     @Override
     public boolean remove(@NonNull UUID id) {
-        List<Transport> transports = load();
-        boolean removed = transports.removeIf(transport -> transport.getId().equals(id));
-        if (removed) save(load());
-        return removed;
+        return sql.executeUpdate("DELETE FROM web.transport WHERE id = ?;", id) > 0;
     }
 
     /**
@@ -82,11 +60,7 @@ public class TransportRepository implements BaseRepository<Transport,List<Transp
      */
     @Override
     public Transport findById(@NonNull UUID id) {
-        List<Transport> transports = load();
-        return transports.stream()
-                .filter(transport -> transport.getId().equals(id))
-                .findFirst()
-                .orElse(null);
+        return getAll().stream().filter(transport -> transport.getId().equals(id)).findFirst().orElse(null);
     }
 
     /**
@@ -94,30 +68,20 @@ public class TransportRepository implements BaseRepository<Transport,List<Transp
      *
      * @return An unmodifiable list of {@link Transport} objects.
      */
+    @SneakyThrows
     @Override
     public List<Transport> getAll() {
-        return load();
-    }
-
-    /**
-     * Loads the list of transport entities from the JSON file into the repository's internal list.
-     *
-     * @return A list of {@link Transport} entities. Returns an empty list if there are errors during file reading.
-     */
-    @SneakyThrows
-    @Override
-    public List<Transport> load() {
-        return jsonSerializer.read(Transport.class);
-    }
-
-    /**
-     * Saves the current state of the transport list to the JSON file.
-     *
-     * @throws IOException if an I/O error occurs during writing to the file.
-     */
-    @SneakyThrows
-    @Override
-    public void save(@NonNull List<Transport> transports) {
-        jsonSerializer.write(transports);
+        ResultSet resultSet = sql.executeQuery("SELECT * FROM web.transport;");
+        List<Transport> transports = new ArrayList<>();
+        while (resultSet.next()) {
+            Transport transport = new Transport();
+            transport.setId(UUID.fromString(resultSet.getString("id")));
+            transport.setName(resultSet.getString("name"));
+            transport.setDeliverID(UUID.fromString(resultSet.getString("deliverer_id")));
+            transport.setRegisteredNumber(resultSet.getString("registered_number"));
+            transport.setCreatedAt(resultSet.getTimestamp("created_at").toLocalDateTime());
+            transports.add(transport);
+        }
+        return transports;
     }
 }

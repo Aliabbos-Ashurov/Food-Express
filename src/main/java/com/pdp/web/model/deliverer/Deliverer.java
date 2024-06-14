@@ -3,10 +3,7 @@ package com.pdp.web.model.deliverer;
 import com.google.gson.annotations.SerializedName;
 import com.pdp.web.model.BaseModel;
 import com.pdp.java.console.support.Displayable;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 /**
  * Defines the characteristics of a deliverer within the system,
@@ -23,6 +20,7 @@ import lombok.ToString;
 @Setter
 @ToString(callSuper = true)
 @AllArgsConstructor
+@NoArgsConstructor
 public class Deliverer extends BaseModel implements Displayable {
     private String fullname;
     @SerializedName("phone_number")
