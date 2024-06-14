@@ -1,12 +1,15 @@
 package com.pdp.web.repository.banned;
 
+import com.pdp.config.SQLConfiguration;
 import com.pdp.utils.serializer.JsonSerializer;
 import com.pdp.web.model.banned.Banned;
 import com.pdp.web.repository.BaseRepository;
 import lombok.NonNull;
 import lombok.SneakyThrows;
+import sql.helper.SQLHelper;
 
-import java.nio.file.Path;
+import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -22,32 +25,7 @@ import java.util.UUID;
  * @since 04/May/2024 15:43
  */
 public class BannedRepository implements BaseRepository<Banned, List<Banned>> {
-    private static volatile BannedRepository instance;
-    private static JsonSerializer<Banned> jsonSerializer;
-
-
-    private BannedRepository() {
-    }
-
-    /**
-     * Lazily initializes and retrieves the sole instance of {@code BannedRepository}.
-     * Ensures that the instance is created only once using a thread-safe double-checked
-     * locking mechanism.
-     *
-     * @return the exclusive instance of the {@code BannedRepository}
-     */
-    public static BannedRepository getInstance() {
-        if (instance == null) {
-            synchronized (BannedRepository.class) {
-                if (instance == null) {
-                    instance = new BannedRepository();
-                    jsonSerializer = new JsonSerializer<>(Path.of(PATH_BANNED));
-                }
-            }
-        }
-        return instance;
-    }
-
+    private final SQLHelper sql = SQLConfiguration.getSQL();
 
     /**
      * Adds a {@code Banned} instance to the repository and serializes the updated list
@@ -57,11 +35,10 @@ public class BannedRepository implements BaseRepository<Banned, List<Banned>> {
      * @return {@code true} if the operation was successful, {@code false} otherwise
      */
     @Override
+    @SneakyThrows
     public boolean add(@NonNull Banned banned) {
-        List<Banned> banneds = load();
-        banneds.add(banned);
-        save(banneds);
-        return true;
+        return sql.executeUpdate("INSERT INTO web.banned(user_id,banned_at,description_id) VALUES(?,?,?);",
+                banned.getUserID(), banned.getBannedAt(), banned.getDescriptionID()) > 0;
     }
 
     /**
@@ -72,11 +49,9 @@ public class BannedRepository implements BaseRepository<Banned, List<Banned>> {
      * @return {@code true} if an instance was found and removed, {@code false} otherwise
      */
     @Override
+    @SneakyThrows
     public boolean remove(@NonNull UUID id) {
-        List<Banned> banneds = load();
-        boolean removed = banneds.removeIf((banned -> banned.getId().equals(id)));
-        if (removed) save(banneds);
-        return removed;
+        return sql.executeUpdate("DELETE FROM web.banned WHERE id = ?;", id) > 0;
     }
 
     /**
@@ -87,8 +62,7 @@ public class BannedRepository implements BaseRepository<Banned, List<Banned>> {
      */
     @Override
     public Banned findById(@NonNull UUID id) {
-        List<Banned> banneds = load();
-        return banneds.stream()
+        return getAll().stream()
                 .filter((banned -> banned.getId().equals(id)))
                 .findFirst()
                 .orElse(null);
@@ -100,31 +74,19 @@ public class BannedRepository implements BaseRepository<Banned, List<Banned>> {
      * @return an immutable list of {@link Banned} instances
      */
     @Override
+    @SneakyThrows
     public List<Banned> getAll() {
-        return load();
-    }
-
-    /**
-     * Loads a list of all {@code Banned} instances from persistent storage.
-     *
-     * @return a list containing all deserialized {@link Banned} instances
-     * @throws Exception if an issue occurs during deserialization
-     */
-    @SneakyThrows
-    @Override
-    public List<Banned> load() {
-        return jsonSerializer.read(Banned.class);
-    }
-
-    /**
-     * Serializes and saves the current list of {@code Banned} instances to persistent storage.
-     *
-     * @param list the list of {@link Banned} instances to be serialized
-     * @throws Exception if an issue occurs during serialization or writing storage
-     */
-    @SneakyThrows
-    @Override
-    public void save(@NonNull List<Banned> list) {
-        jsonSerializer.write(list);
+        ResultSet rs = sql.executeQuery("SELECT * FROM web.banned;");
+        List<Banned> banneds = new ArrayList<>();
+        while (rs.next()) {
+            Banned banned = new Banned();
+            banned.setId(UUID.fromString(rs.getString(1)));
+            banned.setUserID(UUID.fromString(rs.getString(2)));
+            banned.setBannedAt(rs.getTimestamp(3).toLocalDateTime());
+            banned.setDescriptionID(UUID.fromString(rs.getString(4)));
+            banned.setCreatedAt(rs.getTimestamp(5).toLocalDateTime());
+            banneds.add(banned);
+        }
+        return banneds;
     }
 }

@@ -21,5 +21,5 @@ import java.util.List;
  * @see AddressRepository
  */
 public interface AddressService extends BaseService<Address, List<Address>> {
-    AddressRepository repository = AddressRepository.getInstance();
+    AddressRepository repository = new AddressRepository();
 }

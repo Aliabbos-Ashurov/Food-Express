@@ -1,13 +1,17 @@
 package com.pdp.web.repository.comment;
 
+import com.pdp.config.SQLConfiguration;
 import com.pdp.utils.serializer.JsonSerializer;
 import com.pdp.web.model.comment.Comment;
 import com.pdp.web.repository.BaseRepository;
 import com.pdp.config.jsonFilePath.JsonFilePath;
 import lombok.NonNull;
 import lombok.SneakyThrows;
+import sql.helper.SQLHelper;
 
-import java.nio.file.Path;
+import java.io.IOException;
+import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -28,36 +32,13 @@ import java.util.UUID;
  * @since 04/May/2024 16:34
  */
 public class CommentRepository implements BaseRepository<Comment, List<Comment>> {
-    private static volatile CommentRepository instance;
-    private static JsonSerializer<Comment> jsonSerializer;
-
-    private CommentRepository() {
-    }
-
-    /**
-     * Retrieves the singleton instance of {@code CommentRepository}.
-     * Initialization of this instance is performed in a thread-safe manner.
-     *
-     * @return The singleton instance of {@code CommentRepository}.
-     */
-    public static CommentRepository getInstance() {
-        if (instance == null) {
-            synchronized (CommentRepository.class) {
-                if (instance == null) {
-                    instance = new CommentRepository();
-                    jsonSerializer = new JsonSerializer<>(Path.of(JsonFilePath.PATH_COMMENT));
-                }
-            }
-        }
-        return instance;
-    }
+    private final SQLHelper sql = SQLConfiguration.getSQL();
 
     @Override
+    @SneakyThrows
     public boolean add(@NonNull Comment comment) {
-        List<Comment> comments = load();
-        comments.add(comment);
-        save(comments);
-        return true;
+        return sql.executeUpdate("INSERT INTO web.comment(food_id,text) VALUES(?,?);"
+                , comment.getFoodID(), comment.getText()) > 0;
     }
 
     /**
@@ -70,11 +51,9 @@ public class CommentRepository implements BaseRepository<Comment, List<Comment>>
      * @throws IOException if any I/O error occurs during saving to the JSON file.
      */
     @Override
+    @SneakyThrows
     public boolean remove(@NonNull UUID id) {
-        List<Comment> comments = load();
-        boolean removed = comments.removeIf((comment -> comment.getId().equals(id)));
-        if (removed) save(comments);
-        return removed;
+        return sql.executeUpdate("DELETE FROM web.comment WHERE id = ?;", id) > 0;
     }
 
     /**
@@ -86,8 +65,7 @@ public class CommentRepository implements BaseRepository<Comment, List<Comment>>
      */
     @Override
     public Comment findById(@NonNull UUID id) {
-        List<Comment> comments = load();
-        return comments.stream()
+        return getAll().stream()
                 .filter(comment -> comment.getId().equals(id))
                 .findFirst()
                 .orElse(null);
@@ -101,27 +79,18 @@ public class CommentRepository implements BaseRepository<Comment, List<Comment>>
      * @return A list of all {@code Comment} objects in the repository.
      */
     @Override
+    @SneakyThrows
     public List<Comment> getAll() {
-        return load();
-    }
-
-    @SneakyThrows
-    @Override
-    public List<Comment> load() {
-        return jsonSerializer.read(Comment.class);
-    }
-
-    /**
-     * Saves the current list of {@code Comment}s to the JSON file.
-     * This involves serializing the list using {@link JsonSerializer} and writing it to the path
-     * provided by {@link JsonFilePath#PATH_COMMENT}.
-     *
-     * @param comments The list of {@code Comment}s to be saved.
-     * @throws IOException if any I/O error occurs during writing to the JSON file.
-     */
-    @SneakyThrows
-    @Override
-    public void save(@NonNull List<Comment> comments) {
-        jsonSerializer.write(comments);
+        List<Comment> comments = new ArrayList<>();
+        ResultSet rs = sql.executeQuery("SELECT * FROM web.comment;");
+        while (rs.next()) {
+            Comment comment = new Comment();
+            comment.setId(UUID.fromString(rs.getString(1)));
+            comment.setFoodID(UUID.fromString(rs.getString(2)));
+            comment.setText(rs.getString(3));
+            comment.setCreatedAt(rs.getTimestamp(4).toLocalDateTime());
+            comments.add(comment);
+        }
+        return comments;
     }
 }

@@ -1,12 +1,15 @@
 package com.pdp.web.repository.brand;
 
+import com.pdp.config.SQLConfiguration;
 import com.pdp.utils.serializer.JsonSerializer;
 import com.pdp.web.model.brand.Brand;
 import com.pdp.web.repository.BaseRepository;
 import lombok.NonNull;
 import lombok.SneakyThrows;
+import sql.helper.SQLHelper;
 
-import java.nio.file.Path;
+import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -27,30 +30,7 @@ import java.util.UUID;
  * @since 04/May/2024 15:51
  */
 public class BrandRepository implements BaseRepository<Brand, List<Brand>> {
-    private static volatile BrandRepository instance;
-    private static JsonSerializer<Brand> jsonSerializer;
-
-    private BrandRepository() {
-    }
-
-    /**
-     * Lazily loads and returns a singleton instance of {@code BrandRepository}, ensuring
-     * thread-safe instantiation. The Json storage path is initialized following the singleton
-     * creation.
-     *
-     * @return The single active {@code BrandRepository} instance.
-     */
-    public static BrandRepository getInstance() {
-        if (instance == null) {
-            synchronized (BrandRepository.class) {
-                if (instance == null) {
-                    instance = new BrandRepository();
-                    jsonSerializer = new JsonSerializer<>(Path.of(PATH_BRAND));
-                }
-            }
-        }
-        return instance;
-    }
+    private final SQLHelper sql = SQLConfiguration.getSQL();
 
     /**
      * Adds a Brand to the repository and persists the change.
@@ -59,11 +39,10 @@ public class BrandRepository implements BaseRepository<Brand, List<Brand>> {
      * @return true if the addition is successful, false otherwise.
      */
     @Override
+    @SneakyThrows
     public boolean add(@NonNull Brand brand) {
-        List<Brand> brands = load();
-        brands.add(brand);
-        save(brands);
-        return true;
+        return sql.executeUpdate("INSERT INTO web.brand(name,rating,description_id,opening_time,closing_time) VALUES(?,?,?,?,?);",
+                brand.getName(), brand.getRating(), brand.getDescriptionID(), brand.getOpeningTime(), brand.getClosingTime()) > 0;
     }
 
     /**
@@ -73,51 +52,35 @@ public class BrandRepository implements BaseRepository<Brand, List<Brand>> {
      * @return true if the Brand is successfully removed, false otherwise.
      */
     @Override
+    @SneakyThrows
     public boolean remove(@NonNull UUID id) {
-        List<Brand> brands = load();
-        boolean removed = brands.removeIf((brand -> brand.getId().equals(id)));
-        if (removed) save(brands);
-        return removed;
+        return sql.executeUpdate("DELETE FROM web.brand WHERE id = ?;", id) > 0;
     }
-
 
     @Override
     public Brand findById(@NonNull UUID id) {
-        List<Brand> brands = load();
-        return brands.stream()
+        return getAll().stream()
                 .filter((brand -> brand.getId().equals(id)))
                 .findFirst()
                 .orElse(null);
     }
 
     @Override
+    @SneakyThrows
     public List<Brand> getAll() {
-        return load();
-    }
-
-    /**
-     * Synchronously reads the entire list of brand data from persistent JSON storage,
-     * deserializing it into a list of {@code Brand} objects.
-     *
-     * @return A {@link List} of {@code Brand} objects.
-     * @throws Exception If any I/O errors occur during reading from storage.
-     */
-    @SneakyThrows
-    @Override
-    public List<Brand> load() {
-        return jsonSerializer.read(Brand.class);
-    }
-
-    /**
-     * Synchronously writes the current state of the brand list to persistent JSON storage,
-     * serializing it from the in-memory {@link List} representation.
-     *
-     * @param list The {@link List} of {@code Brand} objects to write to storage.
-     * @throws Exception If any I/O errors occur during writing to storage.
-     */
-    @SneakyThrows
-    @Override
-    public void save(@NonNull List<Brand> list) {
-        jsonSerializer.write(list);
+        List<Brand> brands = new ArrayList<>();
+        ResultSet rs = sql.executeQuery("SELECT * FROM web.brand;");
+        while (rs.next()) {
+            Brand brand = new Brand();
+            brand.setId(UUID.fromString(rs.getString(1)));
+            brand.setName(rs.getString(2));
+            brand.setRating(rs.getDouble(3));
+            brand.setDescriptionID(UUID.fromString(rs.getString(4)));
+            brand.setOpeningTime(rs.getTimestamp(5).toLocalDateTime());
+            brand.setClosingTime(rs.getTimestamp(6).toLocalDateTime());
+            brand.setCreatedAt(rs.getTimestamp(7).toLocalDateTime());
+            brands.add(brand);
+        }
+        return brands;
     }
 }

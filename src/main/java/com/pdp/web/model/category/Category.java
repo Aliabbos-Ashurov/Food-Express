@@ -22,6 +22,7 @@ import java.util.UUID;
 @Setter
 @ToString(callSuper = true)
 @AllArgsConstructor
+@NoArgsConstructor
 public class Category extends BaseModel implements Displayable {
     private String name;
     @SerializedName("brand_id")

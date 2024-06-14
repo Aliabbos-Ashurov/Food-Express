@@ -24,6 +24,8 @@ import java.util.UUID;
 @Setter
 @ToString(callSuper = true)
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class CustomerOrder extends BaseModel {
     @SerializedName("user_id")
     private UUID userID;

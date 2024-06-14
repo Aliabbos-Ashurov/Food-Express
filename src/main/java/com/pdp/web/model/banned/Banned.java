@@ -2,9 +2,7 @@ package com.pdp.web.model.banned;
 
 import com.google.gson.annotations.SerializedName;
 import com.pdp.web.model.BaseModel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.ToString;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -22,6 +20,8 @@ import java.util.UUID;
 @Getter
 @ToString(callSuper = true)
 @AllArgsConstructor
+@NoArgsConstructor
+@Setter
 public class Banned extends BaseModel {
     @SerializedName("user_id")
     private UUID userID;

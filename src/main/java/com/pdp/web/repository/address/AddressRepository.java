@@ -1,12 +1,15 @@
 package com.pdp.web.repository.address;
 
+import com.pdp.config.SQLConfiguration;
 import com.pdp.utils.serializer.JsonSerializer;
 import com.pdp.web.model.address.Address;
 import com.pdp.web.repository.BaseRepository;
 import lombok.NonNull;
 import lombok.SneakyThrows;
+import sql.helper.SQLHelper;
 
-import java.nio.file.Path;
+import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -23,7 +26,7 @@ import java.util.UUID;
  * access. Changes to the addresses list are persisted to the JSON file via
  * {@link JsonSerializer}.
  * <p>
- * This class is a singleton and can be accessed via {@link #getInstance()}.
+ * This class is a singleton and can be accessed via {@link }.
  *
  * @author Aliabbos Ashurov
  * @see Address for the entity that {@code AddressRepository} manages.
@@ -31,28 +34,7 @@ import java.util.UUID;
  * @since 04/May/2024 15:34
  */
 public class AddressRepository implements BaseRepository<Address, List<Address>> {
-    private static volatile AddressRepository instance;
-    private static JsonSerializer<Address> jsonSerializer;
-
-    private AddressRepository() {
-    }
-
-    /**
-     * Gets the singleton instance of AddressRepository.
-     *
-     * @return The singleton instance of AddressRepository.
-     */
-    public static AddressRepository getInstance() {
-        if (instance == null) {
-            synchronized (AddressRepository.class) {
-                if (instance == null) {
-                    instance = new AddressRepository();
-                    jsonSerializer = new JsonSerializer<>(Path.of(PATH_ADDRESS));
-                }
-            }
-        }
-        return instance;
-    }
+    private final SQLHelper sql = SQLConfiguration.getSQL();
 
     /**
      * Adds a new address to the repository and persists changes.
@@ -61,11 +43,11 @@ public class AddressRepository implements BaseRepository<Address, List<Address>>
      * @return True if the address is added successfully, false otherwise.
      */
     @Override
+    @SneakyThrows
     public boolean add(@NonNull Address address) {
-        List<Address> addresses = load();
-        addresses.add(address);
-        save(addresses);
-        return true;
+        return sql.executeUpdate("INSERT INTO web.address(city,street,apartment_number,house_number) VALUES(?,?,?,?);",
+                address.getCity(), address.getStreet(),
+                address.getHouseNumber(), address.getApartmentNumber()) > 0;
     }
 
     /**
@@ -78,11 +60,9 @@ public class AddressRepository implements BaseRepository<Address, List<Address>>
      * {@code false} otherwise.
      */
     @Override
+    @SneakyThrows
     public boolean remove(@NonNull UUID id) {
-        List<Address> addresses = load();
-        boolean removed = addresses.removeIf(address -> address.getId().equals(id));
-        if (removed) save(addresses);
-        return removed;
+        return sql.executeUpdate("DELETE FROM web.address WHERE id = ?;", id) > 0;
     }
 
     /**
@@ -94,8 +74,7 @@ public class AddressRepository implements BaseRepository<Address, List<Address>>
      */
     @Override
     public Address findById(@NonNull UUID id) {
-        List<Address> addresses = load();
-        return addresses.stream()
+        return getAll().stream()
                 .filter((address -> address.getId().equals(id)))
                 .findFirst().orElse(null);
     }
@@ -105,38 +84,17 @@ public class AddressRepository implements BaseRepository<Address, List<Address>>
      *
      * @return A {@link List} of all {@link Address} entities within the repository.
      */
+    @SneakyThrows
     @Override
     public List<Address> getAll() {
-        return load();
-    }
-
-    /**
-     * Reads a collection of {@link Address} entities from the repository's data store.
-     * This method depends on {@link JsonSerializer} to read a list of addresses from
-     * the corresponding JSON file and deserialize them.
-     *
-     * @return A list containing all deserialized {@link Address} entities.
-     * @throws Exception if there is an error during the deserialization process.
-     */
-    @SneakyThrows
-    @Override
-    public List<Address> load() {
-        return jsonSerializer.read(Address.class);
-    }
-
-
-    /**
-     * Persists the current state of the repository's {@link Address} entities to the
-     * data store. This method utilizes {@link JsonSerializer} to serialize and write
-     * the list of addresses to the repository's JSON file.
-     *
-     * @param list The list of {@link Address} entities to be serialized and written
-     *             to the persistent data store.
-     * @throws Exception if there is an error during the serialization or write process.
-     */
-    @SneakyThrows
-    @Override
-    public void save(@NonNull List<Address> list) {
-        jsonSerializer.write(list);
+        ResultSet rs = sql.executeQuery("SELECT * FROM web.address;");
+        List<Address> addresses = new ArrayList<>();
+        while (rs.next()) {
+            Address address = new Address(rs.getString(2), rs.getString(3), rs.getInt(5), rs.getInt(6));
+            address.setId(UUID.fromString(rs.getString(1)));
+            address.setCreatedAt(rs.getTimestamp(4).toLocalDateTime());
+            addresses.add(address);
+        }
+        return addresses;
     }
 }

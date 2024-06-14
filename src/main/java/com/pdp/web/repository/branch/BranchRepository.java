@@ -1,12 +1,15 @@
 package com.pdp.web.repository.branch;
 
+import com.pdp.config.SQLConfiguration;
 import com.pdp.utils.serializer.JsonSerializer;
 import com.pdp.web.model.branch.Branch;
 import com.pdp.web.repository.BaseRepository;
 import lombok.NonNull;
 import lombok.SneakyThrows;
+import sql.helper.SQLHelper;
 
-import java.nio.file.Path;
+import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -22,23 +25,7 @@ import java.util.UUID;
  * @since 04/May/2024 15:48
  */
 public class BranchRepository implements BaseRepository<Branch, List<Branch>> {
-    private static volatile BranchRepository instance;
-    private static JsonSerializer<Branch> jsonSerializer;
-
-    private BranchRepository() {
-    }
-
-    public static BranchRepository getInstance() {
-        if (instance == null) {
-            synchronized (BranchRepository.class) {
-                if (instance == null) {
-                    instance = new BranchRepository();
-                    jsonSerializer = new JsonSerializer<>(Path.of(PATH_BRANCH));
-                }
-            }
-        }
-        return instance;
-    }
+    private final SQLHelper sql = SQLConfiguration.getSQL();
 
     /**
      * Adds a new Branch entity to the repository and serializes the updated list
@@ -52,11 +39,10 @@ public class BranchRepository implements BaseRepository<Branch, List<Branch>> {
      * @throws Exception If an error occurs during the saving process.
      */
     @Override
+    @SneakyThrows
     public boolean add(@NonNull Branch branch) {
-        List<Branch> branches = load();
-        branches.add(branch);
-        save(branches);
-        return true;
+        return sql.executeUpdate("INSERT INTO web.branch(location_id,is_activate,phone_number) VALUES(?,?,?);",
+                branch.getLocationID(), branch.isActive(), branch.getPhoneNumber()) > 0;
     }
 
     /**
@@ -66,12 +52,10 @@ public class BranchRepository implements BaseRepository<Branch, List<Branch>> {
      * @param id The UUID of the Branch object to remove.
      * @return True if successful, false otherwise.
      */
+    @SneakyThrows
     @Override
     public boolean remove(@NonNull UUID id) {
-        List<Branch> branches = load();
-        boolean removed = branches.removeIf((branch -> branch.getId().equals(id)));
-        if (removed) save(branches);
-        return removed;
+        return sql.executeUpdate("DELETE FROM web.branch WHERE id = ?;", id) > 0;
     }
 
     /**
@@ -82,8 +66,7 @@ public class BranchRepository implements BaseRepository<Branch, List<Branch>> {
      */
     @Override
     public Branch findById(@NonNull UUID id) {
-        List<Branch> branches = load();
-        return branches.stream()
+        return getAll().stream()
                 .filter((branch -> branch.getId().equals(id)))
                 .findFirst()
                 .orElse(null);
@@ -91,37 +74,19 @@ public class BranchRepository implements BaseRepository<Branch, List<Branch>> {
 
 
     @Override
+    @SneakyThrows
     public List<Branch> getAll() {
-        return load();
-    }
-
-    /**
-     * Loads the existing Branch entities from the permanent storage into memory.
-     * <p>
-     * Branch objects are read from a JSON formatted file using {@link JsonSerializer},
-     * which converts the raw data into a list of Branch entities.
-     *
-     * @return A list of deserialized Branch objects.
-     * @throws Exception If an error occurs during the reading and deserialization process.
-     */
-    @SneakyThrows
-    @Override
-    public List<Branch> load() {
-        return jsonSerializer.read(Branch.class);
-    }
-
-    /**
-     * Saves the current list of Branch entities to permanent storage.
-     * <p>
-     * The in-memory list of Branches is serialized to a JSON formatted file
-     * by {@link JsonSerializer} ensuring that updates are persisted.
-     *
-     * @param list The list of Branch entities to be serialized and saved.
-     * @throws Exception If an error occurs during serialization or writing to storage.
-     */
-    @SneakyThrows
-    @Override
-    public void save(@NonNull List<Branch> list) {
-        jsonSerializer.write(list);
+        ResultSet rs = sql.executeQuery("SELECT * FROM web.branch;");
+        List<Branch> branches = new ArrayList<>();
+        while (rs.next()) {
+            Branch branch = new Branch();
+            branch.setId(UUID.fromString(rs.getString(1)));
+            branch.setLocationID(UUID.fromString(rs.getString(2)));
+            branch.setActive(rs.getBoolean(3));
+            branch.setPhoneNumber(rs.getString(4));
+            branch.setCreatedAt(rs.getTimestamp(5).toLocalDateTime());
+            branches.add(branch);
+        }
+        return branches;
     }
 }

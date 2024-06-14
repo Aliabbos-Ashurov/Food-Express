@@ -3,6 +3,8 @@ package com.pdp.web.model.branch;
 import com.google.gson.annotations.SerializedName;
 import com.pdp.web.model.BaseModel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 
 import java.util.UUID;
@@ -19,11 +21,13 @@ import java.util.UUID;
  */
 @Getter
 @ToString(callSuper = true)
+@Setter
+@NoArgsConstructor
 public class Branch extends BaseModel{
     @SerializedName("brand_id")
     private UUID brandID;
     @SerializedName("location_id")
-    private final UUID locationID;
+    private  UUID locationID;
     @SerializedName("is_active")
     private boolean isActive;
     @SerializedName("phone_number")

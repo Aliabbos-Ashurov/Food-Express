@@ -3,9 +3,7 @@ package com.pdp.web.model.brand;
 import com.google.gson.annotations.SerializedName;
 import com.pdp.web.model.BaseModel;
 import com.pdp.java.console.support.Displayable;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -24,9 +22,11 @@ import java.util.UUID;
 @Getter
 @Setter
 @ToString(callSuper = true)
+@AllArgsConstructor
+@NoArgsConstructor
 public class Brand extends BaseModel implements Displayable {
-    private final String name;
-    private final double rating;
+    private String name;
+    private double rating;
     @SerializedName("description_id")
     private UUID descriptionID;
     @SerializedName("image_url")

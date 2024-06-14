@@ -18,6 +18,7 @@ import lombok.*;
 @Builder
 @ToString(callSuper = true)
 @AllArgsConstructor
+@NoArgsConstructor
 @Setter
 public class Address extends BaseModel {
     private String city;

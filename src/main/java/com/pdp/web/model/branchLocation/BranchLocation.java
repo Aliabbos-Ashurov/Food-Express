@@ -2,9 +2,7 @@ package com.pdp.web.model.branchLocation;
 
 import com.google.gson.annotations.SerializedName;
 import com.pdp.web.model.BaseModel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.ToString;
+import lombok.*;
 
 import java.util.UUID;
 
@@ -18,6 +16,8 @@ import java.util.UUID;
 @Getter
 @AllArgsConstructor
 @ToString(callSuper = true)
+@NoArgsConstructor
+@Setter
 public class BranchLocation extends BaseModel {
     @SerializedName("branch_id")
     private UUID branchID;

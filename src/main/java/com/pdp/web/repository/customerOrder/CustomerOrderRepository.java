@@ -1,14 +1,18 @@
 package com.pdp.web.repository.customerOrder;
 
-import com.pdp.utils.serializer.JsonSerializer;
+import com.pdp.config.SQLConfiguration;
+import com.pdp.enums.OrderStatus;
+import com.pdp.enums.PaymentType;
 import com.pdp.web.model.customerOrder.CustomerOrder;
 import com.pdp.web.repository.BaseRepository;
-import com.pdp.config.jsonFilePath.JsonFilePath;
+
 import lombok.NonNull;
 import lombok.SneakyThrows;
+import sql.helper.SQLHelper;
 
-import java.io.IOException;
-import java.nio.file.Path;
+import java.math.BigDecimal;
+import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -28,23 +32,7 @@ import java.util.UUID;
  * @since 04/May/2024 16:37
  */
 public class CustomerOrderRepository implements BaseRepository<CustomerOrder, List<CustomerOrder>> {
-    private static JsonSerializer<CustomerOrder> jsonSerializer;
-    private static volatile CustomerOrderRepository instance;
-
-    private CustomerOrderRepository() {
-    }
-
-    public static CustomerOrderRepository getInstance() {
-        if (instance == null) {
-            synchronized (CustomerOrderRepository.class) {
-                if (instance == null) {
-                    instance = new CustomerOrderRepository();
-                    jsonSerializer = new JsonSerializer<>(Path.of(JsonFilePath.PATH_CUSTOMER_ORDER));
-                }
-            }
-        }
-        return instance;
-    }
+    private final SQLHelper sql = SQLConfiguration.getSQL();
 
     /**
      * Adds a CustomerOrder to the repository and persistently writes it to the JSON file.
@@ -54,11 +42,11 @@ public class CustomerOrderRepository implements BaseRepository<CustomerOrder, Li
      * was added and the list was saved.
      */
     @Override
+    @SneakyThrows
     public boolean add(@NonNull CustomerOrder customerOrder) {
-        List<CustomerOrder> customerOrders = load();
-        customerOrders.add(customerOrder);
-        save(customerOrders);
-        return true;
+        return sql.executeUpdate("INSERT INTO web.customer_order(user_id,branch_id,address_id,order_status,order_price,payment_type,deliverer_id,description_id) VALUES(?,?,?,?,?,?,?,?)",
+                customerOrder.getUserID(), customerOrder.getBranchID(), customerOrder.getAddressID(), customerOrder.getOrderStatus(),
+                customerOrder.getOrderPrice(), customerOrder.getPaymentType(), customerOrder.getDeliverID(), customerOrder.getDescriptionID()) > 0;
     }
 
     /**
@@ -69,11 +57,9 @@ public class CustomerOrderRepository implements BaseRepository<CustomerOrder, Li
      * @return True if the customerOrder was successfully found and removed, false otherwise.
      */
     @Override
+    @SneakyThrows
     public boolean remove(@NonNull UUID id) {
-        List<CustomerOrder> customerOrders = load();
-        boolean removed = customerOrders.removeIf(customerOrder -> customerOrder.getId().equals(id));
-        if (removed) save(customerOrders);
-        return removed;
+        return sql.executeUpdate("DELETE FROM web.customer_order WHERE id = ?;", id) > 0;
     }
 
     /**
@@ -86,8 +72,7 @@ public class CustomerOrderRepository implements BaseRepository<CustomerOrder, Li
      */
     @Override
     public CustomerOrder findById(@NonNull UUID id) {
-        List<CustomerOrder> customerOrders = load();
-        return customerOrders.stream()
+        return getAll().stream()
                 .filter(customerOrder -> customerOrder.getId().equals(id))
                 .findFirst().orElse(null);
     }
@@ -99,35 +84,24 @@ public class CustomerOrderRepository implements BaseRepository<CustomerOrder, Li
      * @return A List of all {@code CustomerOrder} objects
      */
     @Override
+    @SneakyThrows
     public List<CustomerOrder> getAll() {
-        return load();
-    }
-
-    /**
-     * Loads customer orders from the predefined JSON file into memory. The
-     * {@link JsonSerializer} is used to read from the file and deserialize the JSON
-     * into {@code CustomerOrder} objects.
-     *
-     * @return A list containing the deserialized {@code CustomerOrder} objects.
-     * @throws IOException if there is any issue in reading the file.
-     */
-    @SneakyThrows
-    @Override
-    public List<CustomerOrder> load() {
-        return jsonSerializer.read(CustomerOrder.class);
-    }
-
-    /**
-     * Saves the current state of customer orders into the predefined JSON file. All
-     * customer orders present in the memory are serialized and written to the file
-     * using {@link JsonSerializer}.
-     *
-     * @param customerOrders The List of {@code CustomerOrder} objects to persist.
-     * @throws IOException if there is any issue in writing to the file.
-     */
-    @SneakyThrows
-    @Override
-    public void save(@NonNull List<CustomerOrder> customerOrders) {
-        jsonSerializer.write(customerOrders);
+        List<CustomerOrder> customerOrders = new ArrayList<>();
+        ResultSet rs = sql.executeQuery("SELECT * FROM web.customer_order;");
+        while (rs.next()) {
+            CustomerOrder customerOrder = new CustomerOrder();
+            customerOrder.setId(UUID.fromString(rs.getString(1)));
+            customerOrder.setUserID(UUID.fromString(rs.getString(rs.getString(2))));
+            customerOrder.setBranchID(UUID.fromString(rs.getString(3)));
+            customerOrder.setAddressID(UUID.fromString(rs.getString(4)));
+            customerOrder.setOrderStatus(OrderStatus.valueOf(rs.getString(5)));
+            customerOrder.setOrderPrice(BigDecimal.valueOf(rs.getDouble(6)));
+            customerOrder.setPaymentType(PaymentType.valueOf(rs.getString(7)));
+            customerOrder.setDeliverID(UUID.fromString(rs.getString(8)));
+            customerOrder.setDescriptionID(UUID.fromString(rs.getString(9)));
+            customerOrder.setCreatedAt(rs.getTimestamp(10).toLocalDateTime());
+            customerOrders.add(customerOrder);
+        }
+        return customerOrders;
     }
 }

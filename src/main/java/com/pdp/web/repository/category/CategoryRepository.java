@@ -1,14 +1,14 @@
 package com.pdp.web.repository.category;
 
+import com.pdp.config.SQLConfiguration;
 import com.pdp.utils.serializer.JsonSerializer;
 import com.pdp.web.model.category.Category;
 import com.pdp.web.repository.BaseRepository;
-import com.pdp.config.jsonFilePath.JsonFilePath;
 import lombok.NonNull;
 import lombok.SneakyThrows;
+import sql.helper.SQLHelper;
 
-import java.io.IOException;
-import java.nio.file.Path;
+import java.sql.ResultSet;
 import java.util.*;
 
 
@@ -29,48 +29,18 @@ import java.util.*;
  * @since 04/May/2024 16:29
  */
 public class CategoryRepository implements BaseRepository<Category, Set<Category>> {
-    private static volatile CategoryRepository instance;
-    private static JsonSerializer<Category> jsonSerializer;
-
-    private CategoryRepository() {
-    }
-
-    /**
-     * Retrieves a singleton instance of {@code CategoryRepository}. On initial access,
-     * synchronizes access to ensure only one instance is created, thereafter returning
-     * said instance for future calls.
-     *
-     * @return A singleton {@code CategoryRepository} instance.
-     * @see #instance
-     * @see JsonSerializer
-     * @see JsonFilePath#PATH_CATEGORY
-     */
-    public static CategoryRepository getInstance() {
-        if (instance == null) {
-            synchronized (CategoryRepository.class) {
-                if (instance == null) {
-                    instance = new CategoryRepository();
-                    jsonSerializer = new JsonSerializer<>(Path.of(JsonFilePath.PATH_CATEGORY));
-                }
-            }
-        }
-        return instance;
-    }
+    private final SQLHelper sql = SQLConfiguration.getSQL();
 
     @Override
+    @SneakyThrows
     public boolean add(@NonNull Category category) {
-        Set<Category> categories = load();
-        boolean removed = categories.add(category);
-        if (removed) save(categories);
-        return removed;
+        return sql.executeUpdate("INSERT INTO web.category(name,brand_id,image_url) VALUES(?,?,?)") > 0;
     }
 
     @Override
+    @SneakyThrows
     public boolean remove(@NonNull UUID id) {
-        Set<Category> categories = load();
-        boolean removed = categories.removeIf((category -> category.getId().equals(id)));
-        if (removed) save(categories);
-        return removed;
+        return sql.executeUpdate("DELETE FROM web.category WHERE id = ?;") > 0;
     }
 
     /**
@@ -82,8 +52,7 @@ public class CategoryRepository implements BaseRepository<Category, Set<Category
      */
     @Override
     public Category findById(@NonNull UUID id) {
-        Set<Category> categories = load();
-        return categories.stream()
+        return getAll().stream()
                 .filter((category -> category.getId().equals(id)))
                 .findFirst()
                 .orElse(null);
@@ -96,34 +65,19 @@ public class CategoryRepository implements BaseRepository<Category, Set<Category
      * @return A {@code Set} containing all categories.
      */
     @Override
+    @SneakyThrows
     public Set<Category> getAll() {
-        return load();
-    }
-
-    /**
-     * Reads and deserializes the JSON file into a {@code Set} containing {@code Category} objects.
-     * Uses the {@link JsonSerializer} utility for deserialization.
-     *
-     * @return A {@code Set} containing deserialized {@code Category} objects.
-     * @throws IOException If an error occurs during deserialization.
-     */
-    @SneakyThrows
-    @Override
-    public Set<Category> load() {
-        List<Category> list = jsonSerializer.read(Category.class);
-        return new HashSet<>(list);
-    }
-
-    /**
-     * Serializes and persists all categories from the in-memory {@code Set} to the JSON
-     * storage file. Uses the {@link JsonSerializer} utility for serialization.
-     *
-     * @param categories The {@code Set} of {@code Category} objects to persist.
-     * @throws IOException If an error occurs during serialization.
-     */
-    @SneakyThrows
-    @Override
-    public void save(@NonNull Set<Category> categories) {
-        jsonSerializer.write(new ArrayList<>(categories));
+        Set<Category> categories = new HashSet<>();
+        ResultSet rs = sql.executeQuery("SELECT * FROM web.category;");
+        while (rs.next()) {
+            Category category = new Category();
+            category.setId(UUID.fromString(rs.getString(1)));
+            category.setName(rs.getString(2));
+            category.setBrandId(UUID.fromString(rs.getString(3)));
+            category.setImageUrl(rs.getString(4));
+            category.setCreatedAt(rs.getTimestamp(5).toLocalDateTime());
+            categories.add(category);
+        }
+        return categories;
     }
 }
