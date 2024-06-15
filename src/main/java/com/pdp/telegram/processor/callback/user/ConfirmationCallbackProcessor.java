@@ -22,7 +22,7 @@ public class ConfirmationCallbackProcessor implements Processor<ConfirmationStat
     @Override
     public void process(Update update, ConfirmationState state) {
         CallbackQuery callbackQuery = update.callbackQuery();
-        Message message = callbackQuery.message();
+        Message message = (Message) callbackQuery.maybeInaccessibleMessage();
         User user = message.from();
         Long chatID = user.id();
         if (state.equals(ConfirmationState.ACCEPT_ORDER_IN_CART)) {

@@ -9,5 +9,5 @@ import sql.helper.SQLHelper;
  **/
 public class SQLConfiguration {
     @Getter
-    private static final SQLHelper SQL = new SQLHelper("jdbc:postgresql://localhost:5432/pdp", "postgres", "postgres");
+    private static final SQLHelper SQL = new SQLHelper("jdbc:postgresql://localhost:5432/food_express", "postgres", "");
 }

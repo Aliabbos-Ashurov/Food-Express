@@ -62,6 +62,14 @@ public class CustomerOrderRepository implements BaseRepository<CustomerOrder, Li
         return sql.executeUpdate("DELETE FROM web.customer_order WHERE id = ?;", id) > 0;
     }
 
+    @Override
+    @SneakyThrows
+    public boolean update(@NonNull CustomerOrder customerOrder) {
+        return sql.executeUpdate("UPDATE web.customer_order set user_id=?,branch_id=?,address_id=?,order_status=?,order_price=?,payment_type=?,deliverer_id=?,description_id=? WHERE id = ?;",
+                customerOrder.getUserID(), customerOrder.getBranchID(), customerOrder.getAddressID(), String.valueOf(customerOrder.getOrderStatus()),
+                customerOrder.getOrderPrice(), String.valueOf(customerOrder.getPaymentType()), customerOrder.getDeliverID(), customerOrder.getDescriptionID(), customerOrder.getDescriptionID()) > 0;
+    }
+
     /**
      * Searches and retrieves a {@code CustomerOrder} from the repository using the
      * specified UUID. If the order is not found, `{@code null}` is returned. This

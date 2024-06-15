@@ -86,8 +86,8 @@ public class BranchLocationServiceImp implements BranchLocationService {
      * @return {@code false} as updating branch locations may not be supported.
      */
     @Override
-    public boolean update(@NonNull BranchLocation object) {
-        return false;
+    public boolean update(@NonNull BranchLocation branchLocation) {
+        return repository.update(branchLocation);
     }
 
     /**

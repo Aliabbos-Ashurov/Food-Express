@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -73,24 +72,8 @@ public class DescriptionServiceImp implements DescriptionService {
      */
     @Override
     public boolean update(@NonNull Description description) {
-        List<Description> allDescriptions = getAll();
-        Optional<Description> existingDescription = allDescriptions.stream()
-                .filter(d -> d.getDisplayName().equals(description.getDisplayName()))
-                .findFirst();
-
-        if (existingDescription.isPresent()) {
-            updateDescriptionData(existingDescription.get(), description);
-            repository.save(allDescriptions);
-            return true;
-        }
-        return false;
+        return repository.update(description);
     }
-
-    private void updateDescriptionData(Description currentDescription, Description updated) {
-        currentDescription.setName(updated.getName());
-        currentDescription.setText(updated.getText());
-    }
-
 
     /**
      * Searches for descriptions matching a specified query string.

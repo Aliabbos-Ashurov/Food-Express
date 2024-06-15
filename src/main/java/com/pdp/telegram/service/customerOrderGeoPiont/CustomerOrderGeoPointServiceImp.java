@@ -62,7 +62,7 @@ public class CustomerOrderGeoPointServiceImp implements CustomerOrderGeoPointSer
      */
     @Override
     public boolean update(@NonNull CustomerOrderGeoPoint customerOrderGeoPoint) {
-        return false;
+        return repository.update(customerOrderGeoPoint);
     }
 
     /**

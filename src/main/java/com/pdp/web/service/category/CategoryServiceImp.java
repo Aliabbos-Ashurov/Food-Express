@@ -85,27 +85,12 @@ public class CategoryServiceImp implements CategoryService {
     /**
      * Updates a category in the repository. This method is not implemented in the current class.
      *
-     * @param object The {@link Category} object representing the updated category information.
+     * @param category The {@link Category} object representing the updated category information.
      * @return Always returns {@code false} as the update operation is not supported.
      */
     @Override
     public boolean update(@NonNull Category category) {
-        Set<Category> categories = getAll();
-        Optional<Category> optional = categories.stream()
-                .filter(o -> o.getId().equals(category.getId()))
-                .findFirst();
-        if (optional.isPresent()) {
-            updateCategoryData(optional.get(), category);
-            repository.save(categories);
-            return true;
-        }
-        return false;
-    }
-
-    private void updateCategoryData(Category current, Category updated) {
-        current.setBrandId(updated.getBrandId());
-        current.setName(updated.getName());
-        current.setImageUrl(updated.getImageUrl());
+        return repository.update(category);
     }
 
     /**

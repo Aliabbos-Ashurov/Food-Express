@@ -56,6 +56,13 @@ public class CommentRepository implements BaseRepository<Comment, List<Comment>>
         return sql.executeUpdate("DELETE FROM web.comment WHERE id = ?;", id) > 0;
     }
 
+    @Override
+    @SneakyThrows
+    public boolean update(@NonNull Comment comment) {
+        return sql.executeUpdate("UPDATE web.comment set food_id = ?, text = ? WHERE id = ?;",
+                comment.getFoodID(), comment.getText(), comment.getId()) > 0;
+    }
+
     /**
      * Searches for a {@code Comment} within the repository using the provided UUID. The search
      * is performed on the in-memory list of comments, which is kept in sync with the JSON file.

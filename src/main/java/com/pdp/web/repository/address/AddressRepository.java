@@ -65,6 +65,13 @@ public class AddressRepository implements BaseRepository<Address, List<Address>>
         return sql.executeUpdate("DELETE FROM web.address WHERE id = ?;", id) > 0;
     }
 
+    @Override
+    @SneakyThrows
+    public boolean update(@NonNull Address address) {
+        return sql.executeUpdate("UPDATE web.address set city = ?, street = ?, apartment_number = ?, house_number = ? WHERE id = ?;",
+                address.getCity(), address.getStreet(), address.getApartmentNumber(), address.getHouseNumber(), address.getId()) > 0;
+    }
+
     /**
      * Retrieves an {@link Address} entity by its unique identifier. If no such address
      * exists within the repository, this method returns {@code null}.
@@ -72,6 +79,7 @@ public class AddressRepository implements BaseRepository<Address, List<Address>>
      * @param id The unique identifier of the {@link Address} to locate.
      * @return The {@link Address} entity if found; otherwise, {@code null}.
      */
+
     @Override
     public Address findById(@NonNull UUID id) {
         return getAll().stream()

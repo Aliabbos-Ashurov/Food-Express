@@ -58,6 +58,13 @@ public class BranchRepository implements BaseRepository<Branch, List<Branch>> {
         return sql.executeUpdate("DELETE FROM web.branch WHERE id = ?;", id) > 0;
     }
 
+    @Override
+    @SneakyThrows
+    public boolean update(@NonNull Branch branch) {
+        return sql.executeUpdate("UPDATE web.branch set location_id = ?, is_active = ?, phone_number = ? WHERE id = ?;",
+                branch.getLocationID(), branch.isActive(), branch.getPhoneNumber(), branch.getId()) > 0;
+    }
+
     /**
      * Retrieves the Branch with the specified UUID identifier from the repository.
      *

@@ -55,6 +55,13 @@ public class BranchLocationRepository implements BaseRepository<BranchLocation, 
         return sql.executeUpdate("DELETE FROM web.branch_location WHERE id = ?;") > 0;
     }
 
+    @Override
+    @SneakyThrows
+    public boolean update(@NonNull BranchLocation branchLocation) {
+        return sql.executeUpdate("UPDATE web.branch_location set branch_id = ?, lattidue = ?, longtidue = ? WHERE id = ?;",
+                branchLocation.getBranchID(), branchLocation.getLatidue(), branchLocation.getLongtidue(), branchLocation.getId()) > 0;
+    }
+
     /**
      * Retrieves a {@link BranchLocation} by its UUID. If no matching
      * branch location is found, returns {@code null}.

@@ -22,7 +22,6 @@ import java.util.UUID;
  * @author Doniyor Nishonov
  * @since 14th May 2024, 14:42
  */
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class TelegramTransportRepository implements BaseRepository<TelegramTransport, List<TelegramTransport>> {
     private final SQLHelper sql = SQLConfiguration.getSQL();
 
@@ -48,7 +47,14 @@ public class TelegramTransportRepository implements BaseRepository<TelegramTrans
     @Override
     @SneakyThrows
     public boolean remove(@NonNull UUID id) {
-        return sql.executeUpdate("DELETE FROM telegram.telegramtranpost WHERE id = ?;") > 0;
+        return sql.executeUpdate("DELETE FROM telegram.telegramtranport WHERE id = ?;") > 0;
+    }
+
+    @Override
+    @SneakyThrows
+    public boolean update(@NonNull TelegramTransport telegramTransport) {
+        return sql.executeUpdate("UPDATE telegram.telegramtransport set t_deliverer_id = ?, name = ?, registered_number = ? WHERE id = ?;",
+                telegramTransport.getTelegramDelivererID(), telegramTransport.getName(), telegramTransport.getRegisteredNumber(), telegramTransport.getId()) > 0;
     }
 
     /**

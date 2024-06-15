@@ -58,6 +58,13 @@ public class BrandRepository implements BaseRepository<Brand, List<Brand>> {
     }
 
     @Override
+    @SneakyThrows
+    public boolean update(@NonNull Brand brand) {
+        return sql.executeUpdate("UPDATE web.brand set name = ?,rating = ?, description_id = ?, opening_time = ?, closing_time = ? WHERE id = ?;",
+                brand.getName(), brand.getRating(), brand.getDescriptionID(), brand.getOpeningTime(), brand.getClosingTime(), brand.getDescriptionID()) > 0;
+    }
+
+    @Override
     public Brand findById(@NonNull UUID id) {
         return getAll().stream()
                 .filter((brand -> brand.getId().equals(id)))

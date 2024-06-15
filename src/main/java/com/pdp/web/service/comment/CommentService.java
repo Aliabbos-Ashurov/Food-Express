@@ -17,7 +17,7 @@ import java.util.UUID;
  * @see Comment
  */
 public interface CommentService extends BaseService<Comment, List<Comment>> {
-    CommentRepository repository = CommentRepository.getInstance();
+    CommentRepository repository = new CommentRepository();
 
     /**
      * Fetches a list of comments associated with a specific food item identified by its UUID.

@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -77,23 +76,7 @@ public class AddressServiceImp implements AddressService {
      */
     @Override
     public boolean update(@NonNull Address address) {
-        List<Address> addresses = getAll();
-        Optional<Address> optionalAddress = addresses.stream()
-                .filter(o -> address.getId().equals(o.getId()))
-                .findFirst();
-        if (optionalAddress.isPresent()) {
-            updateAddressData(optionalAddress.get(), address);
-            repository.save(addresses);
-            return true;
-        }
-        return false;
-    }
-
-    private void updateAddressData(Address current, Address updated) {
-        current.setCity(updated.getCity());
-        current.setStreet(updated.getStreet());
-        current.setHouseNumber(updated.getHouseNumber());
-        current.setApartmentNumber(updated.getApartmentNumber());
+        return repository.update(address);
     }
 
     /**

@@ -43,6 +43,13 @@ public class CategoryRepository implements BaseRepository<Category, Set<Category
         return sql.executeUpdate("DELETE FROM web.category WHERE id = ?;") > 0;
     }
 
+    @Override
+    @SneakyThrows
+    public boolean update(@NonNull Category category) {
+        return sql.executeUpdate("UPDATE wen.category set name = ?, brand_id = ?, image_url = ? WHERE id = ?;",
+                category.getName(), category.getBrandId(), category.getImageUrl(), category.getId()) > 0;
+    }
+
     /**
      * Retrieves a {@code Category} object by its unique identifier, returning
      * an {@code Optional}. If the category does not exist, an empty Optional is returned.

@@ -23,7 +23,7 @@ import java.util.List;
  * @see BrandRepository The repository interface handling Brand persistence operations.
  */
 public interface BrandService extends BaseService<Brand, List<Brand>> {
-    BrandRepository repository = BrandRepository.getInstance();
+    BrandRepository repository = new BrandRepository();
 
     Brand getBrandByName(String name);
 }

@@ -8,7 +8,6 @@ import lombok.NonNull;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -77,24 +76,9 @@ public class BrandServiceImp implements BrandService {
      */
     @Override
     public boolean update(@NonNull Brand brand) {
-        List<Brand> brands = getAll();
-        Optional<Brand> brandOptional = brands.stream()
-                .filter(o -> o.getId().equals(brand.getId()))
-                .findFirst();
-        if (brandOptional.isPresent()) {
-            updateBrandData(brandOptional.get(), brand);
-            repository.save(brands);
-            return true;
-        }
-        return false;
+        return repository.update(brand);
     }
 
-    private void updateBrandData(@NonNull Brand current, Brand updated) {
-        current.setOpeningTime(updated.getOpeningTime());
-        current.setClosingTime(updated.getClosingTime());
-        current.setImageURL(updated.getImageURL());
-        current.setDescriptionID(updated.getDescriptionID());
-    }
 
     /**
      * Searches for brands that match the given query.

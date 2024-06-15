@@ -22,7 +22,7 @@ import java.util.UUID;
  */
 
 public interface CategoryService extends BaseService<Category, Set<Category>> {
-    CategoryRepository repository = CategoryRepository.getInstance();
+    CategoryRepository repository = new CategoryRepository();
 
     /**
      * Retrieves a set of categories associated with a specific brand, identified by its UUID.

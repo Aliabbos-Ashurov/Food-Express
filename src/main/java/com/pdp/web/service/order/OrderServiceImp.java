@@ -18,7 +18,6 @@ import org.jetbrains.annotations.NotNull;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -61,11 +60,7 @@ public class OrderServiceImp implements OrderService {
 
     @Override
     public void clearByCustomer(UUID customerOrderID) {
-        List<Order> orders = getAll();
-        List<Order> orderList = orders.stream().filter(order -> Objects.equals(order.getCustomerOrderID(), customerOrderID))
-                .toList();
-        orders.removeAll(orderList);
-        repository.save(orders);
+        repository.clearByCustomer(customerOrderID);
     }
 
     /**
@@ -205,23 +200,7 @@ public class OrderServiceImp implements OrderService {
      */
     @Override
     public boolean update(@NotNull Order order) {
-        List<Order> orders = getAll();
-        Optional<Order> first = orders.stream()
-                .filter(o -> o.getId().equals(order.getId()))
-                .findFirst();
-        if (first.isPresent()) {
-            updateOrderData(first.get(), order);
-            repository.save(orders);
-            return true;
-        }
-        return false;
-    }
-
-    private void updateOrderData(Order order, Order updated) {
-        order.setFoodID(updated.getFoodID());
-        order.setFoodPrice(updated.getFoodPrice());
-        order.setFoodQuantity(updated.getFoodQuantity());
-        order.setCustomerOrderID(updated.getCustomerOrderID());
+        return repository.update(order);
     }
 
     /**

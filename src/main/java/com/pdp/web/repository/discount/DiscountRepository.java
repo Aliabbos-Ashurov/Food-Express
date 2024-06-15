@@ -3,6 +3,7 @@ package com.pdp.web.repository.discount;
 import com.pdp.config.SQLConfiguration;
 import com.pdp.web.model.discount.Discount;
 import com.pdp.web.repository.BaseRepository;
+import lombok.NonNull;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
 import sql.helper.SQLHelper;
@@ -54,6 +55,14 @@ public class DiscountRepository implements BaseRepository<Discount, List<Discoun
     @Override
     public boolean remove(@NotNull UUID id) {
         return sql.executeUpdate("DELETE FROM web.discount WHERE id = ?;", id) > 0;
+    }
+
+    @Override
+    @SneakyThrows
+    public boolean update(@NonNull Discount discount) {
+        return sql.executeUpdate("UPDATE web.discount set food_id=?,starting_time=?,ending_time=?,description_id=?,discount_percentage=? WHERE id = ?:",
+                discount.getFoodID(), discount.getStartingTime(), discount.getEndingTime()
+                , discount.getDescriptionID(), discount.getDiscountPersentage(), discount.getId()) > 0;
     }
 
     @Override

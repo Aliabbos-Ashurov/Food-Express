@@ -54,6 +54,13 @@ public class BannedRepository implements BaseRepository<Banned, List<Banned>> {
         return sql.executeUpdate("DELETE FROM web.banned WHERE id = ?;", id) > 0;
     }
 
+    @Override
+    @SneakyThrows
+    public boolean update(@NonNull Banned banned) {
+        return sql.executeUpdate("UPDATE web.banned set user_id = ?, banned_at = ?, description_id = ? WHERE id = ?;",
+                banned.getUserID(), banned.getBannedAt(), banned.getDescriptionID(), banned.getId()) > 0;
+    }
+
     /**
      * Finds and returns a {@code Banned} instance in the repository, identified by its {@link UUID}.
      *

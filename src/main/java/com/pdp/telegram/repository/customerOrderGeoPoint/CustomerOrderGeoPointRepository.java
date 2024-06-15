@@ -48,6 +48,13 @@ public class CustomerOrderGeoPointRepository implements BaseRepository<CustomerO
         return sql.executeUpdate("DELETE FROM telegram.customer_order_geo_point WHERE id = ?;", id) > 0;
     }
 
+    @Override
+    @SneakyThrows
+    public boolean update(@NonNull CustomerOrderGeoPoint cGeoPoint) {
+        return sql.executeUpdate("UPDATE telegram.customer_order_geo_point set lattidue=?,longtidue=? WHERE id = ?;",
+                cGeoPoint.getLattidue(), cGeoPoint.getLongtidue(), cGeoPoint.getId()) > 0;
+    }
+
     /**
      * Finds a customer order geo point by its ID.
      *

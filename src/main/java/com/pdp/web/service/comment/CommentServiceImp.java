@@ -78,7 +78,7 @@ public class CommentServiceImp implements CommentService {
      */
     @Override
     public boolean update(@NonNull Comment comment) {
-        return false;
+        return repository.update(comment);
     }
 
     /**
