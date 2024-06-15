@@ -19,7 +19,7 @@ import java.util.UUID;
  * @since 11/May/2024 10:23
  */
 public interface BranchLocationService extends BaseService<BranchLocation, List<BranchLocation>> {
-    BranchLocationRepository repository = BranchLocationRepository.getInstance();
+    BranchLocationRepository repository = new BranchLocationRepository();
 
     /**
      * Retrieves the location DTO for the specified branch ID.

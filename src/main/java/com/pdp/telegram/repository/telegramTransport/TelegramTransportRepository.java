@@ -22,7 +22,6 @@ import java.util.UUID;
  * @author Doniyor Nishonov
  * @since 14th May 2024, 14:42
  */
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class TelegramTransportRepository implements BaseRepository<TelegramTransport, List<TelegramTransport>> {
     private final SQLHelper sql = SQLConfiguration.getSQL();
 
