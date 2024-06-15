@@ -8,7 +8,6 @@ import lombok.NonNull;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -80,28 +79,7 @@ public class TelegramDelivererServiceImp implements TelegramDelivererService {
      */
     @Override
     public boolean update(@NonNull TelegramDeliverer telegramDeliverer) {
-        List<TelegramDeliverer> telegramDeliverers = getAll();
-        Optional<TelegramDeliverer> first = telegramDeliverers.stream()
-                .filter(t -> Objects.equals(t.getId(), telegramDeliverer.getId()))
-                .findFirst();
-        if (first.isPresent()) {
-            updateTelegramDelivererData(first.get(), telegramDeliverer);
-            repository.save(telegramDeliverers);
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * Helper method to update the data of a Telegram deliverer.
-     *
-     * @param deliverer The Telegram deliverer to update.
-     * @param updated   The updated data of the Telegram deliverer.
-     */
-    private void updateTelegramDelivererData(TelegramDeliverer deliverer, TelegramDeliverer updated) {
-        deliverer.setFullname(updated.getFullname());
-        deliverer.setTelegramUserID(updated.getTelegramUserID());
-        deliverer.setDeliveryStatus(updated.getDeliveryStatus());
+        return repository.update(telegramDeliverer);
     }
 
     /**

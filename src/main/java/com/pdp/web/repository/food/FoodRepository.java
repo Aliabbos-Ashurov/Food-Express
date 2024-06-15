@@ -4,6 +4,7 @@ import com.pdp.config.SQLConfiguration;
 import com.pdp.utils.serializer.JsonSerializer;
 import com.pdp.web.model.food.Food;
 import com.pdp.web.repository.BaseRepository;
+import lombok.NonNull;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
 import sql.helper.SQLHelper;
@@ -55,6 +56,13 @@ public class FoodRepository implements BaseRepository<Food, List<Food>> {
     @Override
     public boolean remove(@NotNull UUID id) {
         return sql.executeUpdate("DELETE FROM web.food WHERE id = ?;", id) > 0;
+    }
+
+    @Override
+    @SneakyThrows
+    public boolean update(@NonNull Food food) {
+        return sql.executeUpdate("UPDATE web.food set name = ?,image_url=?,description_id=?,price=?,category_id=? WHERE id = ?;",
+                food.getName(), food.getImageUrl(), food.getDescriptionID(), food.getPrice(), food.getCategoryID(), food.getId()) > 0;
     }
 
     /**

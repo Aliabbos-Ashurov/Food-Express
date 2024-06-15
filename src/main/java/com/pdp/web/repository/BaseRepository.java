@@ -38,6 +38,23 @@ public interface BaseRepository<T extends BaseModel, R extends Collection<T>> ex
     boolean remove(@NonNull UUID id);
 
     /**
+     * Updates the specified object in the data store.
+     *
+     * <p>This method takes a non-null object of type {@code T} and attempts to update its
+     * corresponding entry in the data store. The update operation may involve modifying
+     * existing records to reflect the new state of the object.</p>
+     *
+     * <p><strong>Note:</strong> The object passed to this method must not be {@code null}.
+     * If a {@code null} object is passed, the method will throw a {@link NullPointerException}.</p>
+     *
+     * @param object the object to be updated in the data store; must not be {@code null}.
+     * @return {@code true} if the update was successful, {@code false} otherwise.
+     * @throws NullPointerException if the specified object is {@code null}.
+     */
+    boolean update(@NonNull T object);
+
+
+    /**
      * Retrieves an entity from the repository by its unique identifier.
      *
      * @param id The unique identifier of the entity to retrieve.

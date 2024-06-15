@@ -4,9 +4,11 @@ import com.pdp.config.SQLConfiguration;
 import com.pdp.enums.format.PictureFormat;
 import com.pdp.web.model.picture.Picture;
 import com.pdp.web.repository.BaseRepository;
+import lombok.NonNull;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
 import sql.helper.SQLHelper;
+
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
@@ -48,6 +50,13 @@ public class PictureRepository implements BaseRepository<Picture, List<Picture>>
     @Override
     public boolean remove(@NotNull UUID id) {
         return sql.executeUpdate("DELETE FROM web.picture WHERE id = ?;", id) > 0;
+    }
+
+    @Override
+    @SneakyThrows
+    public boolean update(@NonNull Picture picture) {
+        return sql.executeUpdate("UPDATE web.picture set name=?,format=?,width,height=?,image_url=? WHERE id = ?;",
+                picture.getName(), String.valueOf(picture.getFormat()), picture.getWidth(), picture.getHeight(), picture.getImageUrl(), picture.getId()) > 0;
     }
 
     /**

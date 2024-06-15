@@ -6,8 +6,6 @@ import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
 import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -69,20 +67,7 @@ public class DiscountServiceImp implements DiscountService {
      */
     @Override
     public boolean update(@NonNull Discount discount) {
-        List<Discount> discounts = getAll();
-        Optional<Discount> first = discounts.stream().filter(d -> Objects.equals(d.getId(), discount.getId())).findFirst();
-        if (first.isPresent()) {
-            updateDiscountData(first.get(), discount);
-            repository.save(discounts);
-            return true;
-        }
-        return false;
-    }
-
-    private void updateDiscountData(Discount currentDiscount, Discount updated) {
-        currentDiscount.setDiscountPersentage(updated.isDiscountPersentage());
-        currentDiscount.setFoodID(updated.getFoodID());
-        currentDiscount.setDescriptionID(updated.getDescriptionID());
+        return repository.update(discount);
     }
 
     /**

@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -57,7 +56,7 @@ public class UserServiceImp implements UserService {
      */
 
     @Override
-    public boolean remove(UUID id) {
+    public boolean remove(@NotNull UUID id) {
         return repository.remove(id);
     }
 
@@ -69,28 +68,7 @@ public class UserServiceImp implements UserService {
      */
     @Override
     public boolean update(@NotNull User user) {
-        List<User> users = getAll();
-        Optional<User> userOptional = users.stream()
-                .filter(o -> o.getId().equals(user.getId()))
-                .peek((o) -> {
-                    updateUserData(o, user);
-                })
-                .findFirst();
-        if (userOptional.isPresent()) repository.save(users);
-        return userOptional.isPresent();
-    }
-
-    private void updateUserData(User existingUser, User newUser) {
-        existingUser.setRole(newUser.getRole());
-        existingUser.setPassword(newUser.getPassword());
-        existingUser.setEmail(newUser.getEmail());
-        existingUser.setLanguage(newUser.getLanguage());
-        existingUser.setPhoneNumber(newUser.getPhoneNumber());
-        existingUser.setFullname(newUser.getFullname());
-        existingUser.setEmailVerified(newUser.isEmailVerified());
-        existingUser.setNumberVerified(newUser.isNumberVerified());
-        existingUser.setUsername(newUser.getUsername());
-        existingUser.setProfilePictureUrl(newUser.getProfilePictureUrl());
+        return repository.update(user);
     }
 
     /**
@@ -100,7 +78,7 @@ public class UserServiceImp implements UserService {
      * @return A list of User objects that match the query.
      */
     @Override
-    public List<User> search(String query) {
+    public List<User> search(@NotNull String query) {
         List<User> users = getAll();
         return users.stream()
                 .filter(user -> Validator.isValid(user.getUsername(), query))
@@ -114,7 +92,7 @@ public class UserServiceImp implements UserService {
      * @return The User object, or null if no user is found.
      */
     @Override
-    public User getByID(UUID id) {
+    public User getByID(@NotNull UUID id) {
         return repository.findById(id);
     }
 

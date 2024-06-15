@@ -86,12 +86,12 @@ public class BannedServiceImp implements BannedService {
     /**
      * Updates a banned user entry in the repository.
      *
-     * @param object The updated Banned object.
+     * @param banned The updated Banned object.
      * @return true if the update was successful; false otherwise (typically not supported for banned users).
      */
     @Override
-    public boolean update(@NonNull Banned object) {
-        return false;
+    public boolean update(@NonNull Banned banned) {
+        return repository.update(banned);
     }
 
     /**

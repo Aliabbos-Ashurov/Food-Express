@@ -53,6 +53,14 @@ public class UserRepository implements BaseRepository<User, List<User>> {
         return sql.executeUpdate("DELETE FROM web.auth_user WHERE id = ?;", id) > 0;
     }
 
+    @Override
+    @SneakyThrows
+    public boolean update(@NonNull User user) {
+        return sql.executeUpdate("UPDATE web.auth_user set full_name=?,user_name=?,password=?,phone_number=?,email=?,is_number_verified=?,is_email.verified=?,role=?,language=?,profile_picture_url=? WHERE id = ?;",
+                user.getFullname(), user.getUsername(), user.getPassword(), user.getPhoneNumber(), user.getEmail(), user.isNumberVerified(),
+                user.isEmailVerified(), String.valueOf(user.getRole()), String.valueOf(user.getLanguage()), user.getProfilePictureUrl()) > 0;
+    }
+
     /**
      * Finds and returns a user by their ID.
      *

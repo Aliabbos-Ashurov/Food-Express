@@ -10,7 +10,6 @@ import lombok.NonNull;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -108,32 +107,7 @@ public class TelegramUserServiceImp implements TelegramUserService {
      */
     @Override
     public boolean update(@NonNull TelegramUser telegramUser) {
-        List<TelegramUser> telegramUsers = getAll();
-        Optional<TelegramUser> first = telegramUsers.stream()
-                .filter(t -> Objects.equals(t.getChatID(), telegramUser.getChatID()))
-                .findFirst();
-        if (first.isPresent()) {
-            updateTelegramUserData(first.get(), telegramUser);
-            repository.save(telegramUsers);
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * Helper method to update the data of a Telegram user.
-     *
-     * @param telegramUser The Telegram user to update.
-     * @param updated      The updated data of the Telegram user.
-     */
-    private void updateTelegramUserData(TelegramUser telegramUser, TelegramUser updated) {
-        telegramUser.setChatID(updated.getChatID());
-        telegramUser.setLanguage(updated.getLanguage());
-        telegramUser.setFirstName(updated.getFirstName());
-        telegramUser.setRole(updated.getRole());
-        telegramUser.setState(updated.getState());
-        telegramUser.setPhoneNumber(updated.getPhoneNumber());
-        telegramUser.setUsername(updated.getUsername());
+        return repository.update(telegramUser);
     }
 
     /**

@@ -1,6 +1,5 @@
 package com.pdp.web.service.branch;
 
-import com.pdp.utils.Validator;
 import com.pdp.web.model.branch.Branch;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -73,7 +72,7 @@ public class BranchServiceImp implements BranchService {
      */
     @Override
     public boolean update(@NonNull Branch branch) {
-        return false;
+        return repository.update(branch);
     }
 
     /**

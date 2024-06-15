@@ -104,14 +104,14 @@ public class CustomerOrderServiceImp implements CustomerOrderService {
             return customerOrder;
         }
         return first.orElseGet(() -> {
-                    CustomerOrder build = CustomerOrder.builder()
-                            .userID(userId)
-                            .orderStatus(OrderStatus.NOT_CONFIRMED)
-                            .branchID(branchID)
-                            .build();
-                    add(build);
-                    return build;
-                });
+            CustomerOrder build = CustomerOrder.builder()
+                    .userID(userId)
+                    .orderStatus(OrderStatus.NOT_CONFIRMED)
+                    .branchID(branchID)
+                    .build();
+            add(build);
+            return build;
+        });
     }
 
     /**
@@ -176,28 +176,7 @@ public class CustomerOrderServiceImp implements CustomerOrderService {
      */
     @Override
     public boolean update(@NonNull CustomerOrder customerOrder) {
-        List<CustomerOrder> customerOrders = getAll();
-        Optional<CustomerOrder> customerOrderOptional = customerOrders.stream()
-                .filter(o -> o.getId().equals(customerOrder.getId()))
-                .findFirst();
-        if (customerOrderOptional.isPresent()) {
-            updateCustomerOrderData(customerOrderOptional.get(), customerOrder);
-            repository.save(customerOrders);
-            return true;
-        }
-        return false;
-    }
-
-    private void updateCustomerOrderData(CustomerOrder o, CustomerOrder newCustomerOrder) {
-        o.setUserID(newCustomerOrder.getUserID());
-        o.setBranchID(newCustomerOrder.getBranchID());
-        o.setAddressID(newCustomerOrder.getAddressID());
-        o.setDeliverID(newCustomerOrder.getDeliverID());
-        o.setDescriptionID(newCustomerOrder.getDescriptionID());
-        o.setPaymentType(newCustomerOrder.getPaymentType());
-        o.setOrderPrice(newCustomerOrder.getOrderPrice());
-        o.setOrderStatus(newCustomerOrder.getOrderStatus());
-        o.setCustomerOrderGeoPointID(newCustomerOrder.getCustomerOrderGeoPointID());
+        return repository.update(customerOrder);
     }
 
     /**

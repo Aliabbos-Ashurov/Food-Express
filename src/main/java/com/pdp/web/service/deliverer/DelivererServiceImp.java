@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -58,21 +57,7 @@ public class DelivererServiceImp implements DelivererService {
      */
     @Override
     public boolean update(@NonNull Deliverer deliverer) {
-        List<Deliverer> deliverers = getAll();
-        Optional<Deliverer> optional = deliverers.stream()
-                .filter(o -> o.getId().equals(deliverer.getId()))
-                .findFirst();
-        if (optional.isPresent()) {
-            updateDelivererData(optional.get(), deliverer);
-            repository.save(deliverers);
-            return true;
-        }
-        return false;
-    }
-
-    private void updateDelivererData(Deliverer current, Deliverer updated) {
-        current.setFullname(updated.getFullname());
-        current.setPhoneNumber(updated.getPhoneNumber());
+        return repository.update(deliverer);
     }
 
     /**

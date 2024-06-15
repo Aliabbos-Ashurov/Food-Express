@@ -16,5 +16,6 @@ import java.util.UUID;
  */
 public interface TelegramTransportService extends BaseService<TelegramTransport, List<TelegramTransport>> {
     TelegramTransportRepository repository = new TelegramTransportRepository();
+
     TelegramTransport getTransportByDeliverID(UUID telegramDeliverID);
 }

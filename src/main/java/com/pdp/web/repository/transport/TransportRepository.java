@@ -52,6 +52,13 @@ public class TransportRepository implements BaseRepository<Transport, List<Trans
         return sql.executeUpdate("DELETE FROM web.transport WHERE id = ?;", id) > 0;
     }
 
+    @Override
+    @SneakyThrows
+    public boolean update(@NonNull Transport transport) {
+        return sql.executeUpdate("UPDATE web.transport set deliverer_id=?,name=?,registered_number=? WHERE id = ?",
+                transport.getDeliverID(), transport.getName(), transport.getRegisteredNumber(), transport.getId()) > 0;
+    }
+
     /**
      * Finds a transport entity by its UUID.
      *

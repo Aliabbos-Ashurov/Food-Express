@@ -4,6 +4,7 @@ import com.pdp.config.SQLConfiguration;
 import com.pdp.utils.serializer.JsonSerializer;
 import com.pdp.web.model.foodBrandMapping.FoodBrandMapping;
 import com.pdp.web.repository.BaseRepository;
+import lombok.NonNull;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
 import sql.helper.SQLHelper;
@@ -55,6 +56,13 @@ public class FoodBrandMappingRepository implements BaseRepository<FoodBrandMappi
     @Override
     public boolean remove(@NotNull UUID id) {
         return sql.executeUpdate("DELETE FROM web.food_brand_mapping WHERE id = ?;", id) > 0;
+    }
+
+    @Override
+    @SneakyThrows
+    public boolean update(@NonNull FoodBrandMapping foodBrandMapping) {
+        return sql.executeUpdate("UPDATE web.food_brand_mapping set category_name = ?,food_id=?,brand_id WHERE id = ?;",
+                foodBrandMapping.getCategoryName(), foodBrandMapping.getFoodID(), foodBrandMapping.getBrandID(), foodBrandMapping.getId()) > 0;
     }
 
     /**

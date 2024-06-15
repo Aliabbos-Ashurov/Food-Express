@@ -39,6 +39,13 @@ public class DelivererRepository implements BaseRepository<Deliverer, List<Deliv
         return sql.executeUpdate("DELETE FROM web.deliverer WHERE id = ?;", id) > 0;
     }
 
+    @Override
+    @SneakyThrows
+    public boolean update(@NonNull Deliverer deliverer) {
+        return sql.executeUpdate("UPDATE wen.deliverer set full_name=?,phone_number=? WHERE id = ?;",
+                deliverer.getFullname(), deliverer.getPhoneNumber(), deliverer.getId()) > 0;
+    }
+
     /**
      * Finds and returns a {@code Deliverer} by its UUID from the local repository cache.
      * It uses a stream to filter the list of deliverers. If the deliverer is not found,

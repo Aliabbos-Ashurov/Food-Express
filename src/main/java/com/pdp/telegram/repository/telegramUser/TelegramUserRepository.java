@@ -61,6 +61,14 @@ public class TelegramUserRepository implements BaseRepository<TelegramUser, List
         return sql.executeUpdate("DELETE FROM telegram.telegramUser WHERE id = ?", id) > 0;
     }
 
+    @Override
+    @SneakyThrows
+    public boolean update(@NonNull TelegramUser telegramUser) {
+        return sql.executeUpdate("UPDATE telegram.telegramuser set chat_id=?,first_name=?,user_name=?,phone_number=?,role=?,state=?,language=? WHERE id = ?;",
+                telegramUser.getChatID(), telegramUser.getFirstName(), telegramUser.getUsername(), telegramUser.getPhoneNumber(), String.valueOf(telegramUser.getRole())
+                , String.valueOf(telegramUser.getState()), String.valueOf(telegramUser.getLanguage()), telegramUser.getId()) > 0;
+    }
+
     /**
      * Finds a Telegram user by its ID.
      *

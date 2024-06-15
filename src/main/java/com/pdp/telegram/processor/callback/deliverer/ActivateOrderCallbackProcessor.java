@@ -22,7 +22,7 @@ public class ActivateOrderCallbackProcessor implements Processor<ActiveOrderMana
     @Override
     public void process(Update update, ActiveOrderManagementState state) {
         CallbackQuery callbackQuery = update.callbackQuery();
-        Message message = callbackQuery.message();
+        Message message = (Message) callbackQuery.maybeInaccessibleMessage();
         User user = message.from();
         Long chatID = user.id();
         if (state.equals(ActiveOrderManagementState.CONFIRM_ORDER_PICKUP)) {

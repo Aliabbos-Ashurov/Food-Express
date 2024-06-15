@@ -8,7 +8,6 @@ import lombok.NonNull;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -81,23 +80,9 @@ public class TelegramTransportServiceImp implements TelegramTransportService {
      */
     @Override
     public boolean update(@NonNull TelegramTransport telegramTransport) {
-        List<TelegramTransport> telegramTransports = getAll();
-        Optional<TelegramTransport> optional = telegramTransports.stream()
-                .filter(o -> o.getId().equals(telegramTransport.getId()))
-                .findFirst();
-        if (optional.isPresent()) {
-            updateTransportData(optional.get(), telegramTransport);
-            repository.save(telegramTransports);
-            return true;
-        }
-        return false;
+        return repository.update(telegramTransport);
     }
 
-    private void updateTransportData(@NonNull TelegramTransport current, TelegramTransport updated) {
-        current.setName(updated.getName());
-        current.setTelegramDelivererID(updated.getTelegramDelivererID());
-        current.setRegisteredNumber(updated.getRegisteredNumber());
-    }
 
     /**
      * Searches for Telegram transports based on a query string.

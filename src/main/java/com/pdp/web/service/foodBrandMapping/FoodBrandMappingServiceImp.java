@@ -7,7 +7,6 @@ import lombok.NonNull;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -98,21 +97,7 @@ public class FoodBrandMappingServiceImp implements FoodBrandMappingService {
      */
     @Override
     public boolean update(@NonNull FoodBrandMapping foodBrandMapping) {
-        List<FoodBrandMapping> foodBrandMappings = getAll();
-        Optional<FoodBrandMapping> first = foodBrandMappings.stream()
-                .filter(f -> Objects.equals(f.getId(), foodBrandMapping.getId()))
-                .findFirst();
-        if (first.isPresent()) {
-            updateFoodBrandMappingData(first.get(), foodBrandMapping);
-            repository.save(foodBrandMappings);
-        }
-        return false;
-    }
-
-    private void updateFoodBrandMappingData(FoodBrandMapping foodBrandMapping, FoodBrandMapping updated) {
-        foodBrandMapping.setCategoryName(updated.getCategoryName());
-        foodBrandMapping.setBrandID(updated.getBrandID());
-        foodBrandMapping.setFoodID(updated.getFoodID());
+        return repository.update(foodBrandMapping);
     }
 
     /**

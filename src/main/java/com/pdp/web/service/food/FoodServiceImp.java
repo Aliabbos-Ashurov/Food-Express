@@ -7,8 +7,6 @@ import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
 import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -62,24 +60,7 @@ public class FoodServiceImp implements FoodService {
      */
     @Override
     public boolean update(@NonNull Food food) {
-        List<Food> foods = getAll();
-        Optional<Food> first = foods.stream()
-                .filter(f -> Objects.equals(f.getId(), food.getId()))
-                .findFirst();
-        if (first.isPresent()) {
-            updateFoodData(first.get(), food);
-            repository.save(foods);
-            return true;
-        }
-        return false;
-    }
-
-    private void updateFoodData(Food currentFood, Food updated) {
-        currentFood.setName(updated.getName());
-        currentFood.setPrice(updated.getPrice());
-        currentFood.setCategoryID(updated.getCategoryID());
-        currentFood.setImageUrl(updated.getImageUrl());
-        currentFood.setDescriptionID(updated.getDescriptionID());
+        return repository.update(food);
     }
 
     /**

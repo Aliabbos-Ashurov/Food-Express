@@ -57,6 +57,13 @@ public class OrderRepository implements BaseRepository<Order, List<Order>> {
         return sql.executeUpdate("DELETE FROM web.orders WHERE id = ?;", id) > 0;
     }
 
+    @Override
+    @SneakyThrows
+    public boolean update(@NonNull Order order) {
+        return sql.executeUpdate("UPDATE web.orders set food_id=?,food_price=?,food_quantity,customer_order_id=? WHERE id = ?;",
+                order.getFoodID(), order.getFoodPrice(), order.getFoodQuantity(), order.getCustomerOrderID(), order.getId()) > 0;
+    }
+
     /**
      * Retrieves an order from the repository based on its ID.
      *
@@ -84,5 +91,9 @@ public class OrderRepository implements BaseRepository<Order, List<Order>> {
             orders.add(order);
         }
         return orders;
+    }
+    @SneakyThrows
+    public void clearByCustomer(UUID customerOrderId) {
+        sql.executeUpdate("DELETE from web.orders WHERE customer_order_id = ?;", customerOrderId);
     }
 }

@@ -7,6 +7,7 @@ import com.pdp.web.model.user.User;
 import com.pdp.web.service.user.UserService;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -47,7 +48,7 @@ public class LoginServiceImpl implements LoginService {
      * @return The authenticated User object or {@code null} if authentication fails.
      */
     @Override
-    public User checkUser(LoginDTO dto) {
+    public User checkUser(@NotNull LoginDTO dto) {
         List<User> users = userService.getAll();
         return users.stream()
                 .filter(user -> user.getUsername().equals(dto.username())
@@ -63,7 +64,7 @@ public class LoginServiceImpl implements LoginService {
      * @return {@code true} if registration is successful, {@code false} if the username is already in use.
      */
     @Override
-    public boolean signUp(User user) {
+    public boolean signUp(@NotNull User user) {
         List<User> users = userService.getAll();
         boolean userExists = users.stream()
                 .anyMatch(existingUser -> existingUser.getUsername().equals(user.getUsername()));

@@ -5,6 +5,7 @@ import com.pdp.utils.serializer.JsonSerializer;
 import com.pdp.web.model.description.Description;
 import com.pdp.web.repository.BaseRepository;
 import com.pdp.config.jsonFilePath.JsonFilePath;
+import lombok.NonNull;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
 import sql.helper.SQLHelper;
@@ -59,6 +60,13 @@ public class DescriptionRepository implements BaseRepository<Description, List<D
     @Override
     public boolean remove(@NotNull UUID id) {
         return sql.executeUpdate("DELETE FROM web.description WHERE id = ?;", id) > 0;
+    }
+
+    @Override
+    @SneakyThrows
+    public boolean update(@NonNull Description description) {
+        return sql.executeUpdate("UPDATE web.description set name = ?, text = ? WHERE id = ?;",
+                description.getName(), description.getText(), description.getId()) > 0;
     }
 
     /**

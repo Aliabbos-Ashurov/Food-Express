@@ -48,6 +48,13 @@ public class TelegramDelivererRepository implements BaseRepository<TelegramDeliv
         return sql.executeUpdate("DELETE FROM telegram.telegramDeliverer WHERE id = ?;", id) > 0;
     }
 
+    @Override
+    @SneakyThrows
+    public boolean update(@NonNull TelegramDeliverer telegramDeliverer) {
+        return sql.executeUpdate("UPDATE telegram.telegramdeliverer set telegram_user_id=?,full_name=?,deliverystatus=? WHERE id = ?;",
+                telegramDeliverer.getTelegramUserID(), telegramDeliverer.getFullname(), String.valueOf(telegramDeliverer.getDeliveryStatus()), telegramDeliverer.getId()) > 0;
+    }
+
     /**
      * Finds a Telegram deliverer by its ID.
      *
