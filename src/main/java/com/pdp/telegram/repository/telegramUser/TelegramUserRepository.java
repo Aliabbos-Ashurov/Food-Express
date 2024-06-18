@@ -9,15 +9,11 @@ import com.pdp.telegram.state.State;
 import com.pdp.telegram.state.telegramDeliverer.ActiveOrderManagementState;
 import com.pdp.telegram.state.telegramDeliverer.DeliveryMenuState;
 import com.pdp.telegram.state.telegramUser.*;
-import com.pdp.utils.serializer.JsonSerializer;
 import com.pdp.web.repository.BaseRepository;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.SneakyThrows;
 import sql.helper.SQLHelper;
 
-import java.nio.file.Path;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
