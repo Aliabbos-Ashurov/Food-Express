@@ -43,10 +43,9 @@ public class TelegramUserRepository implements BaseRepository<TelegramUser, List
     @SneakyThrows
     @Override
     public boolean add(@NonNull TelegramUser object) {
-        return sql.executeUpdate("INSERT INTO telegram.telegramUser(chat_id,first_name,user_name,phone_number,role,state,language) " +
-                        "VALUES (?,?,?,?,?,?,?);",
+        return Objects.nonNull(sql.executeQuery("select telegram.add_t_user(?,?,?,?,?,?,?);",
                 object.getChatID(), object.getFirstName(), object.getUsername(), object.getPhoneNumber(),
-                object.getRole(), String.valueOf(object.getState()), object.getLanguage()) > 0;
+                String.valueOf(object.getState()), String.valueOf(object.getRole()), String.valueOf(object.getLanguage())));
     }
 
     /**
@@ -88,7 +87,7 @@ public class TelegramUserRepository implements BaseRepository<TelegramUser, List
     @SneakyThrows
     @Override
     public List<TelegramUser> getAll() {
-        ResultSet resultSet = sql.executeQuery("SELECT * FROM telegram.telegramUser;");
+        ResultSet resultSet = sql.executeQuery("SELECT * FROM telegram.telegramuser;");
         List<TelegramUser> users = new ArrayList<>();
         while (resultSet.next()) {
             TelegramUser telegramUser = new TelegramUser();
@@ -101,6 +100,7 @@ public class TelegramUserRepository implements BaseRepository<TelegramUser, List
             telegramUser.setState(getUserState(resultSet.getString("state")));
             telegramUser.setLanguage(Language.valueOf(resultSet.getString("language")));
             telegramUser.setCreatedAt(resultSet.getTimestamp("created_at").toLocalDateTime());
+            users.add(telegramUser);
         }
         return users;
     }
