@@ -45,8 +45,8 @@ public class CustomerOrderRepository implements BaseRepository<CustomerOrder, Li
     @Override
     @SneakyThrows
     public boolean add(@NonNull CustomerOrder customerOrder) {
-        return sql.executeUpdate("INSERT INTO web.customer_order(user_id,branch_id,address_id,order_status,order_price,payment_type,deliverer_id,description_id) VALUES(?,?,?,?,?,?,?,?)",
-                customerOrder.getUserID(), customerOrder.getBranchID(), customerOrder.getAddressID(), String.valueOf(customerOrder.getOrderStatus()),
+        return sql.executeUpdate("INSERT INTO web.customer_order(id,user_id,branch_id,address_id,order_status,customer_order_geo_point_id,order_price,payment_type,deliverer_id,description_id) VALUES(?,?,?,?,?,?,?,?,?,?)",
+                customerOrder.getId(),customerOrder.getUserID(), customerOrder.getBranchID(), customerOrder.getAddressID(), String.valueOf(customerOrder.getOrderStatus()), customerOrder.getCustomerOrderGeoPointID(),
                 customerOrder.getOrderPrice(), String.valueOf(customerOrder.getPaymentType()), customerOrder.getDeliverID(), customerOrder.getDescriptionID()) > 0;
     }
 
@@ -66,8 +66,8 @@ public class CustomerOrderRepository implements BaseRepository<CustomerOrder, Li
     @Override
     @SneakyThrows
     public boolean update(@NonNull CustomerOrder customerOrder) {
-        return sql.executeUpdate("UPDATE web.customer_order set user_id=?,branch_id=?,address_id=?,order_status=?,order_price=?,payment_type=?,deliverer_id=?,description_id=? WHERE id = ?;",
-                customerOrder.getUserID(), customerOrder.getBranchID(), customerOrder.getAddressID(), String.valueOf(customerOrder.getOrderStatus()),
+        return sql.executeUpdate("UPDATE web.customer_order set user_id=?,branch_id=?,address_id=?,customer_order_geo_point_id=?,order_status=?,order_price=?,payment_type=?,deliverer_id=?,description_id=? WHERE id = ?;",
+                customerOrder.getUserID(), customerOrder.getBranchID(), customerOrder.getAddressID(),customerOrder.getCustomerOrderGeoPointID(), String.valueOf(customerOrder.getOrderStatus()),
                 customerOrder.getOrderPrice(), String.valueOf(customerOrder.getPaymentType()), customerOrder.getDeliverID(), customerOrder.getDescriptionID(), customerOrder.getId()) > 0;
     }
 
@@ -100,7 +100,6 @@ public class CustomerOrderRepository implements BaseRepository<CustomerOrder, Li
         while (rs.next()) {
             CustomerOrder customerOrder = new CustomerOrder();
 
-            // Example of handling potential null values from ResultSet
             UUID id = rs.getString(1) != null ? UUID.fromString(rs.getString(1)) : null;
             UUID userID = rs.getString(2) != null ? UUID.fromString(rs.getString(2)) : null;
             UUID branchID = rs.getString(3) != null ? UUID.fromString(rs.getString(3)) : null;
@@ -111,19 +110,21 @@ public class CustomerOrderRepository implements BaseRepository<CustomerOrder, Li
             if (rs.getString(7) != null) {
                 try {
                     paymentType = PaymentType.valueOf(rs.getString(7));
-                } catch (IllegalArgumentException ignored) {}
+                } catch (IllegalArgumentException ignored) {
+                }
             }
+            UUID customerOrderGeoPoint = rs.getString(11) != null ? UUID.fromString(rs.getString(11)) : null;
             UUID deliverID = rs.getString(8) != null ? UUID.fromString(rs.getString(8)) : null;
             UUID descriptionID = rs.getString(9) != null ? UUID.fromString(rs.getString(9)) : null;
             LocalDateTime createdAt = rs.getTimestamp(10) != null ? rs.getTimestamp(10).toLocalDateTime() : null;
 
-            // Set values to customerOrder object
             customerOrder.setId(id);
             customerOrder.setUserID(userID);
             customerOrder.setBranchID(branchID);
             customerOrder.setAddressID(addressID);
             customerOrder.setOrderStatus(orderStatus);
             customerOrder.setOrderPrice(orderPrice);
+            customerOrder.setCustomerOrderGeoPointID(customerOrderGeoPoint);
             customerOrder.setPaymentType(paymentType);
             customerOrder.setDeliverID(deliverID);
             customerOrder.setDescriptionID(descriptionID);

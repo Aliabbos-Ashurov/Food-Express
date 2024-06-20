@@ -32,8 +32,8 @@ public class TelegramDelivererRepository implements BaseRepository<TelegramDeliv
     @SneakyThrows
     @Override
     public boolean add(@NonNull TelegramDeliverer object) {
-        return sql.executeUpdate("INSERT INTO telegram.telegramDeliverer(telegram_user_id,full_name,deliveryStatus) VALUES (?,?,?);",
-                object.getTelegramUserID(), object.getFullname(), String.valueOf(object.getDeliveryStatus())) > 0;
+        return sql.executeUpdate("INSERT INTO telegram.telegramDeliverer(id,telegram_user_id,full_name,deliveryStatus) VALUES (?,?,?,?);",
+                object.getId(), object.getTelegramUserID(), object.getFullname(), String.valueOf(object.getDeliveryStatus())) > 0;
     }
 
     /**

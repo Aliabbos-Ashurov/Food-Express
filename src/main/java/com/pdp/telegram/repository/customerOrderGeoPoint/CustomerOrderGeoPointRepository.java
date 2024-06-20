@@ -11,6 +11,7 @@ import sql.helper.SQLHelper;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -32,8 +33,8 @@ public class CustomerOrderGeoPointRepository implements BaseRepository<CustomerO
     @SneakyThrows
     @Override
     public boolean add(@NonNull CustomerOrderGeoPoint customerOrderGeoPoint) {
-        return sql.executeUpdate("INSERT INTO telegram.customer_order_geo_point(lattidue,longtidue) VALUES (?,?);",
-                customerOrderGeoPoint.getLattidue(), customerOrderGeoPoint.getLongtidue()) > 0;
+        return sql.executeUpdate("INSERT INTO telegram.customer_order_geo_point(id,lattidue,longtidue) VALUES (?,?,?);",
+                customerOrderGeoPoint.getId(), customerOrderGeoPoint.getLattidue(), customerOrderGeoPoint.getLongtidue()) > 0;
     }
 
     /**
@@ -64,7 +65,7 @@ public class CustomerOrderGeoPointRepository implements BaseRepository<CustomerO
     @Override
     public CustomerOrderGeoPoint findById(@NonNull UUID id) {
         return getAll().stream()
-                .filter(customerOrderGeoPoint -> customerOrderGeoPoint.getId().equals(id)).findFirst().orElse(null);
+                .filter(customerOrderGeoPoint -> Objects.equals(customerOrderGeoPoint.getId(),id)).findFirst().orElse(null);
     }
 
     /**

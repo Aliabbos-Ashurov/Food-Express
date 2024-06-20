@@ -240,7 +240,7 @@ public class SendMessageFactory {
         CustomerOrderGeoPoint orderGeoPoint = getGeoPoint(customerOrder);
         String status = StatusSourceUtils.getLocalizedStatus(customerOrder.getOrderStatus(), language);
         return String.format(
-                "\uD83C\uDFE2 Brand: %s\n⬆\uFE0F From location: %s\n ⬇\uFE0FTo location: %s\n \uD83D\uDCB0Price: %s\n \uD83D\uDCB5Payment Type: %s\n \uD83D\uDCCAStatus: %s",
+                "\uD83C\uDFE2 Brand: %s\n⬆️ From location: %s\n ⬇️To location: %s\n \uD83D\uDCB0Price: %s\n \uD83D\uDCB5Payment Type: %s\n \uD83D\uDCCAStatus: %s",
                 brand.getName(),
                 branchLocation.getLatidue() + " - " + branchLocation.getLongtidue(),
                 orderGeoPoint.getLattidue() + " - " + orderGeoPoint.getLongtidue(),

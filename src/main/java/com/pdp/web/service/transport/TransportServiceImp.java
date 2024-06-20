@@ -88,7 +88,7 @@ public class TransportServiceImp implements TransportService {
      * @return the {@link Transport} object, or null if no transport is found
      */
     @Override
-    public Transport getByID(UUID id) {
+    public Transport getByID(@NotNull UUID id) {
         return repository.findById(id);
     }
 

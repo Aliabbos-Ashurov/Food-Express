@@ -34,8 +34,8 @@ public class TelegramTransportRepository implements BaseRepository<TelegramTrans
     @Override
     @SneakyThrows
     public boolean add(@NonNull TelegramTransport tt) {
-        return sql.executeUpdate("INSERT INTO telegram.telegram_transport(t_deliverer_id,name,registered_number) VALUES(?,?,?);",
-                tt.getTelegramDelivererID(), tt.getName(), tt.getRegisteredNumber()) > 0;
+        return sql.executeUpdate("INSERT INTO telegram.telegramtransport(id,t_deliverer_id,name,registered_number) VALUES(?,?,?,?);",
+                tt.getId(),tt.getTelegramDelivererID(), tt.getName(), tt.getRegisteredNumber()) > 0;
     }
 
     /**
