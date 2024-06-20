@@ -86,6 +86,7 @@ public class BrandRepository implements BaseRepository<Brand, List<Brand>> {
             brand.setOpeningTime(rs.getTimestamp(5).toLocalDateTime());
             brand.setClosingTime(rs.getTimestamp(6).toLocalDateTime());
             brand.setCreatedAt(rs.getTimestamp(7).toLocalDateTime());
+            brand.setImageURL(rs.getString(8));
             brands.add(brand);
         }
         return brands;

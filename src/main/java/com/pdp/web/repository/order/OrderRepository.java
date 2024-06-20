@@ -41,8 +41,8 @@ public class OrderRepository implements BaseRepository<Order, List<Order>> {
     @SneakyThrows
     @Override
     public boolean add(@NonNull Order order) {
-        return sql.executeUpdate("INSERT INTO web.orders(food_id,food_price,food_quantity,customer_order_id) VALUES (?,?,?,?);",
-                order.getFoodID(), order.getFoodPrice(), order.getFoodQuantity(), order.getCustomerOrderID()) > 0;
+        return sql.executeUpdate("INSERT INTO web.orders(id,food_id,food_price,food_quantity,customer_order_id) VALUES (?,?,?,?,?);",
+                order.getId(), order.getFoodID(), order.getFoodPrice(), order.getFoodQuantity(), order.getCustomerOrderID()) > 0;
     }
 
     /**
@@ -60,7 +60,7 @@ public class OrderRepository implements BaseRepository<Order, List<Order>> {
     @Override
     @SneakyThrows
     public boolean update(@NonNull Order order) {
-        return sql.executeUpdate("UPDATE web.orders set food_id=?,food_price=?,food_quantity,customer_order_id=? WHERE id = ?;",
+        return sql.executeUpdate("UPDATE web.orders set food_id=?,food_price=?,food_quantity=?,customer_order_id=? WHERE id = ?;",
                 order.getFoodID(), order.getFoodPrice(), order.getFoodQuantity(), order.getCustomerOrderID(), order.getId()) > 0;
     }
 
@@ -92,6 +92,7 @@ public class OrderRepository implements BaseRepository<Order, List<Order>> {
         }
         return orders;
     }
+
     @SneakyThrows
     public void clearByCustomer(UUID customerOrderId) {
         sql.executeUpdate("DELETE from web.orders WHERE customer_order_id = ?;", customerOrderId);

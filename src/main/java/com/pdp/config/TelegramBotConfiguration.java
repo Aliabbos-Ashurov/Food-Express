@@ -16,7 +16,6 @@ import java.util.ResourceBundle;
  */
 public class TelegramBotConfiguration {
     private static final ResourceBundle settings = ResourceBundle.getBundle("settings/settings", Locale.ENGLISH);
-    //   private static final ThreadLocal<TelegramBot> telegramBotThreadLocal = ThreadLocal.withInitial(() -> new TelegramBot(settings.getString("bot.token")));
     private static final ThreadLocal<TelegramBot> telegramBotThreadLocal = ThreadLocal.withInitial(() -> new TelegramBot(settings.getString("bot.token")));
 
     public static TelegramBot get() {

@@ -12,6 +12,7 @@ import sql.helper.SQLHelper;
 
 import java.math.BigDecimal;
 import java.sql.ResultSet;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -45,8 +46,8 @@ public class CustomerOrderRepository implements BaseRepository<CustomerOrder, Li
     @SneakyThrows
     public boolean add(@NonNull CustomerOrder customerOrder) {
         return sql.executeUpdate("INSERT INTO web.customer_order(user_id,branch_id,address_id,order_status,order_price,payment_type,deliverer_id,description_id) VALUES(?,?,?,?,?,?,?,?)",
-                customerOrder.getUserID(), customerOrder.getBranchID(), customerOrder.getAddressID(), customerOrder.getOrderStatus(),
-                customerOrder.getOrderPrice(), customerOrder.getPaymentType(), customerOrder.getDeliverID(), customerOrder.getDescriptionID()) > 0;
+                customerOrder.getUserID(), customerOrder.getBranchID(), customerOrder.getAddressID(), String.valueOf(customerOrder.getOrderStatus()),
+                customerOrder.getOrderPrice(), String.valueOf(customerOrder.getPaymentType()), customerOrder.getDeliverID(), customerOrder.getDescriptionID()) > 0;
     }
 
     /**
@@ -67,7 +68,7 @@ public class CustomerOrderRepository implements BaseRepository<CustomerOrder, Li
     public boolean update(@NonNull CustomerOrder customerOrder) {
         return sql.executeUpdate("UPDATE web.customer_order set user_id=?,branch_id=?,address_id=?,order_status=?,order_price=?,payment_type=?,deliverer_id=?,description_id=? WHERE id = ?;",
                 customerOrder.getUserID(), customerOrder.getBranchID(), customerOrder.getAddressID(), String.valueOf(customerOrder.getOrderStatus()),
-                customerOrder.getOrderPrice(), String.valueOf(customerOrder.getPaymentType()), customerOrder.getDeliverID(), customerOrder.getDescriptionID(), customerOrder.getDescriptionID()) > 0;
+                customerOrder.getOrderPrice(), String.valueOf(customerOrder.getPaymentType()), customerOrder.getDeliverID(), customerOrder.getDescriptionID(), customerOrder.getId()) > 0;
     }
 
     /**
@@ -98,18 +99,40 @@ public class CustomerOrderRepository implements BaseRepository<CustomerOrder, Li
         ResultSet rs = sql.executeQuery("SELECT * FROM web.customer_order;");
         while (rs.next()) {
             CustomerOrder customerOrder = new CustomerOrder();
-            customerOrder.setId(UUID.fromString(rs.getString(1)));
-            customerOrder.setUserID(UUID.fromString(rs.getString(rs.getString(2))));
-            customerOrder.setBranchID(UUID.fromString(rs.getString(3)));
-            customerOrder.setAddressID(UUID.fromString(rs.getString(4)));
-            customerOrder.setOrderStatus(OrderStatus.valueOf(rs.getString(5)));
-            customerOrder.setOrderPrice(BigDecimal.valueOf(rs.getDouble(6)));
-            customerOrder.setPaymentType(PaymentType.valueOf(rs.getString(7)));
-            customerOrder.setDeliverID(UUID.fromString(rs.getString(8)));
-            customerOrder.setDescriptionID(UUID.fromString(rs.getString(9)));
-            customerOrder.setCreatedAt(rs.getTimestamp(10).toLocalDateTime());
+
+            // Example of handling potential null values from ResultSet
+            UUID id = rs.getString(1) != null ? UUID.fromString(rs.getString(1)) : null;
+            UUID userID = rs.getString(2) != null ? UUID.fromString(rs.getString(2)) : null;
+            UUID branchID = rs.getString(3) != null ? UUID.fromString(rs.getString(3)) : null;
+            UUID addressID = rs.getString(4) != null ? UUID.fromString(rs.getString(4)) : null;
+            OrderStatus orderStatus = rs.getString(5) != null ? OrderStatus.valueOf(rs.getString(5)) : null;
+            BigDecimal orderPrice = rs.getObject(6) != null ? BigDecimal.valueOf(rs.getDouble(6)) : null;
+            PaymentType paymentType = null;
+            if (rs.getString(7) != null) {
+                try {
+                    paymentType = PaymentType.valueOf(rs.getString(7));
+                } catch (IllegalArgumentException ignored) {}
+            }
+            UUID deliverID = rs.getString(8) != null ? UUID.fromString(rs.getString(8)) : null;
+            UUID descriptionID = rs.getString(9) != null ? UUID.fromString(rs.getString(9)) : null;
+            LocalDateTime createdAt = rs.getTimestamp(10) != null ? rs.getTimestamp(10).toLocalDateTime() : null;
+
+            // Set values to customerOrder object
+            customerOrder.setId(id);
+            customerOrder.setUserID(userID);
+            customerOrder.setBranchID(branchID);
+            customerOrder.setAddressID(addressID);
+            customerOrder.setOrderStatus(orderStatus);
+            customerOrder.setOrderPrice(orderPrice);
+            customerOrder.setPaymentType(paymentType);
+            customerOrder.setDeliverID(deliverID);
+            customerOrder.setDescriptionID(descriptionID);
+            customerOrder.setCreatedAt(createdAt);
+
             customerOrders.add(customerOrder);
         }
         return customerOrders;
     }
+
 }
+

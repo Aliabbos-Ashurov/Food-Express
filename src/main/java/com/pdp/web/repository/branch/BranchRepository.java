@@ -92,6 +92,7 @@ public class BranchRepository implements BaseRepository<Branch, List<Branch>> {
             branch.setActive(rs.getBoolean(3));
             branch.setPhoneNumber(rs.getString(4));
             branch.setCreatedAt(rs.getTimestamp(5).toLocalDateTime());
+            branch.setBrandID(UUID.fromString(rs.getString(6)));
             branches.add(branch);
         }
         return branches;
