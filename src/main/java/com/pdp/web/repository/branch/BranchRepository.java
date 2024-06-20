@@ -36,7 +36,6 @@ public class BranchRepository implements BaseRepository<Branch, List<Branch>> {
      *
      * @param branch The Branch entity to be added to the repository.
      * @return True if the Branch has been successfully added, false otherwise.
-     * @throws Exception If an error occurs during the saving process.
      */
     @Override
     @SneakyThrows

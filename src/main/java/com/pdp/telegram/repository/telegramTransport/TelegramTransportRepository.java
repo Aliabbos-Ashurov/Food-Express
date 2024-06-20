@@ -3,8 +3,6 @@ package com.pdp.telegram.repository.telegramTransport;
 import com.pdp.config.SQLConfiguration;
 import com.pdp.telegram.model.telegramTransport.TelegramTransport;
 import com.pdp.web.repository.BaseRepository;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.SneakyThrows;
 import sql.helper.SQLHelper;

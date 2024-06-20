@@ -4,6 +4,7 @@ import com.pdp.utils.Validator;
 import com.pdp.web.model.transport.Transport;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -53,7 +54,7 @@ public class TransportServiceImp implements TransportService {
      * @return true if the transport was successfully removed, false otherwise
      */
     @Override
-    public boolean remove(UUID id) {
+    public boolean remove(@NonNull UUID id) {
         return repository.remove(id);
     }
 
@@ -75,7 +76,7 @@ public class TransportServiceImp implements TransportService {
      * @return a list of {@link Transport} objects that match the query
      */
     @Override
-    public List<Transport> search(String query) {
+    public List<Transport> search(@NonNull String query) {
         return getAll().stream()
                 .filter(t -> Validator.isValid(t.getDisplayName(), query))
                 .toList();
